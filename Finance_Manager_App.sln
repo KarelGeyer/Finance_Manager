@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance_Manager_UI", "Finance_Manager_UI\Finance_Manager_UI.csproj", "{8D8765D1-B080-42EE-A67B-67FF1BEF3DE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Finance_Manager_UI", "Finance_Manager_UI\Finance_Manager_UI.csproj", "{8D8765D1-B080-42EE-A67B-67FF1BEF3DE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Finance_Manager_Backend", "Finance_Manager_Backend", "{E7FF467E-7ACA-4950-A692-07449CE1B1BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{CA6FC670-5FAB-4093-A231-7920D2A4D419}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{CA6FC670-5FAB-4093-A231-7920D2A4D419}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{DF79664D-15AC-4267-897E-10A6B0D1294D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{15D34A6F-2CB3-4F7D-A121-A9524DFCA01D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService.csproj", "{15D34A6F-2CB3-4F7D-A121-A9524DFCA01D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0499D9FC-18B9-4704-B005-EBAC5F93D73E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0499D9FC-18B9-4704-B005-EBAC5F93D73E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1D357A8E-E913-4CA0-8182-8BAB4BF7251F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Test", "UserService.Test\UserService.Test.csproj", "{463E849D-9C1E-408E-A288-78435B3A1B79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,10 @@ Global
 		{0499D9FC-18B9-4704-B005-EBAC5F93D73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0499D9FC-18B9-4704-B005-EBAC5F93D73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0499D9FC-18B9-4704-B005-EBAC5F93D73E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{463E849D-9C1E-408E-A288-78435B3A1B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{463E849D-9C1E-408E-A288-78435B3A1B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{463E849D-9C1E-408E-A288-78435B3A1B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{463E849D-9C1E-408E-A288-78435B3A1B79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +55,7 @@ Global
 		{CA6FC670-5FAB-4093-A231-7920D2A4D419} = {E7FF467E-7ACA-4950-A692-07449CE1B1BB}
 		{DF79664D-15AC-4267-897E-10A6B0D1294D} = {E7FF467E-7ACA-4950-A692-07449CE1B1BB}
 		{15D34A6F-2CB3-4F7D-A121-A9524DFCA01D} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
+		{463E849D-9C1E-408E-A288-78435B3A1B79} = {1D357A8E-E913-4CA0-8182-8BAB4BF7251F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47B40EC3-D549-4E20-AEAE-5640A2AD5CD4}
