@@ -29,15 +29,15 @@ The is to have a software provided through several stores for free and that will
 
 - Windows
 - Android
-- MacOS?
+- MacOS
 - iOS
 - Web?
 
 ## Technologies
 
 - [.NET](https://dotnet.microsoft.com/en-us/) for microservices
-- [WPF .NET](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/?view=netdesktop-8.0) for desktop layer
-- [Xamarin](https://learn.microsoft.com/cs-cz/xamarin/get-started/what-is-xamarin) for mobile layer and macOS
+- [MAUI](https://dotnet.microsoft.com/en-us/apps/maui) for desktop layer
+- [Xamarin](https://learn.microsoft.com/cs-cz/xamarin/get-started/what-is-xamarin) for mobile layer integrated into MAUI framework
 - [MimeKit](https://mimekit.net/) as a mail client
 - [MSSQL](https://www.microsoft.com/cs-cz/sql-server/sql-server-2019) as a database layer
 - [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms?view=sql-server-ver16)
@@ -55,11 +55,7 @@ The is to have a software provided through several stores for free and that will
      - Essentially all you have to do is run Visual Studio Installer
      - Check ASP.NET and web development tile and install whatever is set by default
        ![web api tab](assets/images/web-api-development.png)
-  2. <strong>WPF development</strong> (Windows desktop application)
-     - For Devs that wants to work on WPF development
-     - Similarly to above but check the .NET Desktop Development
-       ![WPF app tab](assets/images/wpf-desktop-tab.png)
-  3. <strong>Xamarin development</strong> (iOS, Andrios, MacOS)
+  2. <strong>Desktop/Wep app development</strong> (iOS, Android, MacOS)
      - For Devs that wants to work on support for mobile or MaxOS version
      - Similarly to above but check the .NET Multiplatform App UI Development
        ![multiplatform app tab](assets/images/multiplatform-tab.png)
@@ -70,17 +66,10 @@ The is to have a software provided through several stores for free and that will
 
 First of all, thank you very much for any contribution you have done for this project, be sure it is valued just like it possibly helps you get some experience with project's tech stack.
 
-After you have completed the steps from <a href="#getting-started">Section above</a>, the rules are quite simple. First create your feature branch through JIRA directly on task and use the recommended name.
+After you have completed the steps from <a href="#getting-started">Section above</a>, the rules are quite simple. Choose a task to do, assign it to yourself and create a branch. Also please do not forget to update the status of the task to "In Progress" status so we know it being solved.
 ![alt text](assets/images/jira-task-view.png) ![alt text](assets/images/jira-branch-creation.png)
-When you are done with your work, make sure to create a short descriptive commit and push your changes to the repository.
-Then Open a pull request with following rules:
-
-1. Name has to be descriptive, similar to commit
-2. At the end of the PR name add the task number
-   ![alt text](assets/images/jira-task-name.png)
-   <strong>example name</strong>: Create Git Repo #Kan-1
-3. Give it a proper description so know what the added code does even without looking at it
-4. Read [Following guide](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/) for context
+When you are done with your work, make sure to create a short descriptive commit and push your changes to the repository. We manage our commits and PR's based on [this article](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/) as we have a JIRA integration in our Github repository. After you create your Pull Request, assign one of the experienced developers for code review and change status of the task to "Code Review" and asign the task to the person responsible for the code review.
+If the PR is accepted, it will be merged into the main branch. Code reviewer can also reject the PR and ask for changes in the code before it is accepted. In that case the code reviewer will change the task status back to "In progress" and asign it back to you.
 
 ## Roadmap
 
