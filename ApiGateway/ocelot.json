@@ -1,0 +1,19 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/Users",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5101
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/GetUsers"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http:/localhost:5000"
+  }
+}
