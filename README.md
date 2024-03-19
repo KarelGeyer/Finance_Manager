@@ -71,6 +71,8 @@ After you have completed the steps from <a href="#getting-started">Section above
 When you are done with your work, make sure to create a short descriptive commit and push your changes to the repository. We manage our commits and PR's based on [this article](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/) as we have a JIRA integration in our Github repository. After you create your Pull Request, assign one of the experienced developers for code review and change status of the task to "Code Review" and asign the task to the person responsible for the code review.
 If the PR is accepted, it will be merged into the main branch. Code reviewer can also reject the PR and ask for changes in the code before it is accepted. In that case the code reviewer will change the task status back to "In progress" and asign it back to you.
 
+Also please keep in mind that we are trying to write as many unit tests as possible and we would like to have a full coverage on backend. Every backend and helper service that is not frontend needs to have its own unit test project and at least 70% coverage.
+
 ## Roadmap
 
 - [ ] Add basic setup files, create project folder structure
