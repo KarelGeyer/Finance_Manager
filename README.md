@@ -75,11 +75,12 @@ After you have completed the steps from <a href="#getting-started">Section above
 When you are done with your work, make sure to create a short descriptive commit and push your changes to the repository.
 Then Open a pull request with following rules:
 
-1. Name has to be dsecriptive, similar to commit
+1. Name has to be descriptive, similar to commit
 2. At the end of the PR name add the task number
    ![alt text](assets/images/jira-task-name.png)
    <strong>example name</strong>: Create Git Repo #Kan-1
 3. Give it a proper description so know what the added code does even without looking at it
+4. Read [Following guide](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/) for context
 
 ## Roadmap
 
