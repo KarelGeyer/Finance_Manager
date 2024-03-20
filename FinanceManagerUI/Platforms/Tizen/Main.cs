@@ -2,7 +2,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using System;
 
-namespace Finance_Manager_UI
+namespace FinanceManagerUI
 {
     internal class Program : MauiApplication
     {

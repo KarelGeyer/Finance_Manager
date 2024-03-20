@@ -1,4 +1,4 @@
-﻿namespace Finance_Manager_UI
+﻿namespace FinanceManagerUI
 {
     public partial class MainPage : ContentPage
     {
