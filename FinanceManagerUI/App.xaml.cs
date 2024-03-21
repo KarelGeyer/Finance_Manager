@@ -1,4 +1,6 @@
-﻿namespace FinanceManagerUI
+﻿using FinanceManagerUI.ViewModels;
+
+namespace FinanceManagerUI
 {
     public partial class App : Application
     {

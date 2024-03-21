@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanceManagerUI.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodel="clr-namespace:FinanceManagerUI.ViewModels"
+    Title="Home"
+    x:DataType="viewmodel:MainViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,100">
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Button
+                    HorizontalOptions="Fill"
+                    SemanticProperties.Hint="Counts the number of times you click"
+                    Text="Properties" />
+
+                <Button
+                    HorizontalOptions="Fill"
+                    SemanticProperties.Hint="Counts the number of times you click"
+                    Text="Expenses" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
