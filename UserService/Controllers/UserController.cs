@@ -1,6 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Common.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Supabase;
 
 namespace UsersService.Controllers
 {
@@ -8,16 +12,29 @@ namespace UsersService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly Client _supabaseClient;
+
+        public UserController(Client supabaseClient)
+        {
+            _supabaseClient = supabaseClient;
+        }
+
         [HttpGet]
         [Route("[action]")]
-        public async Task<List<User>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            User user = new() { Id = 0, Name = "Test", };
-            User user2 = new() { Id = 1, Name = "Test2", };
-            User user3 = new() { Id = 2, Name = "Test3", };
+            try
+            {
+                var response = await _supabaseClient.From<User>().Get();
 
-            List<User> res = await Task.FromResult<List<User>>([user, user2, user3]);
-            return res;
+                var users = response.Models;
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }
