@@ -22,11 +22,13 @@ var configuration = builder.Configuration;
 var supabaseUrl = configuration["SupaBase:Url"];
 var supabaseKey = configuration["SupaBase:Key"];
 
-builder.Services.AddSingleton<Supabase.Client>(_ =>
+builder.Services.AddSingleton(_ =>
 {
     var options = new Supabase.SupabaseOptions { AutoConnectRealtime = true };
-    var client = new Supabase.Client(supabaseUrl, supabaseKey, options);
+
+    var client = new Supabase.Client(supabaseUrl!, supabaseKey, options);
     client.InitializeAsync().Wait();
+
     return client;
 });
 
