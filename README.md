@@ -40,7 +40,6 @@ The is to have a software provided through several stores for free and that will
 - [Xamarin](https://learn.microsoft.com/cs-cz/xamarin/get-started/what-is-xamarin) for mobile layer integrated into MAUI framework
 - [MimeKit](https://mimekit.net/) as a mail client
 - [MSSQL](https://www.microsoft.com/cs-cz/sql-server/sql-server-2019) as a database layer
-- [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/sql-server-management-studio-ssms?view=sql-server-ver16)
 
 ## Getting Started
 
@@ -50,11 +49,11 @@ The is to have a software provided through several stores for free and that will
 - You need to clone the project from github with `git clone`
 - depending on which part of the project you will be working on, you will need to install several things:
   <strong>Visual Studio</strong>
-  1. <strong>Web API development</strong>
-     - You will need at least VS version 17.8 or higher as we user .NET 8.0
-     - Essentially all you have to do is run Visual Studio Installer
-     - Check ASP.NET and web development tile and install whatever is set by default
-       ![web api tab](assets/images/web-api-development.png)
+  1. <strong>Web API development</strong> - You will need at least VS version 17.8 or higher as we user .NET 8.0 - Essentially all you have to do is run Visual Studio Installer - Check ASP.NET and web development tile and install whatever is set by default
+     ![web api tab](assets/images/web-api-development.png) - You will also need a secret in order to be able to work with our DB provider, in order to do so, right click on service you wish to work on, find Manager User Secrets:
+     `{
+  "Supabase:Key": "key"
+}` and provide a key. In order to retrieve the key, contact one on of the project admins.
   2. <strong>Desktop/Wep app development</strong> (iOS, Android, MacOS)
      - For Devs that wants to work on support for mobile or MaxOS version
      - Similarly to above but check the .NET Multiplatform App UI Development
