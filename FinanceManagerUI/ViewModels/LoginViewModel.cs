@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FinanceManagerUI.ViewModels
 {
-    public partial class ExpensesViewModel : ObservableObject
+    public partial class LoginViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string _title = "Expenses";
+        private string _title = "Login";
     }
 }

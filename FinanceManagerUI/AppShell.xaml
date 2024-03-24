@@ -14,12 +14,7 @@
 
     <Shell.FlyoutHeader>
         <VerticalStackLayout Padding="20">
-            <Label HorizontalOptions="Center" Text="App Theme" />
-            <HorizontalStackLayout HorizontalOptions="Center">
-                <Label Text="Light" VerticalOptions="Center" />
-                <Switch IsToggled="True" />
-                <Label Text="Dark" VerticalOptions="Center" />
-            </HorizontalStackLayout>
+            <Label HorizontalOptions="Center" Text="Finance Manager" />
         </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
@@ -30,13 +25,24 @@
             Route="MainPage" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Account">
+        <ShellContent
+            Title="Account"
+            ContentTemplate="{DataTemplate pages:AccountPage}"
+            Route="AccountPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Properties">
+        <ShellContent
+            Title="Properties"
+            ContentTemplate="{DataTemplate pages:PropertiesPage}"
+            Route="PropertiesPage" />
+    </FlyoutItem>
+
     <FlyoutItem Title="Expenses">
         <ShellContent
             Title="Expenses"
             ContentTemplate="{DataTemplate pages:ExpensesPage}"
             Route="ExpensesPage" />
     </FlyoutItem>
-
-
-
 </Shell>

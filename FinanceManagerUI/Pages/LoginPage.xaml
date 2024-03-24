@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="FinanceManagerUI.Pages.ExpensesPage"
+    x:Class="FinanceManagerUI.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Expenses">
+    Title="LoginPage">
     <VerticalStackLayout>
         <Label
             HorizontalOptions="Center"
