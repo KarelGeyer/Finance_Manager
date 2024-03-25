@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.Enums
 {
+    /// <summary>
+    ///  Enumarator Representation of an HTTP Status used in the project
+    /// </summary>
     public enum EHttpStatus
     {
         OK = 200,
