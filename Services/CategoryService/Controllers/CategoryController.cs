@@ -1,30 +1,29 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CategoryService.Service;
 using Common;
 using Common.Category;
 using Common.Enums;
+using Common.Exceptions;
 using Common.Request;
 using Common.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Postgrest.Responses;
-using Supabase;
-using Websocket.Client;
 
 namespace UsersService.Controllers
 {
-    [Route("api/v1")]
+    [Route("api/category")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly Client _supabaseClient;
+        private readonly IDbService<Category> _dbService;
 
-        public CategoryController(Client supabaseClient)
+        public CategoryController(IDbService<Category> dbService)
         {
-            _supabaseClient = supabaseClient;
+            _dbService = dbService;
         }
 
+        /// <summary>
+        /// List of <see cref="Category"/> categories
+        /// </summary>
+        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
         public async Task<BaseResponse<List<Category>>> GetAll()
@@ -33,22 +32,11 @@ namespace UsersService.Controllers
 
             try
             {
-                var response = await _supabaseClient.From<Category>().Get();
-                var categories = response.Models;
-
-                if (categories == null || categories.Count < 1)
-                {
-                    res.Data = null;
-                    res.Status = EHttpStatus.NOT_FOUND;
-                    res.ResponseMessage = CustomResponseMessage.GetNotFoundResponseMessage(
-                        nameof(Category)
-                    );
-                }
-
+                var categories = await _dbService.GetAllAsync();
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
@@ -58,36 +46,23 @@ namespace UsersService.Controllers
             return res;
         }
 
+        /// <summary>
+        /// List of <see cref="Category"/> categories sorted by <see cref="CategoryType"/> type
+        /// </summary>
+        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetByType(
-            [FromBody] BaseRequest<ECategoryType> req
-        )
+        public async Task<BaseResponse<List<Category>>> GetByType([FromBody] BaseRequest<int> req)
         {
             BaseResponse<List<Category>> res = new();
 
             try
             {
-                var response = await _supabaseClient
-                    .From<Category>()
-                    .Where(x => x.Type == req.Data)
-                    .Get();
-
-                var categories = response.Models;
-
-                if (categories == null || categories.Count < 1)
-                {
-                    res.Data = null;
-                    res.Status = EHttpStatus.NOT_FOUND;
-                    res.ResponseMessage = CustomResponseMessage.GetNotFoundResponseMessage(
-                        nameof(Category)
-                    );
-                }
-
+                var categories = await _dbService.GetByCategoryAsync(req.Data);
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
@@ -97,6 +72,11 @@ namespace UsersService.Controllers
             return res;
         }
 
+        /// <summary>
+        /// <see cref="Category"/> category
+        /// </summary>
+        /// <param name="req">Id of a <see cref="Category"/> category</param>
+        /// <returns><see cref="Task"/> with <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
         public async Task<BaseResponse<Category>> GetById([FromBody] BaseRequest<int> req)
@@ -105,24 +85,11 @@ namespace UsersService.Controllers
 
             try
             {
-                var category = await _supabaseClient
-                    .From<Category>()
-                    .Where(x => x.Id == req.Data)
-                    .Single();
-
-                if (category == null)
-                {
-                    res.Data = null;
-                    res.Status = EHttpStatus.NOT_FOUND;
-                    res.ResponseMessage = CustomResponseMessage.GetNotFoundResponseMessage(
-                        nameof(Category)
-                    );
-                }
-
+                var category = await _dbService.GetAsync(req.Data);
                 res.Data = category;
                 res.Status = EHttpStatus.OK;
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
