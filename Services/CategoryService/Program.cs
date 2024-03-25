@@ -1,4 +1,5 @@
 using System;
+using CategoryService.Service;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,6 @@ using Supabase;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,10 +17,8 @@ builder.Services.AddSwaggerGen();
 
 // Supabase configuration
 var configuration = builder.Configuration;
-
 var supabaseUrl = configuration["SupaBase:Url"];
 var supabaseKey = configuration["SupaBase:Key"];
-
 builder.Services.AddSingleton(_ =>
 {
     var options = new Supabase.SupabaseOptions { AutoConnectRealtime = true };
@@ -31,9 +29,11 @@ builder.Services.AddSingleton(_ =>
     return client;
 });
 
+// Dependency injection
+builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,9 +41,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
