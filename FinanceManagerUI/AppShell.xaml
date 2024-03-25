@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FinanceManagerUI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FinanceManagerUI"
+    xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:pages="clr-namespace:FinanceManagerUI.Pages"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui"
+    Title="FinanceManagerUI"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource Surface},
+                                            Dark={StaticResource SurfaceDark}}"
+    Shell.FlyoutBehavior="{OnIdiom Default=Flyout}">
+
+    <Shell.FlyoutHeader>
+        <VerticalStackLayout Padding="20">
+            <Label HorizontalOptions="Center" Text="Finance Manager" />
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="MainPage">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate pages:MainPage}"
+            Route="MainPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Account">
+        <ShellContent
+            Title="Account"
+            ContentTemplate="{DataTemplate pages:AccountPage}"
+            Route="AccountPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Properties">
+        <ShellContent
+            Title="Properties"
+            ContentTemplate="{DataTemplate pages:PropertiesPage}"
+            Route="PropertiesPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Expenses">
+        <ShellContent
+            Title="Expenses"
+            ContentTemplate="{DataTemplate pages:ExpensesPage}"
+            Route="ExpensesPage" />
+    </FlyoutItem>
+</Shell>
