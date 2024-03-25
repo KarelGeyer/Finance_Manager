@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Enums
+﻿namespace Common.Enums
 {
+    /// <summary>
+    /// Enumarator representation of a <see cref="Category.CategoryType"/>
+    /// </summary>
     public enum ECategoryType
     {
         PropertyCategory = 1,

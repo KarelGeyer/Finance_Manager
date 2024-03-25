@@ -9,15 +9,21 @@ using System.Threading.Tasks;
 
 namespace Common.Category
 {
+    /// <summary>
+    /// Represents a Category DB Entity
+    /// </summary>
     [Table("Categories")]
-    public class Category : BaseModel
+    public class Category : BaseDbModel
     {
-        [PrimaryKey("Id", false)]
-        public int Id { get; set; }
-
+        /// <summary>
+        /// Represents a <see cref="CategoryType"/>'s Id
+        /// </summary>
         [Column("Type")]
-        public ECategoryType Type { get; set; }
+        public int Type { get; set; }
 
+        /// <summary>
+        /// An actual string representation of a <see cref="Category"/>
+        /// </summary>
         [Column("Value")]
         public string Value { get; set; }
     }
