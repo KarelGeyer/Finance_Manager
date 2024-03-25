@@ -26,8 +26,27 @@ namespace UsersService.Controllers
             try
             {
                 var response = await _supabaseClient.From<User>().Get();
-
                 var users = response.Models;
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> GetUser()
+        {
+            try
+            {
+                var response = await _supabaseClient
+                    .From<User>()
+                    .Where(x => x.Name == "Karel")
+                    .Single();
+                var users = response;
 
                 return Ok(users);
             }
