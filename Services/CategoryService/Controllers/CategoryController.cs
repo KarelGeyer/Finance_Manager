@@ -1,9 +1,7 @@
 using CategoryService.Service;
-using Common;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Category;
-using Common.Request;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 
