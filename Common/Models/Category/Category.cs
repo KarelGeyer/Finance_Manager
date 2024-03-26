@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Category
+namespace Common.Models.Category
 {
     /// <summary>
     /// Represents a Category DB Entity
@@ -18,8 +18,8 @@ namespace Common.Category
         /// <summary>
         /// Represents a <see cref="CategoryType"/>'s Id
         /// </summary>
-        [Column("Type")]
-        public int Type { get; set; }
+        [Column("CategoryTypeId")]
+        public int TypeId { get; set; }
 
         /// <summary>
         /// An actual string representation of a <see cref="Category"/>

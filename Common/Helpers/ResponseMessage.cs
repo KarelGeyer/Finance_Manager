@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Common.Helpers
 {
     /// <summary>
     /// A static class containing methods and static strings used to get response messages across all services

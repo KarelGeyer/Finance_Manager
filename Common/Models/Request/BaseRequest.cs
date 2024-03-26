@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Request
+namespace Common.Models.Request
 {
     /// <summary>
     /// A unified request model
