@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Common.Models
 {
     /// <summary>
     /// A base DB model shared across all Base DB models
