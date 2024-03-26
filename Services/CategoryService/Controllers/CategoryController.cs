@@ -1,8 +1,8 @@
 using CategoryService.Service;
 using Common;
-using Common.Category;
 using Common.Enums;
 using Common.Exceptions;
+using Common.Models.Category;
 using Common.Request;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +39,12 @@ namespace UsersService.Controllers
             catch (NotFoundException ex)
             {
                 res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
             }
@@ -52,17 +58,23 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetByType([FromBody] BaseRequest<int> req)
+        public async Task<BaseResponse<List<Category>>> GetByType(int id)
         {
             BaseResponse<List<Category>> res = new();
 
             try
             {
-                var categories = await _dbService.GetByCategoryAsync(req.Data);
+                var categories = await _dbService.GetByCategoryAsync(id);
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
@@ -79,17 +91,23 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<Category>> GetById([FromBody] BaseRequest<int> req)
+        public async Task<BaseResponse<Category>> GetById(int id)
         {
             BaseResponse<Category> res = new();
 
             try
             {
-                var category = await _dbService.GetAsync(req.Data);
+                var category = await _dbService.GetAsync(id);
                 res.Data = category;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;

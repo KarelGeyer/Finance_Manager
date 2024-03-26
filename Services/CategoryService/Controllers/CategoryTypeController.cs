@@ -1,9 +1,8 @@
 using CategoryService.Service;
 using Common;
-using Common.Category;
 using Common.Enums;
 using Common.Exceptions;
-using Common.Request;
+using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +38,12 @@ namespace UsersService.Controllers
             catch (NotFoundException ex)
             {
                 res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
             }
@@ -53,17 +58,23 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="CategoryType"/> category type</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<CategoryType>> GetById([FromBody] BaseRequest<int> req)
+        public async Task<BaseResponse<CategoryType>> GetById(int id)
         {
             BaseResponse<CategoryType> res = new();
 
             try
             {
-                var category = await _dbService.GetAsync(req.Data);
+                var category = await _dbService.GetAsync(id);
                 res.Data = category;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;

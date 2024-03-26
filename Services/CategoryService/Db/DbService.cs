@@ -1,7 +1,7 @@
-﻿using Common;
-using Common.Category;
-using Common.Enums;
+﻿using Common.Enums;
 using Common.Exceptions;
+using Common.Models;
+using Common.Models.Category;
 using Supabase;
 
 namespace CategoryService.Service
@@ -47,7 +47,7 @@ namespace CategoryService.Service
         {
             var response = await _supabaseClient
                 .From<Category>()
-                .Where(x => x.Id == categoryTypeId)
+                .Where(x => x.TypeId == categoryTypeId)
                 .Get();
 
             if (response.Models == null || response.Models.Count == 0)
