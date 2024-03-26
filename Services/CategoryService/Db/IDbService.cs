@@ -1,6 +1,6 @@
-﻿using Common;
-using Common.Category;
-using Common.Enums;
+﻿using Common.Enums;
+using Common.Models;
+using Common.Models.Category;
 
 namespace CategoryService.Service
 {
