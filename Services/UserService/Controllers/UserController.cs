@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.User;
+using Common.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Supabase;
@@ -26,7 +26,6 @@ namespace UsersService.Controllers
             try
             {
                 var response = await _supabaseClient.From<User>().Get();
-
                 var users = response.Models;
 
                 return Ok(users);

@@ -1,7 +1,7 @@
 ﻿using Postgrest.Attributes;
 using Postgrest.Models;
 
-namespace Common.User
+namespace Common.Models.User
 {
     [Table("Users")]
     public class User : BaseModel

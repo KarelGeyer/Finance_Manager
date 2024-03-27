@@ -39,7 +39,9 @@ The is to have a software provided through several stores for free and that will
 - [MAUI](https://dotnet.microsoft.com/en-us/apps/maui) for desktop layer
 - [Xamarin](https://learn.microsoft.com/cs-cz/xamarin/get-started/what-is-xamarin) for mobile layer integrated into MAUI framework
 - [MimeKit](https://mimekit.net/) as a mail client
-- [MSSQL](https://www.microsoft.com/cs-cz/sql-server/sql-server-2019) as a database layer
+- [PostreSql](https://www.postgresql.org/) as a database layer
+- [Supabase](https://supabase.com/docs) as DB manager as DB requests API
+- [MSTest](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest) for C# unit testing
 
 ## Getting Started
 
@@ -70,7 +72,7 @@ After you have completed the steps from <a href="#getting-started">Section above
 When you are done with your work, make sure to create a short descriptive commit and push your changes to the repository. We manage our commits and PR's based on [this article](https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/) as we have a JIRA integration in our Github repository. After you create your Pull Request, assign one of the experienced developers for code review and change status of the task to "Code Review" and asign the task to the person responsible for the code review.
 If the PR is accepted, it will be merged into the main branch. Code reviewer can also reject the PR and ask for changes in the code before it is accepted. In that case the code reviewer will change the task status back to "In progress" and asign it back to you.
 
-Also please keep in mind that we are trying to write as many unit tests as possible and we would like to have a full coverage on backend. Every backend and helper service that is not frontend needs to have its own unit test project and at least 70% coverage.
+Also please keep in mind that we are trying to write as many unit tests as possible and we would like to have a full coverage on backend. Every backend and helper service that is not frontend needs to have its own unit test project. We do test every single controller and helper class inside all services. Each Tested Class needs to have at least 90% line coverage. We do not check branch coverage due to the nature of what we actually cover with unit tests.
 
 ## Roadmap
 
@@ -85,12 +87,17 @@ Also please keep in mind that we are trying to write as many unit tests as possi
     - [ ] Android
     - [ ] iOS
   - [ ] Add Web version of application
-  - [ ] Allow Excel exports
+  - [ ] Allow Excel/PDF exports - export income, expenses and properties overview
   - [ ] Multilanguage support
     - [ ] Czech
     - [ ] English
     - [ ] Portuguese
     - [ ] Korean
+  - [ ] Calendar Support
+    - [ ] Gmail
+    - [ ] Outlook
+  - [ ] User Role support
+    - [ ] Admins can add categories as they wish
 
 ## Contact
 
