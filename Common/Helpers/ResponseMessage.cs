@@ -18,5 +18,17 @@ namespace Common.Helpers
         /// <returns>a string response message</returns>
         public static string GetNotFoundResponseMessage(string model) =>
             $"No record of type {nameof(model)} was found";
+
+        public static string GetFailedToCreateMessage<T>(int id)
+            where T : class => $"Failed to create new {nameof(T)} with Id {id}";
+
+        public static string GetFailedToCreateMessage<T>()
+            where T : class => $"Failed to create new {nameof(T)}";
+
+        public static string GetFailedToUpdateMessage<T>(int id)
+            where T : class => $"Failed to update {nameof(T)} with Id {id}";
+
+        public static string GetFailedToUpdateMessage<T>()
+            where T : class => $"Failed to update {nameof(T)}";
     }
 }
