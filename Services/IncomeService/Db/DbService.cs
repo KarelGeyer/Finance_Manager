@@ -5,7 +5,9 @@ using Common.Models;
 using Common.Models.Category;
 using Common.Models.Savings;
 using Common.Models.User;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using SavingsService.Db;
 using Supabase;
 
 namespace SavingsService.Service
@@ -13,58 +15,62 @@ namespace SavingsService.Service
     public class DbService : IDbService
     {
         private readonly Client _supabaseClient;
+        private readonly DataContext _context;
 
-        public DbService(Client supabaseClient)
+        public DbService(Client supabaseClient, DataContext context)
         {
             _supabaseClient = supabaseClient;
+            _context = context;
         }
 
         public async Task<bool> Create(int userId)
         {
-            Savings newSavings = new Savings { OwnerId = userId, Amount = 0, };
-            var response = await _supabaseClient.From<Savings>().Insert(newSavings);
+            //Savings newSavings = new Savings { OwnerId = userId, Amount = 0, };
+            //var response = await _supabaseClient.From<Savings>().Insert(newSavings);
 
-            if (response == null)
-            {
-                throw new FailedToCreateException<Savings>();
-            }
+            //if (response == null)
+            //{
+            //    throw new FailedToCreateException<Savings>();
+            //}
 
             return true;
         }
 
         public async Task<bool> Delete(int userId)
         {
-            await _supabaseClient.From<Savings>().Where(s => s.OwnerId == userId).Delete();
+            //await _supabaseClient.From<Savings>().Where(s => s.OwnerId == userId).Delete();
             return true;
         }
 
-        public async Task<float> Get(int userId)
+        public async Task<double> Get(int userId)
         {
-            var response = await _supabaseClient
-                .From<Savings>()
-                .Where(s => s.OwnerId == userId)
-                .Single();
+            //var response = await _supabaseClient
+            //    .From<Savings>()
+            //    .Where(s => s.OwnerId == userId)
+            //    .Single();
 
-            if (response == null)
+            var savings = await _context.Savings.ToListAsync();
+
+            if (savings == null)
             {
                 throw new NotFoundException();
             }
 
-            return response.Amount;
+            return savings[0].Amount;
         }
 
         public async Task<bool> Update(UpdateSavings request)
         {
-            var response = await _supabaseClient
-                .From<Savings>()
-                .Where(x => x.OwnerId == request.Id)
-                .Set(x => x.Amount, request.Amount)
-                .Update();
+            //var response = await _supabaseClient
+            //    .From<Savings>()
+            //    .Where(x => x.OwnerId == request.Id)
+            //    .Set(x => x.Amount, request.Amount)
+            //    .Update();
 
-            if (response.Models == null || response.Models.Count == 0)
-            {
-                throw new FailedToUpdateException<Savings>();
-            }
+            //if (response.Models == null || response.Models.Count == 0)
+            //{
+            //    throw new FailedToUpdateException<Savings>();
+            //}
 
             return true;
         }

@@ -20,12 +20,12 @@ namespace SavingsService.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<float>> GetSavings(int userId)
+        public async Task<BaseResponse<double>> GetSavings(int userId)
         {
-            BaseResponse<float> res = new();
+            BaseResponse<double> res = new();
             try
             {
-                float amount = await _dbService.Get(userId);
+                double amount = await _dbService.Get(userId);
                 res.Data = amount;
                 res.Status = EHttpStatus.OK;
                 res.ResponseMessage = string.Empty;

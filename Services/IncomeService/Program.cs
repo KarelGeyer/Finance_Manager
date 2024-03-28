@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SavingsService.Db;
+using SavingsService.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Supabase configuration
 var configuration = builder.Configuration;
@@ -20,6 +28,8 @@ builder.Services.AddSingleton(_ =>
 
     return client;
 });
+
+builder.Services.AddScoped<IDbService, DbService>();
 
 var app = builder.Build();
 

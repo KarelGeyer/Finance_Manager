@@ -7,7 +7,7 @@ namespace SavingsService.Service
 {
     public interface IDbService
     {
-        Task<float> Get(int userId);
+        Task<double> Get(int userId);
 
         Task<bool> Create(int userId);
 
