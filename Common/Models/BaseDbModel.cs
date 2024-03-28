@@ -1,10 +1,10 @@
-﻿using Postgrest.Attributes;
-using Postgrest.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Postgrest.Attributes;
+using Postgrest.Models;
 
 namespace Common.Models
 {
@@ -13,7 +13,7 @@ namespace Common.Models
     /// </summary>
     public class BaseDbModel : BaseModel
     {
-        [PrimaryKey("Id", false)]
+        [PrimaryKey("Id")]
         public int Id { get; set; }
     }
 }

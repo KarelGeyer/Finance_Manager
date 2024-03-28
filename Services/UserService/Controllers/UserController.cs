@@ -1,39 +1,53 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Common.Enums;
+using Common.Exceptions;
 using Common.Models.User;
-using Microsoft.AspNetCore.Http;
+using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using Supabase;
+using UserService.Service;
 
-namespace UsersService.Controllers
+namespace UserService.Controllers
 {
-    [Route("api/v1")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly Client _supabaseClient;
+        private readonly IDbService<UserModel> _dbService;
 
-        public UserController(Client supabaseClient)
+        public UserController(IDbService<UserModel> dbService)
         {
-            _supabaseClient = supabaseClient;
+            _dbService = dbService;
         }
 
+        /// <summary>
+        /// List of <see cref="UserModel"/> users
+        /// </summary>
+        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="UserModel"/> user</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<BaseResponse<List<UserModel>>> GetAllAsync()
         {
+            BaseResponse<List<UserModel>> res = new();
+
             try
             {
-                var response = await _supabaseClient.From<User>().Get();
-                var users = response.Models;
-
-                return Ok(users);
+                var users = await _dbService.GetAllAsync();
+                res.Data = users;
+                res.Status = EHttpStatus.OK;
+            }
+            catch (NotFoundException ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                res.Data = null;
+                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                res.ResponseMessage = ex.Message;
             }
+
+            return res;
         }
     }
 }

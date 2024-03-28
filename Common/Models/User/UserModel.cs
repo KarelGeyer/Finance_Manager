@@ -1,12 +1,12 @@
-﻿using Postgrest.Attributes;
-using Postgrest.Models;
+﻿using Common.Models.Currency;
+using Postgrest.Attributes;
 
 namespace Common.Models.User
 {
     [Table("Users")]
-    public class User : BaseModel
+    public class UserModel : BaseDbModel
     {
-        [PrimaryKey("Id", false)]
+        [PrimaryKey("Id")]
         public int Id { get; set; }
 
         [Column("UserGroupId")]
@@ -35,5 +35,9 @@ namespace Common.Models.User
 
         [Column("CreatedAt")]
         public DateTime CreatedAt { get; set; }
+
+        public virtual UserGroupModel UserGroup { get; set; }
+
+        public virtual CurrencyModel Currency { get; set; }
     }
 }
