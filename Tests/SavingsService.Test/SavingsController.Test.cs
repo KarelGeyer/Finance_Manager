@@ -112,7 +112,7 @@ namespace SavingsServiceTest
         [TestMethod]
         public void UpdateSavingsTest()
         {
-            UpdateSavings request = new UpdateSavings { Id = 1, Amount = 1000, };
+            UpdateSavings request = new UpdateSavings { UserId = 1, Amount = 1000, };
             _dbServiceMock.Setup(x => x.Update(request)).ReturnsAsync(true);
             SavingsController controller = new(_dbServiceMock.Object);
 
@@ -127,7 +127,7 @@ namespace SavingsServiceTest
         [TestMethod]
         public void UpdateSavingsTestThrowsFailedToUpdateException()
         {
-            UpdateSavings request = new UpdateSavings { Id = 1, Amount = 1000, };
+            UpdateSavings request = new UpdateSavings { UserId = 1, Amount = 1000, };
             _dbServiceMock
                 .Setup(x => x.Update(request))
                 .Throws(new FailedToUpdateException<Savings>());
@@ -144,7 +144,7 @@ namespace SavingsServiceTest
         [TestMethod]
         public void UpdateSavingsTestThrowsUserDoesNotExistExceptionn()
         {
-            UpdateSavings request = new UpdateSavings { Id = 1, Amount = 1000, };
+            UpdateSavings request = new UpdateSavings { UserId = 1, Amount = 1000, };
             _dbServiceMock.Setup(x => x.Update(request)).Throws(new UserDoesNotExistException());
             SavingsController controller = new(_dbServiceMock.Object);
 
@@ -159,7 +159,7 @@ namespace SavingsServiceTest
         [TestMethod]
         public void UpdateSavingsTestThrowsException()
         {
-            UpdateSavings request = new UpdateSavings { Id = 1, Amount = 1000, };
+            UpdateSavings request = new UpdateSavings { UserId = 1, Amount = 1000, };
             _dbServiceMock.Setup(x => x.Update(request)).Throws(new Exception());
             SavingsController controller = new(_dbServiceMock.Object);
 
