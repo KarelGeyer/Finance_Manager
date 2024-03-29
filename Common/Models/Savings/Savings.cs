@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Common.Models.Savings
 {
-    [Table("Savings")]
     public class Savings : BaseDbModel
     {
-        public float Amount { get; set; }
+        public double Amount { get; set; }
 
         public int OwnerId { get; set; }
     }
