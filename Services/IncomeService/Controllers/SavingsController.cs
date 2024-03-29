@@ -7,17 +7,29 @@ using SavingsService.Service;
 
 namespace SavingsService.Controllers
 {
+    /// <summary>
+    /// Controller for managing savings.
+    /// </summary>
     [Route("api/income")]
     [ApiController]
     public class SavingsController
     {
         private readonly IDbService _dbService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SavingsController"/> class.
+        /// </summary>
+        /// <param name="dbService">The database service.</param>
         public SavingsController(IDbService dbService)
         {
             _dbService = dbService;
         }
 
+        /// <summary>
+        /// Gets the savings for a user.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>The savings amount.</returns>
         [HttpGet]
         [Route("[action]")]
         public async Task<BaseResponse<double>> GetSavings(int userId)
@@ -46,6 +58,11 @@ namespace SavingsService.Controllers
             return res;
         }
 
+        /// <summary>
+        /// Adds savings for a user.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>A response indicating the success of the operation.</returns>
         [HttpPost]
         [Route("[action]")]
         public async Task<BaseResponse<bool>> AddSavings(int userId)
@@ -74,6 +91,11 @@ namespace SavingsService.Controllers
             return res;
         }
 
+        /// <summary>
+        /// Updates the savings for a user.
+        /// </summary>
+        /// <param name="req">The update request.</param>
+        /// <returns>A response indicating the success of the operation.</returns>
         [HttpPut]
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateSavings([FromBody] UpdateSavings req)
@@ -108,6 +130,11 @@ namespace SavingsService.Controllers
             return res;
         }
 
+        /// <summary>
+        /// Deletes the savings for a user.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>A response indicating the success of the operation.</returns>
         [HttpDelete]
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteSavings(int userId)

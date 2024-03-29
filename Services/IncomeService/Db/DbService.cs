@@ -13,15 +13,23 @@ using Supabase.Gotrue;
 
 namespace SavingsService.Service
 {
+    /// <summary>
+    /// Represents a database service for handling savings.
+    /// </summary>
     public class DbService : IDbService
     {
         private readonly DataContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbService"/> class.
+        /// </summary>
+        /// <param name="context">The data context.</param>
         public DbService(DataContext context)
         {
             _context = context;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> Create(int userId)
         {
             Savings newSavings = new Savings
@@ -40,6 +48,7 @@ namespace SavingsService.Service
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> Delete(int id)
         {
             Savings savings = await _context.Savings.Where(x => x.Id == id).SingleAsync();
@@ -58,6 +67,7 @@ namespace SavingsService.Service
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<double> Get(int userId)
         {
             Savings savings = await _context.Savings.Where(x => x.OwnerId == userId).SingleAsync();
@@ -70,6 +80,7 @@ namespace SavingsService.Service
             return savings.Amount;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> Update(UpdateSavings request)
         {
             Savings savings = await _context.Savings
