@@ -12,9 +12,9 @@ namespace UsersService.Controllers
     [ApiController]
     public class CategoryTypeController : ControllerBase
     {
-        private readonly IDbService<CategoryType> _dbService;
+        private readonly IDbService _dbService;
 
-        public CategoryTypeController(IDbService<CategoryType> dbService)
+        public CategoryTypeController(IDbService dbService)
         {
             _dbService = dbService;
         }
@@ -31,7 +31,7 @@ namespace UsersService.Controllers
 
             try
             {
-                var categoryTypes = await _dbService.GetAllAsync();
+                List<CategoryType> categoryTypes = await _dbService.GetAllCategoryTypes();
                 res.Data = categoryTypes;
                 res.Status = EHttpStatus.OK;
             }
@@ -64,8 +64,8 @@ namespace UsersService.Controllers
 
             try
             {
-                var category = await _dbService.GetAsync(id);
-                res.Data = category;
+                CategoryType categoryType = await _dbService.GetCategoryType(id);
+                res.Data = categoryType;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)

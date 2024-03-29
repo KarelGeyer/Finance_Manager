@@ -11,9 +11,9 @@ namespace UsersService.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly IDbService<Category> _dbService;
+        private readonly IDbService _dbService;
 
-        public CategoryController(IDbService<Category> dbService)
+        public CategoryController(IDbService dbService)
         {
             _dbService = dbService;
         }
@@ -30,7 +30,7 @@ namespace UsersService.Controllers
 
             try
             {
-                var categories = await _dbService.GetAllAsync();
+                var categories = await _dbService.GetAllCategories();
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
@@ -62,7 +62,7 @@ namespace UsersService.Controllers
 
             try
             {
-                var categories = await _dbService.GetByCategoryAsync(id);
+                var categories = await _dbService.GetCategoriesByCategoryType(id);
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
@@ -95,7 +95,7 @@ namespace UsersService.Controllers
 
             try
             {
-                var category = await _dbService.GetAsync(id);
+                Category category = await _dbService.GetCategory(id);
                 res.Data = category;
                 res.Status = EHttpStatus.OK;
             }
