@@ -8,7 +8,7 @@ namespace Common.Models.Savings
 {
     public class UpdateSavings
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
 
         public float Amount { get; set; }
     }

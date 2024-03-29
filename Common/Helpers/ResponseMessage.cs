@@ -30,5 +30,11 @@ namespace Common.Helpers
 
         public static string GetFailedToUpdateMessage<T>()
             where T : class => $"Failed to update {nameof(T)}";
+
+        public static string GetFailedToDeleteMessage<T>(int id)
+            where T : class => $"Failed to delete {nameof(T)} with Id {id}";
+
+        public static string GetFailedToDeleteMessage<T>()
+            where T : class => $"Failed to delete {nameof(T)}";
     }
 }
