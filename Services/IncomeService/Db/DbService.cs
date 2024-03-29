@@ -5,26 +5,34 @@ using Common.Models;
 using Common.Models.Category;
 using Common.Models.Savings;
 using Common.Models.User;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using SavingsService.Db;
 using Supabase;
+using Supabase.Gotrue;
 
 namespace SavingsService.Service
 {
     public class DbService : IDbService
     {
-        private readonly Client _supabaseClient;
+        private readonly DataContext _context;
 
-        public DbService(Client supabaseClient)
+        public DbService(DataContext context)
         {
-            _supabaseClient = supabaseClient;
+            _context = context;
         }
 
         public async Task<bool> Create(int userId)
         {
-            Savings newSavings = new Savings { OwnerId = userId, Amount = 0, };
-            var response = await _supabaseClient.From<Savings>().Insert(newSavings);
-
-            if (response == null)
+            Savings newSavings = new Savings
+            {
+                OwnerId = userId,
+                Amount = 0,
+                Id = userId
+            };
+            await _context.Savings.AddAsync(newSavings);
+            int created = await _context.SaveChangesAsync();
+            if (created == 0)
             {
                 throw new FailedToCreateException<Savings>();
             }
@@ -32,50 +40,54 @@ namespace SavingsService.Service
             return true;
         }
 
-        public async Task<bool> Delete(int userId)
+        public async Task<bool> Delete(int id)
         {
-            await _supabaseClient.From<Savings>().Where(s => s.OwnerId == userId).Delete();
-            return true;
-        }
-
-        public async Task<float> Get(int userId)
-        {
-            var response = await _supabaseClient
-                .From<Savings>()
-                .Where(s => s.OwnerId == userId)
-                .Single();
-
-            if (response == null)
+            Savings savings = await _context.Savings.Where(x => x.Id == id).SingleAsync();
+            if (savings == null)
             {
                 throw new NotFoundException();
             }
 
-            return response.Amount;
-        }
-
-        public async Task<bool> Update(UpdateSavings request)
-        {
-            var response = await _supabaseClient
-                .From<Savings>()
-                .Where(x => x.OwnerId == request.Id)
-                .Set(x => x.Amount, request.Amount)
-                .Update();
-
-            if (response.Models == null || response.Models.Count == 0)
+            _context.Savings.Remove(savings);
+            int deleted = await _context.SaveChangesAsync();
+            if (deleted == 0)
             {
-                throw new FailedToUpdateException<Savings>();
+                throw new FailedToDeleteException<Savings>(id);
             }
 
             return true;
         }
 
-        public async Task GetUserId(int userId)
+        public async Task<double> Get(int userId)
         {
-            var user = await _supabaseClient.From<User>().Where(x => x.Id == userId).Single();
-            if (user == null || user.Id == 0)
+            Savings savings = await _context.Savings.Where(x => x.OwnerId == userId).SingleAsync();
+
+            if (savings == null)
             {
-                throw new UserDoesNotExistException();
+                throw new NotFoundException();
             }
+
+            return savings.Amount;
+        }
+
+        public async Task<bool> Update(UpdateSavings request)
+        {
+            Savings savings = await _context.Savings
+                .Where(x => x.OwnerId == request.UserId)
+                .SingleAsync();
+            if (savings == null)
+            {
+                throw new FailedToUpdateException<Savings>();
+            }
+
+            savings.Amount = request.Amount;
+            int updated = await _context.SaveChangesAsync();
+            if (updated == 0)
+            {
+                throw new FailedToUpdateException<Savings>(savings.Id);
+            }
+
+            return true;
         }
     }
 }

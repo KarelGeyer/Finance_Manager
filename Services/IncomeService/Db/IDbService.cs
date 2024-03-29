@@ -7,14 +7,12 @@ namespace SavingsService.Service
 {
     public interface IDbService
     {
-        Task<float> Get(int userId);
+        Task<double> Get(int userId);
 
         Task<bool> Create(int userId);
 
         Task<bool> Update(UpdateSavings request);
 
         Task<bool> Delete(int userId);
-
-        Task GetUserId(int userId);
     }
 }
