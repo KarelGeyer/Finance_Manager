@@ -3,13 +3,13 @@ using System;
 
 namespace Common.Exceptions
 {
-    public class FailedToCreateException<T> : Exception
+    public class FailedToUpdateException<T> : Exception
         where T : class
     {
-        public FailedToCreateException()
-            : base(CustomResponseMessage.GetFailedToCreateMessage<T>()) { }
+        public FailedToUpdateException()
+            : base(CustomResponseMessage.GetFailedToUpdateMessage<T>()) { }
 
-        public FailedToCreateException(int id)
-            : base(CustomResponseMessage.GetFailedToCreateMessage<T>(id)) { }
+        public FailedToUpdateException(int id)
+            : base(CustomResponseMessage.GetFailedToUpdateMessage<T>(id)) { }
     }
 }
