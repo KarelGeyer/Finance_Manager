@@ -1,10 +1,11 @@
-﻿using Common.Models.Savings;
+﻿using Common.Models.Income;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
-namespace SavingsService.Db
+namespace IncomeService.Db
 {
     /// <summary>
-    /// Represents the data context for the savings service.
+    /// Represents a data context for managing income data.
     /// </summary>
     public class DataContext : DbContext
     {
@@ -16,8 +17,8 @@ namespace SavingsService.Db
             : base(options) { }
 
         /// <summary>
-        /// Gets or sets the savings entities.
+        /// Gets or sets the collection of income records.
         /// </summary>
-        public DbSet<Savings> Savings { get; set; }
+        public DbSet<Income> Incomes { get; set; }
     }
 }

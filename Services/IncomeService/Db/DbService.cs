@@ -3,18 +3,19 @@ using Common.Exceptions;
 using Common.Helpers;
 using Common.Models;
 using Common.Models.Category;
+using Common.Models.Income;
 using Common.Models.Savings;
-using Common.Models.User;
+using IncomeService.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using SavingsService.Db;
 using Supabase;
 using Supabase.Gotrue;
 
-namespace SavingsService.Service
+namespace IncomeService.Db
 {
     /// <summary>
-    /// Represents a database service for handling savings.
+    /// Database service for managing income data.
     /// </summary>
     public class DbService : IDbService
     {
@@ -30,19 +31,23 @@ namespace SavingsService.Service
         }
 
         /// <inheritdoc/>
-        public async Task<bool> Create(int userId)
+        public async Task<bool> Create(IncomeCreateRequest req)
         {
-            Savings newSavings = new Savings
+            Income newIncome = new Income
             {
-                OwnerId = userId,
-                Amount = 0,
-                Id = userId
+                Id = req.OwnerId + 4,
+                OwnerId = req.OwnerId,
+                Name = req.Name,
+                Value = req.Value,
+                CategoryId = req.CategoryId,
+                CreatedAt = DateTime.Now,
             };
-            await _context.Savings.AddAsync(newSavings);
-            int created = await _context.SaveChangesAsync();
-            if (created == 0)
+
+            await _context.Incomes.AddAsync(newIncome);
+            int result = await _context.SaveChangesAsync();
+            if (result == 0)
             {
-                throw new FailedToCreateException<Savings>();
+                throw new FailedToCreateException<Income>();
             }
 
             return true;
@@ -51,51 +56,83 @@ namespace SavingsService.Service
         /// <inheritdoc/>
         public async Task<bool> Delete(int id)
         {
-            Savings savings = await _context.Savings.Where(x => x.Id == id).SingleAsync();
-            if (savings == null)
+            Income income = await _context.Incomes.Where(x => x.Id == id).SingleAsync();
+            if (income == null)
             {
                 throw new NotFoundException();
             }
 
-            _context.Savings.Remove(savings);
-            int deleted = await _context.SaveChangesAsync();
-            if (deleted == 0)
+            _context.Incomes.Remove(income);
+            int result = await _context.SaveChangesAsync();
+            if (result == 0)
             {
-                throw new FailedToDeleteException<Savings>(id);
+                throw new FailedToDeleteException<Income>(id);
             }
 
             return true;
         }
 
         /// <inheritdoc/>
-        public async Task<double> Get(int userId)
+        public async Task<Income> Get(int userId, int id)
         {
-            Savings savings = await _context.Savings.Where(x => x.OwnerId == userId).SingleAsync();
-
-            if (savings == null)
+            Income income = await _context.Incomes
+                .Where(x => x.OwnerId == userId && x.Id == id)
+                .SingleAsync();
+            if (income == null)
             {
                 throw new NotFoundException();
             }
 
-            return savings.Amount;
+            return income;
         }
 
         /// <inheritdoc/>
-        public async Task<bool> Update(UpdateSavings request)
+        public async Task<List<Income>> GetAll(int userId)
         {
-            Savings savings = await _context.Savings
-                .Where(x => x.OwnerId == request.UserId)
-                .SingleAsync();
-            if (savings == null)
+            List<Income> incomes = await _context.Incomes
+                .Where(x => x.OwnerId == userId)
+                .ToListAsync();
+            if (incomes == null)
             {
-                throw new FailedToUpdateException<Savings>();
+                return new List<Income>();
             }
 
-            savings.Amount = request.Amount;
-            int updated = await _context.SaveChangesAsync();
-            if (updated == 0)
+            return incomes;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> Update(IncomeUpdateNameRequest req)
+        {
+            Income income = await _context.Incomes.Where(x => x.Id == req.Id).SingleAsync();
+            if (income == null)
             {
-                throw new FailedToUpdateException<Savings>(savings.Id);
+                throw new NotFoundException();
+            }
+
+            income.Name = req.Name;
+            int result = await _context.SaveChangesAsync();
+            if (result == 0)
+            {
+                throw new FailedToUpdateException<Income>(req.Id);
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> Update(IncomeUpdateValueRequest req)
+        {
+            Income income = await _context.Incomes.Where(x => x.Id == req.Id).SingleAsync();
+            if (income == null)
+            {
+                throw new NotFoundException();
+            }
+
+            income.Value = req.Value;
+            int result = await _context.SaveChangesAsync();
+            if (result == 0)
+            {
+                throw new FailedToUpdateException<Income>(req.Id);
             }
 
             return true;

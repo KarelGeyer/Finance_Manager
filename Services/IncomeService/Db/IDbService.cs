@@ -1,43 +1,64 @@
 ﻿using Common.Enums;
+using Common.Exceptions;
 using Common.Models;
-using Common.Models.Category;
-using Common.Models.Savings;
+using Common.Models.Income;
 
-namespace SavingsService.Service
+namespace IncomeService.Db
 {
+    /// <summary>
+    /// Represents a database service for managing income records.
+    /// </summary>
     public interface IDbService
     {
         /// <summary>
-        /// Gets the amount of savings for the specified user.
+        /// Retrieves all income records for a user.
         /// </summary>
-        /// <param name="userId">The user ID.</param>
-        /// <returns>The amount of savings.</returns>
-        /// <exception cref="Common.Exceptions.NotFoundException"></exception>
-        Task<double> Get(int userId);
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of income records.</returns>
+        Task<List<Income>> GetAll(int userId);
 
         /// <summary>
-        /// Creates a new savings record for the specified user.
+        /// Retrieves an income record by ID.
         /// </summary>
-        /// <param name="userId">The user ID.</param>
-        /// <returns>A boolean value indicating whether the operation was successful.</returns>
-        /// <exception cref="Common.Exceptions.FailedToCreateException{Savings}"></exception>
-        Task<bool> Create(int userId);
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="id">The ID of the income record.</param>
+        /// <returns>The income record.</returns>
+        /// <exception cref="NotFoundException">Thrown when the income record is not found.</exception>
+        Task<Income> Get(int userId, int id);
 
         /// <summary>
-        /// Updates the amount of savings for the specified user.
+        /// Creates a new income record.
         /// </summary>
-        /// <param name="request">The update request.</param>
-        /// <returns>A boolean value indicating whether the operation was successful.</returns>
-        /// <exception cref="Common.Exceptions.FailedToUpdateException{Savings}"></exception>
-        Task<bool> Update(UpdateSavings request);
+        /// <param name="req">The income create request.</param>
+        /// <returns>True if the income record is created successfully, otherwise false.</returns>
+        /// <exception cref="FailedToCreateException{Income}">Thrown when the income record fails to be created.</exception>
+        Task<bool> Create(IncomeCreateRequest req);
 
         /// <summary>
-        /// Deletes the savings record with the specified ID.
+        /// Updates the name of an income record.
         /// </summary>
-        /// <param name="id">The ID of the savings record to delete.</param>
-        /// <returns>A boolean value indicating whether the operation was successful.</returns>
-        /// <exception cref="Common.Exceptions.NotFoundException"></exception>
-        /// <exception cref="Common.Exceptions.FailedToDeleteException{Savings}"></exception>
-        Task<bool> Delete(int userId);
+        /// <param name="req">The income update name request.</param>
+        /// <returns>True if the income record is updated successfully, otherwise false.</returns>
+        /// <exception cref="NotFoundException">Thrown when the income record is not found.</exception>
+        /// <exception cref="FailedToUpdateException{Income}">Thrown when the income record fails to be updated.</exception>
+        Task<bool> Update(IncomeUpdateNameRequest req);
+
+        /// <summary>
+        /// Updates the value of an income record.
+        /// </summary>
+        /// <param name="req">The income update value request.</param>
+        /// <returns>True if the income record is updated successfully, otherwise false.</returns>
+        /// <exception cref="NotFoundException">Thrown when the income record is not found.</exception>
+        /// <exception cref="FailedToUpdateException{Income}">Thrown when the income record fails to be updated.</exception>
+        Task<bool> Update(IncomeUpdateValueRequest req);
+
+        /// <summary>
+        /// Deletes an income record.
+        /// </summary>
+        /// <param name="id">The ID of the income record to delete.</param>
+        /// <returns>True if the income record is deleted successfully, otherwise false.</returns>
+        /// <exception cref="NotFoundException">Thrown when the income record is not found.</exception>
+        /// <exception cref="FailedToDeleteException{Income}">Thrown when the income record fails to be deleted.</exception>
+        Task<bool> Delete(int id);
     }
 }
