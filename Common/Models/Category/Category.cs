@@ -12,19 +12,16 @@ namespace Common.Models.Category
     /// <summary>
     /// Represents a Category DB Entity
     /// </summary>
-    [Table("Categories")]
     public class Category : BaseDbModel
     {
         /// <summary>
         /// Represents a <see cref="CategoryType"/>'s Id
         /// </summary>
-        [Column("CategoryTypeId")]
-        public int TypeId { get; set; }
+        public int CategoryTypeId { get; set; }
 
         /// <summary>
         /// An actual string representation of a <see cref="Category"/>
         /// </summary>
-        [Column("Value")]
         public string Value { get; set; }
     }
 }
