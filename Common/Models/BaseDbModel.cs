@@ -13,6 +13,9 @@ namespace Common.Models
     /// </summary>
     public class BaseDbModel
     {
+        /// <summary>
+        /// Get or sets the entity Id attribute
+        /// </summary>
         public int Id { get; set; }
     }
 }
