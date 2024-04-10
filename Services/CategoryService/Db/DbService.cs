@@ -1,61 +1,89 @@
-﻿using Common.Enums;
+﻿using CategoryService.Db;
+using Common.Enums;
 using Common.Exceptions;
 using Common.Models;
 using Common.Models.Category;
+using Microsoft.EntityFrameworkCore;
 using Supabase;
 
 namespace CategoryService.Service
 {
-    public class DbService<T> : IDbService<T>
-        where T : BaseDbModel, new()
+    public class DbService : IDbService
     {
-        private readonly Client _supabaseClient;
+        private readonly DataContext _dataContext;
 
-        public DbService(Client supabaseClient)
+        public DbService(DataContext dataContext)
         {
-            _supabaseClient = supabaseClient;
+            _dataContext = dataContext;
         }
 
         /// <inheritdoc/>
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<Category>> GetAllCategories()
         {
-            var response = await _supabaseClient.From<T>().Get();
+            List<Category> categories = await _dataContext.Categories.ToListAsync();
 
-            if (response.Models == null || response.Models.Count == 0)
+            if (categories == null || categories.Count == 0)
             {
                 throw new NotFoundException();
             }
 
-            return response.Models;
+            return categories;
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetAsync(int id)
+        public async Task<Category> GetCategory(int id)
         {
-            var response = await _supabaseClient.From<T>().Where(x => x.Id == id).Single();
+            Category category = await _dataContext.Categories.Where(x => x.Id == id).FirstAsync();
 
-            if (response == null)
+            if (category == null)
             {
                 throw new NotFoundException(id);
             }
 
-            return response;
+            return category;
         }
 
         /// <inheritdoc/>
-        public async Task<List<Category>> GetByCategoryAsync(int categoryTypeId)
+        public async Task<List<Category>> GetCategoriesByCategoryType(int categoryTypeId)
         {
-            var response = await _supabaseClient
-                .From<Category>()
-                .Where(x => x.TypeId == categoryTypeId)
-                .Get();
+            List<Category> categories = await _dataContext.Categories
+                .Where(x => x.CategoryTypeId == categoryTypeId)
+                .ToListAsync();
 
-            if (response.Models == null || response.Models.Count == 0)
+            if (categories == null || categories.Count == 0)
             {
                 throw new NotFoundException();
             }
 
-            return response.Models;
+            return categories;
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<CategoryType>> GetAllCategoryTypes()
+        {
+            List<CategoryType> categorytypes = await _dataContext.CategoriesTypes.ToListAsync();
+
+            if (categorytypes == null || categorytypes.Count == 0)
+            {
+                throw new NotFoundException();
+            }
+
+            return categorytypes;
+        }
+
+        /// <inheritdoc/>
+        public async Task<CategoryType> GetCategoryType(int id)
+        {
+            CategoryType categoryType = await _dataContext.CategoriesTypes
+                .Where(x => x.Id == id)
+                .SingleAsync();
+
+            if (categoryType == null)
+            {
+                throw new NotFoundException(id);
+            }
+
+            return categoryType;
         }
     }
 }

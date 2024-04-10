@@ -1,22 +1,19 @@
 ﻿using Common.Enums;
-using Newtonsoft.Json;
-using Postgrest.Attributes;
-using Postgrest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Models.Category
+namespace Common.Models.Currency
 {
     /// <summary>
-    /// Represents a Category Type Entity
+    /// Represents a currency.
     /// </summary>
-    public class CategoryType : BaseDbModel
+    public class Currency : BaseDbModel
     {
         /// <summary>
-        /// Integer representation of a <see cref="CategoryType"/>
+        /// Gets or sets the value of the currency.
         /// </summary>
         public string Value { get; set; }
     }

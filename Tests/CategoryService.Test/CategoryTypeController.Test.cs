@@ -13,7 +13,7 @@ namespace CategoryService.Test
     [TestClass]
     public class CategoryTypeControllerTest
     {
-        Mock<IDbService<CategoryType>> _mockDbService;
+        Mock<IDbService> _mockDbService;
 
         CategoryType _categoryType;
         List<CategoryType> _categoryTypes;
@@ -21,7 +21,7 @@ namespace CategoryService.Test
         [TestInitialize]
         public void InitializeTest()
         {
-            _mockDbService = new Mock<IDbService<CategoryType>>();
+            _mockDbService = new Mock<IDbService>();
 
             _categoryType = new CategoryType
             {
@@ -35,7 +35,7 @@ namespace CategoryService.Test
         [TestMethod]
         public void GetAllTest()
         {
-            _mockDbService.Setup(x => x.GetAllAsync()).ReturnsAsync(_categoryTypes);
+            _mockDbService.Setup(x => x.GetAllCategoryTypes()).ReturnsAsync(_categoryTypes);
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetAll();
@@ -49,7 +49,7 @@ namespace CategoryService.Test
         [TestMethod]
         public void GetAllTestWithNotFoundException()
         {
-            _mockDbService.Setup(x => x.GetAllAsync()).Throws(new NotFoundException());
+            _mockDbService.Setup(x => x.GetAllCategoryTypes()).Throws(new NotFoundException());
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetAll();
@@ -63,7 +63,7 @@ namespace CategoryService.Test
         [TestMethod]
         public void GetAllTestWithInternalErrorException()
         {
-            _mockDbService.Setup(x => x.GetAllAsync()).Throws(new Exception());
+            _mockDbService.Setup(x => x.GetAllCategoryTypes()).Throws(new Exception());
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetAll();
@@ -78,7 +78,7 @@ namespace CategoryService.Test
         public void GetByIdTest()
         {
             int id = 1;
-            _mockDbService.Setup(x => x.GetAsync(id)).ReturnsAsync(_categoryType);
+            _mockDbService.Setup(x => x.GetCategoryType(id)).ReturnsAsync(_categoryType);
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetById(id);
@@ -93,7 +93,7 @@ namespace CategoryService.Test
         public void GetByIdTestWithNotFoundException()
         {
             int id = 1;
-            _mockDbService.Setup(x => x.GetAsync(id)).Throws(new NotFoundException());
+            _mockDbService.Setup(x => x.GetCategoryType(id)).Throws(new NotFoundException());
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetById(id);
@@ -108,7 +108,7 @@ namespace CategoryService.Test
         public void GetByIdTestWithInternalErrorException()
         {
             int id = 1;
-            _mockDbService.Setup(x => x.GetAsync(id)).Throws(new Exception());
+            _mockDbService.Setup(x => x.GetCategoryType(id)).Throws(new Exception());
             CategoryTypeController controller = new CategoryTypeController(_mockDbService.Object);
 
             var response = controller.GetById(id);

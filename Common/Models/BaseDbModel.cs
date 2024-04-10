@@ -11,7 +11,7 @@ namespace Common.Models
     /// <summary>
     /// A base DB model shared across all Base DB models
     /// </summary>
-    public class BaseDbModel : BaseModel
+    public class BaseDbModel
     {
         /// <summary>
         /// Get or sets the entity Id attribute

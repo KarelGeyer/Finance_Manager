@@ -1,38 +1,44 @@
-using CategoryService.Service;
-using Common;
 using Common.Enums;
 using Common.Exceptions;
-using Common.Models.Category;
+using Common.Models.Currency;
 using Common.Response;
+using CurrencyService.Db;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UsersService.Controllers
+namespace CurrencyService.Controllers
 {
-    [Route("api/categoryType")]
+    /// <summary>
+    /// Represents a controller for managing currency-related operations.
+    /// </summary>
+    [Route("api/currency")]
     [ApiController]
-    public class CategoryTypeController : ControllerBase
+    public class CurrencyController : ControllerBase
     {
         private readonly IDbService _dbService;
 
-        public CategoryTypeController(IDbService dbService)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CurrencyController"/> class.
+        /// </summary>
+        /// <param name="dbService">The database service.</param>
+        public CurrencyController(IDbService dbService)
         {
             _dbService = dbService;
         }
 
         /// <summary>
-        /// List of <see cref="CategoryType"/> category types
+        /// Retrieves all currencies.
         /// </summary>
-        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="CategoryType"/> category type</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<CategoryType>>> GetAll()
+        public async Task<BaseResponse<List<Currency>>> GetAll()
         {
-            BaseResponse<List<CategoryType>> res = new();
+            BaseResponse<List<Currency>> res = new();
 
             try
             {
-                List<CategoryType> categoryTypes = await _dbService.GetAllCategoryTypes();
-                res.Data = categoryTypes;
+                List<Currency> currencies = await _dbService.GetAll();
+                res.Data = currencies;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
@@ -52,20 +58,20 @@ namespace UsersService.Controllers
         }
 
         /// <summary>
-        /// <see cref="CategoryType"/> category type
+        /// Retrieves a currency by its ID.
         /// </summary>
-        /// <param name="req">Id of a <see cref="CategoryType"/> category type</param>
-        /// <returns><see cref="Task"/> with <see cref="CategoryType"/> category type</returns>
+        /// <param name="id">The ID of the currency.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<CategoryType>> GetById(int id)
+        public async Task<BaseResponse<Currency>> Get(int id)
         {
-            BaseResponse<CategoryType> res = new();
+            BaseResponse<Currency> res = new();
 
             try
             {
-                CategoryType categoryType = await _dbService.GetCategoryType(id);
-                res.Data = categoryType;
+                Currency currency = await _dbService.Get(id);
+                res.Data = currency;
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
