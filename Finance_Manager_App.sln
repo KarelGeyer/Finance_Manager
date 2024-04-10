@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurrencyService", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurrencyService.Test", "Tests\CurrencyService.Test\CurrencyService.Test.csproj", "{016387AB-C14B-4189-8262-2411716F34E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoansService", "Services\LoansService\LoansService\LoansService.csproj", "{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoansService", "Services\LoansService\LoansService\LoansService.csproj", "{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SavingsService", "Services\SavingsService\SavingsService.csproj", "{8A1A1E22-E58C-4F9B-B913-97F998F33068}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A1A1E22-E58C-4F9B-B913-97F998F33068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A1A1E22-E58C-4F9B-B913-97F998F33068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A1A1E22-E58C-4F9B-B913-97F998F33068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A1A1E22-E58C-4F9B-B913-97F998F33068}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +111,7 @@ Global
 		{5A5D0061-9C17-47FD-93F7-0309976A85B0} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
 		{016387AB-C14B-4189-8262-2411716F34E8} = {1D357A8E-E913-4CA0-8182-8BAB4BF7251F}
 		{A1C3BDE1-FDC0-461C-A6A6-522CED457B9C} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
+		{8A1A1E22-E58C-4F9B-B913-97F998F33068} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47B40EC3-D549-4E20-AEAE-5640A2AD5CD4}
