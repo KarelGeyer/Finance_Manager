@@ -30,7 +30,7 @@ namespace CurrencyService.Db
             await _context.Expenses.AddAsync(newExpense);
             int result = await _context.SaveChangesAsync();
 
-            if(result == 0)
+            if (result == 0)
             {
                 throw new FailedToCreateException<Expense>(newExpense.Id);
             }
@@ -41,8 +41,6 @@ namespace CurrencyService.Db
         public async Task<bool> Delete(int ownerId, int Id)
         {
             Expense? expense = await _context.Expenses.FindAsync(Id);
-
-            if
         }
 
         public Task<bool> DeleteAll(int ownerId)
