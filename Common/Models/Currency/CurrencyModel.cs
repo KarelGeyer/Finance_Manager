@@ -17,6 +17,7 @@ namespace Common.Models.Currency
         [Column("Value")]
         public string Value { get; set; }
 
-        public virtual ICollection<UserModel> Users { get; set; } = new HashSet<UserModel>();
+        public virtual ICollection<Common.Models.User.User> Users { get; set; } =
+            new HashSet<Common.Models.User.User>();
     }
 }

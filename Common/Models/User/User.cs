@@ -1,14 +1,10 @@
-﻿using Common.Models.Currency;
-using Postgrest.Attributes;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Common.Models.User
 {
     [Table("Users")]
-    public class UserModel : BaseDbModel
+    public class User : BaseDbModel
     {
-        [PrimaryKey("Id")]
-        public int Id { get; set; }
-
         [Column("UserGroupId")]
         public int UserGroupId { get; set; }
 
@@ -34,10 +30,6 @@ namespace Common.Models.User
         public int CurrencyId { get; set; }
 
         [Column("CreatedAt")]
-        public DateTime CreatedAt { get; set; }
-
-        public virtual UserGroupModel UserGroup { get; set; }
-
-        public virtual CurrencyModel Currency { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
     }
 }
