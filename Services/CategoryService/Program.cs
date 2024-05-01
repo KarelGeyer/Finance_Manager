@@ -1,10 +1,6 @@
-using System;
+using CategoryService.Db;
 using CategoryService.Service;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Supabase;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,22 +12,14 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Supabase configuration
-var configuration = builder.Configuration;
-var supabaseUrl = configuration["SupaBase:Url"];
-var supabaseKey = configuration["SupaBase:Key"];
-builder.Services.AddSingleton(_ =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    var options = new Supabase.SupabaseOptions { AutoConnectRealtime = true };
-
-    var client = new Supabase.Client(supabaseUrl!, supabaseKey, options);
-    client.InitializeAsync().Wait();
-
-    return client;
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 // Dependency injection
-builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
+builder.Services.AddScoped<DataContext>();
+builder.Services.AddScoped<IDbService, DbService>();
 
 var app = builder.Build();
 
