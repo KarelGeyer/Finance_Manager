@@ -58,9 +58,15 @@ namespace CurrencyService.Db
             throw new NotImplementedException();
         }
 
-        public Task<List<Expense>> GetAll(int ownerId)
+        public async Task<List<Expense>> GetAll(int ownerId)
         {
-            throw new NotImplementedException();
+            DateTime date = DateTime.Now;
+
+            List<Expense> expenses = await _context.Expenses
+                .Where(x => x.OwnerId == ownerId && x.CreatedAt.Month == date.Month)
+                .ToListAsync();
+
+            return expenses;
         }
 
         public Task<List<Expense>> GetByCategory(int ownerId, int categoryId)

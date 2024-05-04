@@ -1,4 +1,9 @@
+using Common.Enums;
+using Common.Models.Expenses;
+using Common.Response;
+using CurrencyService.Db;
 using Microsoft.AspNetCore.Mvc;
+using Postgrest.Responses;
 
 namespace ExpensesSerivce.Controllers
 {
@@ -6,28 +11,38 @@ namespace ExpensesSerivce.Controllers
     [Route("[controller]")]
     public class ExpensesController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<ExpensesController> _logger;
+        private readonly IDbService _dbService;
 
-        public ExpensesController(ILogger<ExpensesController> logger)
+        public ExpensesController(ILogger<ExpensesController> logger, IDbService dbService)
         {
             _logger = logger;
+            _dbService = dbService;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<BaseResponse<List<Expense>>> GetAll(int ownerId)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            BaseResponse<List<Expense>> res = new();
+
+            if (ownerId == 0)
+                throw new ArgumentNullException(nameof(ownerId));
+
+            try
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                List<Expense> expenses = await _dbService.GetAll(ownerId);
+                res.Data = expenses;
+                res.Status = EHttpStatus.OK;
+            }
+            catch (Exception ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                res.ResponseMessage = ex.Message;
+            }
+
+            return res;
         }
     }
 }
