@@ -1,36 +1,22 @@
-using System;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Supabase;
+using Microsoft.EntityFrameworkCore;
+using UserService.Db;
+using UserService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Supabase configuration
-var configuration = builder.Configuration;
-
-var supabaseUrl = configuration["SupaBase:Url"];
-var supabaseKey = configuration["SupaBase:Key"];
-
-builder.Services.AddSingleton(_ =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    var options = new Supabase.SupabaseOptions { AutoConnectRealtime = true };
-
-    var client = new Supabase.Client(supabaseUrl!, supabaseKey, options);
-    client.InitializeAsync().Wait();
-
-    return client;
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<DataContext>();
+builder.Services.AddScoped<IDbService, DbService>();
+
+// Add services to the container.
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
