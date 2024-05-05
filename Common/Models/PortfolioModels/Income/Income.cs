@@ -1,15 +1,12 @@
-﻿namespace Common.Models.Income
+﻿using Common.Models.PortfolioModels;
+
+namespace Common.Models.ProductModels.Income
 {
     /// <summary>
     /// Represents an income.
     /// </summary>
-    public class Income : BaseDbModel
+    public class Income : PortfolioModel
     {
-        /// <summary>
-        /// Gets or sets the owner ID of the income.
-        /// </summary>
-        public int OwnerId { get; set; }
-
         /// <summary>
         /// Gets or sets the name of the income.
         /// </summary>
@@ -24,10 +21,5 @@
         /// Gets or sets the category ID of the income.
         /// </summary>
         public int CategoryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the creation date of the income.
-        /// </summary>
-        public DateTime CreatedAt { get; set; }
     }
 }

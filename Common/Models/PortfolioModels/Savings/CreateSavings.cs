@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Models.Savings
 {
-    public class UpdateSavings
-    {
-        public int UserId { get; set; }
+	public class CreateSavings
+	{
+		public int OwnerId { get; set; }
 
-        public float Amount { get; set; }
-    }
+		public float Amount { get; set; }
+	}
 }

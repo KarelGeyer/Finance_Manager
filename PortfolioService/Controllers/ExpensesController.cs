@@ -1,41 +1,42 @@
-﻿using Common.Enums;
+using Common.Enums;
 using Common.Exceptions;
+using Common.Models.Expenses;
 using Common.Models.ProductModels.Income;
 using Common.Response;
-using IncomeService.Db;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioService.Db;
+using Postgrest.Responses;
 
-namespace IncomeService.Controllers
+namespace PortfolioService.Controllers
 {
-	/// <summary>
-	/// Controller for managing income related operations.
-	/// </summary>
-	[Route("api/income")]
 	[ApiController]
-	public class IncomeController : ControllerBase
+	[Route("[controller]")]
+	public class ExpensesController : ControllerBase
 	{
-		private readonly IDbService _dbService;
+		private readonly ILogger<ExpensesController> _logger;
+		private readonly IDbService<Expense> _dbService;
 
-		public IncomeController(IDbService dbService)
+		public ExpensesController(ILogger<ExpensesController> logger, IDbService<Expense> dbService)
 		{
+			_logger = logger;
 			_dbService = dbService;
 		}
 
 		/// <summary>
-		/// Get all incomes for a specific user.
+		/// Get all expenses for a specific user.
 		/// </summary>
 		/// <param name="userId">The user ID.</param>
-		/// <returns>A list of incomes.</returns>
+		/// <returns>A list of expenses.</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<List<Income>>> GetAll(int userId)
+		public async Task<BaseResponse<List<Expense>>> GetAllExpenses(int ownerId)
 		{
-			BaseResponse<List<Income>> res = new();
+			BaseResponse<List<Expense>> res = new();
 
 			try
 			{
-				List<Income> incomes = await _dbService.GetAll(userId);
-				res.Data = incomes;
+				List<Expense> expenses = await _dbService.GetAllAsync(ownerId);
+				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (Exception ex)
@@ -49,21 +50,21 @@ namespace IncomeService.Controllers
 		}
 
 		/// <summary>
-		/// Get a specific income for a user.
+		/// Get a specific expense for a user.
 		/// </summary>
 		/// <param name="userId">The user ID.</param>
 		/// <param name="id">The income ID.</param>
-		/// <returns>The income.</returns>
+		/// <returns>An expense.</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<Income>> Get(int userId, int id)
+		public async Task<BaseResponse<Expense>> GetExpense(int id)
 		{
-			BaseResponse<Income> res = new();
+			BaseResponse<Expense> res = new();
 
 			try
 			{
-				Income income = await _dbService.Get(userId, id);
-				res.Data = income;
+				Expense expense = await _dbService.GetAsync(id);
+				res.Data = expense;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (NotFoundException ex)
@@ -83,28 +84,36 @@ namespace IncomeService.Controllers
 		}
 
 		/// <summary>
-		/// Create a new income.
+		/// Create a new expense.
 		/// </summary>
-		/// <param name="req">The income creation request.</param>
+		/// <param name="req">The expense creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> Create([FromBody] CreateIncome req)
+		public async Task<BaseResponse<bool>> CreateExpense([FromBody] CreateExpense createExpense)
 		{
-			if (req == null)
-				throw new ArgumentNullException();
-			if (req.Name == string.Empty)
-				throw new ArgumentNullException(req.Name);
+			ArgumentNullException.ThrowIfNull(createExpense);
+			ArgumentNullException.ThrowIfNull(createExpense.Name);
+
+			Expense newExpense =
+				new()
+				{
+					Name = createExpense.Name,
+					Value = createExpense.Value,
+					CategoryId = createExpense.CategoryId,
+					OwnerId = createExpense.OwnerId,
+					CreatedAt = DateTime.Now,
+				};
 
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				bool result = await _dbService.Create(req);
+				bool result = await _dbService.CreateAsync(newExpense);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (FailedToCreateException<Income> ex)
+			catch (FailedToCreateException<Expense> ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -121,24 +130,26 @@ namespace IncomeService.Controllers
 		}
 
 		/// <summary>
-		/// Update the name of an income.
+		/// Update the name of an expense.
 		/// </summary>
-		/// <param name="req">The income update name request.</param>
+		/// <param name="req">The expense update name request.</param>
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
 		[Route("[action]/Name")]
-		public async Task<BaseResponse<bool>> Update([FromBody] IncomeUpdateNameRequest req)
+		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] UpdateExpense updateExpense)
 		{
-			if (req == null)
-				throw new ArgumentNullException();
-			if (req.Name == string.Empty)
-				throw new ArgumentNullException(req.Name);
+			ArgumentNullException.ThrowIfNull(updateExpense);
+			ArgumentNullException.ThrowIfNull(updateExpense.Name);
 
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				bool result = await _dbService.Update(req);
+				Expense expense = await _dbService.GetAsync(updateExpense.Id);
+				expense.Name = updateExpense.Name;
+				expense.Value = updateExpense.Value;
+
+				bool result = await _dbService.UpdateAsync(expense);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -148,7 +159,7 @@ namespace IncomeService.Controllers
 				res.Status = EHttpStatus.NOT_FOUND;
 				res.ResponseMessage = ex.Message;
 			}
-			catch (FailedToUpdateException<Income> ex)
+			catch (FailedToUpdateException<Expense> ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -165,61 +176,19 @@ namespace IncomeService.Controllers
 		}
 
 		/// <summary>
-		/// Update the value of an income.
+		/// Delete an expense.
 		/// </summary>
-		/// <param name="req">The income update value request.</param>
-		/// <returns>A boolean indicating if the update was successful.</returns>
-		[HttpPut]
-		[Route("[action]/Value")]
-		public async Task<BaseResponse<bool>> Update([FromBody] IncomeUpdateValueRequest req)
-		{
-			if (req == null)
-				throw new ArgumentNullException();
-
-			BaseResponse<bool> res = new();
-
-			try
-			{
-				bool result = await _dbService.Update(req);
-				res.Data = result;
-				res.Status = EHttpStatus.OK;
-			}
-			catch (NotFoundException ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToUpdateException<Income> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (Exception ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
-				res.ResponseMessage = ex.Message;
-			}
-
-			return res;
-		}
-
-		/// <summary>
-		/// Delete an income.
-		/// </summary>
-		/// <param name="id">The income ID.</param>
+		/// <param name="id">The expense ID.</param>
 		/// <returns>A boolean indicating if the deletion was successful.</returns>
 		[HttpDelete]
 		[Route("[action]/Value")]
-		public async Task<BaseResponse<bool>> Delete(int id)
+		public async Task<BaseResponse<bool>> DeleteExpense(int id)
 		{
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				bool result = await _dbService.Delete(id);
+				bool result = await _dbService.DeleteAsync(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -229,7 +198,7 @@ namespace IncomeService.Controllers
 				res.Status = EHttpStatus.NOT_FOUND;
 				res.ResponseMessage = ex.Message;
 			}
-			catch (FailedToDeleteException<Income> ex)
+			catch (FailedToDeleteException<Expense> ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;

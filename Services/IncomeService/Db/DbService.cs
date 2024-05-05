@@ -2,7 +2,7 @@
 using Common.Exceptions;
 using Common.Models;
 using Common.Models.Category;
-using Common.Models.Income;
+using Common.Models.ProductModels.Income;
 using Common.Models.Savings;
 using IncomeService.Db;
 using Microsoft.EntityFrameworkCore;

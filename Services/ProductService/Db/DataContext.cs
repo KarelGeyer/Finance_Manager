@@ -1,8 +1,9 @@
-﻿using Common.Models.ProductModels.Loans;
+﻿using Common.Models.Loan;
+using Common.Models.ProductModels.Properties;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace LoansService.Db
+namespace ProductService.Db
 {
     public class DataContext : DbContext
     {
@@ -16,6 +17,6 @@ namespace LoansService.Db
         /// <summary>
         /// Gets or sets the collection of income records.
         /// </summary>
-        public DbSet<Loan> Loans { get; set; }
+        public DbSet<Property> Properties { get; set; }
     }
 }

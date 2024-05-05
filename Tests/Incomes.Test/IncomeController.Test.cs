@@ -2,7 +2,7 @@ using Common.Enums;
 using Common.Exceptions;
 using Common.Helpers;
 using Common.Models.Category;
-using Common.Models.Income;
+using Common.Models.ProductModels.Income;
 using IncomeService.Controllers;
 using IncomeService.Db;
 using Moq;
@@ -119,7 +119,7 @@ namespace Incomes.Test
         [TestMethod]
         public void CreateTest()
         {
-            IncomeCreateRequest req = new()
+            CreateIncome req = new()
             {
                 OwnerId = 1,
                 Name = "Name",
@@ -141,7 +141,7 @@ namespace Incomes.Test
         [TestMethod]
         public void CreateTestThrowsFailedToCreateException()
         {
-            IncomeCreateRequest req = new()
+            CreateIncome req = new()
             {
                 OwnerId = 1,
                 Name = "Name",
@@ -163,7 +163,7 @@ namespace Incomes.Test
         [TestMethod]
         public void CreateTestThrowsException()
         {
-            IncomeCreateRequest req = new()
+            CreateIncome req = new()
             {
                 OwnerId = 1,
                 Name = "Name",

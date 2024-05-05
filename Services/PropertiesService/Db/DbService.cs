@@ -3,7 +3,7 @@ using Common.Exceptions;
 using Common.Models;
 using Common.Models.Category;
 using Common.Models.Loan;
-using Common.Models.Properties;
+using Common.Models.ProductModels.Properties;
 using Microsoft.EntityFrameworkCore;
 using Supabase;
 
@@ -31,8 +31,8 @@ namespace LoansService.Db
 
             await _context.Properties.AddAsync(newProperty);
             int result = await _context.SaveChangesAsync();
-            
-            if(result == 0)
+
+            if (result == 0)
             {
                 throw new FailedToCreateException<Property>(newProperty.Id);
             }
@@ -49,7 +49,7 @@ namespace LoansService.Db
             _context.Properties.RemoveRange(properties);
             int result = await _context.SaveChangesAsync();
 
-            if(result == 0)
+            if (result == 0)
             {
                 throw new FailedToDeleteException<Property>();
             }
@@ -65,9 +65,9 @@ namespace LoansService.Db
 
             _context.Properties.Remove(property);
             int result = await _context.SaveChangesAsync();
-            if(result == 0)
+            if (result == 0)
             {
-                   throw new FailedToDeleteException<Property>(id);
+                throw new FailedToDeleteException<Property>(id);
             }
 
             return true;
@@ -75,11 +75,11 @@ namespace LoansService.Db
 
         public async Task<Property> Get(int ownerId)
         {
-            Property property =  await _context.Properties
+            Property property = await _context.Properties
                 .Where(x => x.OwnerId == ownerId)
                 .SingleAsync();
 
-            if(property == null)
+            if (property == null)
             {
                 throw new NotFoundException();
             }
@@ -93,7 +93,7 @@ namespace LoansService.Db
                 .Where(x => x.OwnerId == ownerId)
                 .ToListAsync();
 
-            if(properties == null)
+            if (properties == null)
             {
                 return new List<Property>();
             }
@@ -107,7 +107,7 @@ namespace LoansService.Db
                 .Where(x => x.OwnerId == ownerId && x.CategoryId == categoryId)
                 .ToListAsync();
 
-            if(properties == null)
+            if (properties == null)
             {
                 return new List<Property>();
             }
@@ -123,7 +123,7 @@ namespace LoansService.Db
 
             property.Name = name;
             int result = await _context.SaveChangesAsync();
-            if(result == 0)
+            if (result == 0)
             {
                 throw new FailedToUpdateException<Property>(property.Id);
             }
@@ -139,7 +139,7 @@ namespace LoansService.Db
 
             property.Value = value;
             int result = await _context.SaveChangesAsync();
-            if(result == 0)
+            if (result == 0)
             {
                 throw new FailedToUpdateException<Property>(property.Id);
             }
@@ -147,5 +147,4 @@ namespace LoansService.Db
             return true;
         }
     }
-
 }
