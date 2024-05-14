@@ -1,6 +1,6 @@
 using Common.Enums;
 using Common.Exceptions;
-using Common.Models.Loan;
+using Common.Models.ProductModels.Loans;
 using Common.Response;
 using LoansService.Db;
 using Microsoft.AspNetCore.Mvc;
@@ -244,7 +244,11 @@ namespace LoansService.Controllers
 
         [HttpDelete]
         [Route("[action]")]
-        public async Task<BaseResponse<bool>> DeleteAllToByMonth(int ownerId, int ownToId, string month)
+        public async Task<BaseResponse<bool>> DeleteAllToByMonth(
+            int ownerId,
+            int ownToId,
+            string month
+        )
         {
             BaseResponse<bool> res = new();
 

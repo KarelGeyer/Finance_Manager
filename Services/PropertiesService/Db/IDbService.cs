@@ -1,4 +1,4 @@
-﻿using Common.Models.Properties;
+﻿using Common.Models.ProductModels.Properties;
 
 namespace LoansService.Db
 {

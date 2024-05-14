@@ -9,11 +9,11 @@ namespace UsersService.Controllers
 {
     [Route("api/category")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class BudgetController : ControllerBase
     {
         private readonly IDbService _dbService;
 
-        public CategoryController(IDbService dbService)
+        public BudgetController(IDbService dbService)
         {
             _dbService = dbService;
         }

@@ -11,6 +11,414 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/GetUsers"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Budgets",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5102
+        }
+      ],
+      "DownstreamPathTemplate": "/api/budget/GetAll"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllCategories",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5102
+        }
+      ],
+      "DownstreamPathTemplate": "/api/category/GetAll"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllCategoriesByType",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5103
+        }
+      ],
+      "DownstreamPathTemplate": "/api/category/GetByType"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetCategoryByType",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5103
+        }
+      ],
+      "DownstreamPathTemplate": "/api/category/GetById"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllCategoryTypes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5103
+        }
+      ],
+      "DownstreamPathTemplate": "/api/categoryType/GetAll"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetCategoryTypeById",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5103
+        }
+      ],
+      "DownstreamPathTemplate": "/api/categoryType/GetById"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllCurrencies",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5104
+        }
+      ],
+      "DownstreamPathTemplate": "/api/currency/GetAll"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetCurrency",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5104
+        }
+      ],
+      "DownstreamPathTemplate": "/api/currency/Get"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllExpenses",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/expenses/GetAllExpenses"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetExpense",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/expenses/GetExpense"
+    },
+    {
+      "UpstreamPathTemplate": "/api/CreateExpense",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/expenses/CreateExpense"
+    },
+    {
+      "UpstreamPathTemplate": "/api/UpdateExpense",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/expenses/UpdateExpense"
+    },
+    {
+      "UpstreamPathTemplate": "/api/DeleteExpense",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/expenses/DeleteExpense"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllIncomes",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/income/GetAllIncomes"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetIncome",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/income/GetIncome"
+    },
+    {
+      "UpstreamPathTemplate": "/api/CreateIncome",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/income/CreateIncome"
+    },
+    {
+      "UpstreamPathTemplate": "/api/UpdateIncome",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/income/UpdateIncome"
+    },
+    {
+      "UpstreamPathTemplate": "/api/DeleteIncome",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/income/DeleteIncome"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllLoans",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/GetAllLoans"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetLoan",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/GetLoan"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllLoansByCreditor",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/GetAllLoansByCreditor"
+    },
+    {
+      "UpstreamPathTemplate": "/api/CreateLoan",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/CreateLoan"
+    },
+    {
+      "UpstreamPathTemplate": "/api/UpdateLoan",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/UpdateLoan"
+    },
+    {
+      "UpstreamPathTemplate": "/api/DeleteLoan",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/loans/DeleteLoan"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetAllProperties",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/GetAllProperties"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetProperty",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/GetProperty"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetPropertiesByCategory",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/GetPropertiesByCategory"
+    },
+    {
+      "UpstreamPathTemplate": "/api/CreateProperty",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/CreateProperty"
+    },
+    {
+      "UpstreamPathTemplate": "/api/UpdateProperty",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/UpdateProperty"
+    },
+    {
+      "UpstreamPathTemplate": "/api/DeleteProperty",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/properties/DeleteProperty"
+    },
+    {
+      "UpstreamPathTemplate": "/api/GetSavings",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/savings/GetSavings"
+    },
+    {
+      "UpstreamPathTemplate": "/api/AddSavings",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/savings/AddSavings"
+    },
+    {
+      "UpstreamPathTemplate": "/api/UpdateSavings",
+      "UpstreamHttpMethod": [ "Put" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/savings/UpdateSavings"
+    },
+    {
+      "UpstreamPathTemplate": "/api/DeleteSavings",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5105
+        }
+      ],
+      "DownstreamPathTemplate": "/api/savings/DeleteSavings"
     }
   ],
   "GlobalConfiguration": {

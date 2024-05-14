@@ -1,7 +1,7 @@
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Income;
-using Common.Models.Properties;
+using Common.Models.ProductModels.Properties;
 using Common.Response;
 using LoansService.Db;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +13,7 @@ namespace PropertiesService.Controllers
     public class PropertiesConrtoller : ControllerBase
     {
         IDbService _dbService;
+
         public PropertiesConrtoller(IDbService dbService)
         {
             _dbService = dbService;
@@ -25,8 +26,8 @@ namespace PropertiesService.Controllers
 
             try
             {
-                List<Property> properties =  await _dbService.GetAll(ownerId);
-                res.Data = properties; 
+                List<Property> properties = await _dbService.GetAll(ownerId);
+                res.Data = properties;
                 res.Status = EHttpStatus.OK;
             }
             catch (Exception ex)
@@ -56,7 +57,6 @@ namespace PropertiesService.Controllers
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
             }
-
 
             return res;
         }
@@ -93,7 +93,7 @@ namespace PropertiesService.Controllers
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
-            catch(FailedToCreateException<Property> ex)
+            catch (FailedToCreateException<Property> ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
@@ -120,7 +120,7 @@ namespace PropertiesService.Controllers
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
-            catch(FailedToUpdateException<Property> ex)
+            catch (FailedToUpdateException<Property> ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
@@ -147,7 +147,7 @@ namespace PropertiesService.Controllers
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
-            catch(FailedToUpdateException<Property> ex)
+            catch (FailedToUpdateException<Property> ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
@@ -174,7 +174,7 @@ namespace PropertiesService.Controllers
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
-            catch(FailedToDeleteException<Property> ex)
+            catch (FailedToDeleteException<Property> ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
@@ -201,7 +201,7 @@ namespace PropertiesService.Controllers
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
-            catch(FailedToDeleteException<Property> ex)
+            catch (FailedToDeleteException<Property> ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;

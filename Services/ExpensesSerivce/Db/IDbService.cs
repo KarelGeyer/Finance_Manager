@@ -1,5 +1,4 @@
-﻿
-using Common.Models.Expenses;
+﻿using Common.Models.Expenses;
 
 namespace CurrencyService.Db
 {
@@ -13,13 +12,12 @@ namespace CurrencyService.Db
 
         Task<List<Expense>> GetByValue(int ownerId, int minValue, int maxValue);
 
-        Task<bool> Create (CreateExpense expense);
+        Task<bool> Create(CreateExpense expense);
 
-        Task<bool> Delete (int ownerId, int Id);
+        Task<bool> Delete(int ownerId, int Id);
 
         Task<bool> DeleteMonth(int ownerId, string month);
 
-        Task<bool> DeleteAll (int ownerId);
-
+        Task<bool> DeleteAll(int ownerId);
     }
 }

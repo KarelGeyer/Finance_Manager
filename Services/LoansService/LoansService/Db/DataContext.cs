@@ -1,4 +1,4 @@
-﻿using Common.Models.Loan;
+﻿using Common.Models.ProductModels.Loans;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
