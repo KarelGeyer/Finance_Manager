@@ -16,6 +16,7 @@ namespace PortfolioService.Db
 			_context = context;
 		}
 
+		/// <inheritdoc />
 		public async Task<bool> CreateAsync(T entity)
 		{
 			await _context.Set<T>().AddAsync(entity);
@@ -29,7 +30,8 @@ namespace PortfolioService.Db
 			return true;
 		}
 
-		public async Task<bool> DeleteAsync(int id)
+        /// <inheritdoc />
+        public async Task<bool> DeleteAsync(int id)
 		{
 			T entity = await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
 
@@ -48,7 +50,8 @@ namespace PortfolioService.Db
 			return true;
 		}
 
-		public async Task<T> GetAsync(int id)
+        /// <inheritdoc />
+        public async Task<T> GetAsync(int id)
 		{
 			T entity = await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
 
@@ -60,13 +63,15 @@ namespace PortfolioService.Db
 			return entity;
 		}
 
-		public async Task<List<T>> GetAllAsync(int ownerId)
+        /// <inheritdoc />
+        public async Task<List<T>> GetAllAsync(int ownerId)
 		{
 			List<T> entities = await _context.Set<T>().Where(x => x.OwnerId == ownerId).ToListAsync();
 			return entities;
 		}
 
-		public async Task<List<T>> GetAllAsync(int ownerId, int month, int year)
+        /// <inheritdoc />
+        public async Task<List<T>> GetAllAsync(int ownerId, int month, int year)
 		{
 			List<T> entities = await _context
 				.Set<T>()
@@ -75,7 +80,8 @@ namespace PortfolioService.Db
 			return entities;
 		}
 
-		public async Task<bool> UpdateAsync(T entity)
+        /// <inheritdoc />
+        public async Task<bool> UpdateAsync(T entity)
 		{
 			T entityToUpdate = await _context.Set<T>().Where(x => x.Id == entity.Id).SingleAsync();
 
@@ -83,7 +89,7 @@ namespace PortfolioService.Db
 			int result = await _context.SaveChangesAsync();
 			if (result == 0)
 			{
-				throw new FailedToUpdateException<Property>(entity.Id);
+				throw new FailedToUpdateException<T>(entity.Id);
 			}
 
 			return true;

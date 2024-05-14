@@ -14,7 +14,7 @@ namespace PortfolioService.Controllers
 	/// <summary>
 	/// Controller for managing savings.
 	/// </summary>
-	[Route("api/income")]
+	[Route("api/savings")]
 	[ApiController]
 	public class SavingsController
 	{

@@ -134,7 +134,7 @@ namespace PortfolioService.Controllers
 		/// <param name="updateIncome">The income update name request.</param>
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
-		[Route("[action]/Name")]
+		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateIncome([FromBody] UpdateIncome updateIncome)
 		{
 			ArgumentNullException.ThrowIfNull(updateIncome);
@@ -180,7 +180,7 @@ namespace PortfolioService.Controllers
 		/// <param name="id">The income ID.</param>
 		/// <returns>A boolean indicating if the deletion was successful.</returns>
 		[HttpDelete]
-		[Route("[action]/Value")]
+		[Route("[action]")]
 		public async Task<BaseResponse<bool>> DeleteIncome(int id)
 		{
 			BaseResponse<bool> res = new();

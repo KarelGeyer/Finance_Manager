@@ -9,8 +9,8 @@ using Postgrest.Responses;
 
 namespace PortfolioService.Controllers
 {
-	[ApiController]
-	[Route("[controller]")]
+    [Route("api/expenses")]
+    [Route("[controller]")]
 	public class ExpensesController : ControllerBase
 	{
 		private readonly ILogger<ExpensesController> _logger;
@@ -135,7 +135,7 @@ namespace PortfolioService.Controllers
 		/// <param name="req">The expense update name request.</param>
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
-		[Route("[action]/Name")]
+		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] UpdateExpense updateExpense)
 		{
 			ArgumentNullException.ThrowIfNull(updateExpense);
@@ -181,7 +181,7 @@ namespace PortfolioService.Controllers
 		/// <param name="id">The expense ID.</param>
 		/// <returns>A boolean indicating if the deletion was successful.</returns>
 		[HttpDelete]
-		[Route("[action]/Value")]
+		[Route("[action]")]
 		public async Task<BaseResponse<bool>> DeleteExpense(int id)
 		{
 			BaseResponse<bool> res = new();

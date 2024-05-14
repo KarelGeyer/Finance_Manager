@@ -10,8 +10,8 @@ using PortfolioService.Db;
 
 namespace PortfolioService.Controllers
 {
-	[ApiController]
-	[Route("[controller]")]
+    [Route("api/properties")]
+    [ApiController]
 	public class PropertiesConrtoller : ControllerBase
 	{
 		private readonly IDbService<Property> _dbService;
@@ -21,8 +21,16 @@ namespace PortfolioService.Controllers
 			_dbService = dbService;
 		}
 
-		[HttpGet(Name = "GetAllProperties")]
-		public async Task<BaseResponse<List<Property>>> GetAllProperties(int ownerId, int month, int year)
+        /// <summary>
+        /// Get all properties for a specific user.
+        /// </summary>
+        /// <param name="ownerId">The owner ID</param>
+        /// <param name="month">The month</param>
+        /// <param name="year">The year</param>
+        /// <returns>A list of properties.</returns>
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<BaseResponse<List<Property>>> GetAllProperties(int ownerId, int month, int year)
 		{
 			BaseResponse<List<Property>> res = new();
 
@@ -49,8 +57,14 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		[HttpGet(Name = "GetProperty")]
-		public async Task<BaseResponse<Property>> GetProperty(int id)
+        /// <summary>
+        /// Get a specific properties for a user.
+        /// </summary>
+        /// <param name="id">The loan ID.</param>
+        /// <returns>The property.</returns>
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<BaseResponse<Property>> GetProperty(int id)
 		{
 			BaseResponse<Property> res = new();
 			if (id == 0)
@@ -72,8 +86,15 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		[HttpGet(Name = "GetPropertiesByCategory")]
-		public async Task<BaseResponse<List<Property>>> GetPropertiesByCategory(int ownerId, int categoryId)
+        /// <summary>
+        /// Get all properties for a specific user by a given category.
+        /// </summary>
+        /// <param name="ownerId">The owner ID</param>
+        /// <param name="categoryId">The category ID</param>
+        /// <returns>A list of properties.</returns>
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<BaseResponse<List<Property>>> GetPropertiesByCategory(int ownerId, int categoryId)
 		{
 			BaseResponse<List<Property>> res = new();
 
@@ -97,8 +118,14 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		[HttpPost(Name = "CreateProperty")]
-		public async Task<BaseResponse<bool>> CreateProperty([FromBody] CreateProperty createProperty)
+        /// <summary>
+        /// Creates a new property.
+        /// </summary>
+        /// <param name="createProperty">The property creation request.</param>
+        /// <returns>A boolean indicating if the creation was successful.</returns>
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<BaseResponse<bool>> CreateProperty([FromBody] CreateProperty createProperty)
 		{
 			ArgumentNullException.ThrowIfNull(createProperty);
 			ArgumentNullException.ThrowIfNull(createProperty.Name);
@@ -137,8 +164,14 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		[HttpPut(Name = "UpdateProperty")]
-		public async Task<BaseResponse<bool>> UpdateProperty([FromBody] UpdateProperty updateProperty)
+        /// <summary>
+        /// Update the name of an property.
+        /// </summary>
+        /// <param name="updateLoan">The property update name request.</param>
+        /// <returns>A boolean indicating if the update was successful.</returns>
+        [HttpPut]
+        [Route("[action]")]
+        public async Task<BaseResponse<bool>> UpdateProperty([FromBody] UpdateProperty updateProperty)
 		{
 			ArgumentNullException.ThrowIfNull(updateProperty);
 			ArgumentNullException.ThrowIfNull(updateProperty.Name);
@@ -177,8 +210,14 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		[HttpDelete(Name = "DeleteProperty")]
-		public async Task<BaseResponse<bool>> DeleteProperty(int id)
+        /// <summary>
+        /// Delete an property.
+        /// </summary>
+        /// <param name="loanId">The property ID.</param>
+        /// <returns>A boolean indicating if the deletion was successful.</returns>
+        [HttpDelete]
+        [Route("[action]")]
+        public async Task<BaseResponse<bool>> DeleteProperty(int id)
 		{
 			BaseResponse<bool> res = new();
 
