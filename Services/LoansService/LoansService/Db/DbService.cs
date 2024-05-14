@@ -2,7 +2,7 @@
 using Common.Exceptions;
 using Common.Models;
 using Common.Models.Category;
-using Common.Models.Loan;
+using Common.Models.ProductModels.Loans;
 using Microsoft.EntityFrameworkCore;
 using Supabase;
 
@@ -19,15 +19,16 @@ namespace LoansService.Db
 
         public async Task<bool> Create(CreateLoan createLoan)
         {
-            Loan newLoan = new()
-            {
-                OwnerId = createLoan.OwnerId,
-                Value = createLoan.Value,
-                Name = createLoan.Name,
-                To = createLoan.OwnToId,
-                CreatedAt = DateTime.Now,
-                Id = new Random().Next(1, 1000)
-            };
+            Loan newLoan =
+                new()
+                {
+                    OwnerId = createLoan.OwnerId,
+                    Value = createLoan.Value,
+                    Name = createLoan.Name,
+                    To = createLoan.OwnToId,
+                    CreatedAt = DateTime.Now,
+                    Id = new Random().Next(1, 1000)
+                };
 
             _context.Loans.Add(newLoan);
             int result = await _context.SaveChangesAsync();
@@ -43,9 +44,7 @@ namespace LoansService.Db
         public async Task<bool> DeleteAllByMonth(int ownerId, string month)
         {
             List<Loan> loans = _context.Loans
-                .Where(x =>
-                    x.OwnerId == ownerId &&
-                    x.CreatedAt.ToString("MMMM") == month)
+                .Where(x => x.OwnerId == ownerId && x.CreatedAt.ToString("MMMM") == month)
                 .ToList();
 
             _context.Loans.RemoveRange(loans);
@@ -62,10 +61,12 @@ namespace LoansService.Db
         public async Task<bool> DeleteAllTo(int ownerId, int ownToId, string month)
         {
             List<Loan> loans = _context.Loans
-                .Where(x =>
-                    x.OwnerId == ownerId &&
-                    x.To == ownToId &&
-                    x.CreatedAt.ToString("MMMM") == month)
+                .Where(
+                    x =>
+                        x.OwnerId == ownerId
+                        && x.To == ownToId
+                        && x.CreatedAt.ToString("MMMM") == month
+                )
                 .ToList();
 
             _context.Loans.RemoveRange(loans);
@@ -81,10 +82,12 @@ namespace LoansService.Db
         public async Task<bool> DeleteAllToByMonth(int ownerId, int ownToId, string month)
         {
             List<Loan> loans = _context.Loans
-                .Where(x =>
-                x.OwnerId == ownerId &&
-                x.To == ownToId &&
-                x.CreatedAt.ToString("MMMM") == month)
+                .Where(
+                    x =>
+                        x.OwnerId == ownerId
+                        && x.To == ownToId
+                        && x.CreatedAt.ToString("MMMM") == month
+                )
                 .ToList();
 
             _context.Loans.RemoveRange(loans);
@@ -99,9 +102,7 @@ namespace LoansService.Db
 
         public async Task<bool> DeleteOne(int ownerId, int loanId)
         {
-            Loan loan = _context.Loans
-                .Where(x => x.OwnerId == ownerId && x.Id == loanId)
-                .Single();
+            Loan loan = _context.Loans.Where(x => x.OwnerId == ownerId && x.Id == loanId).Single();
 
             _context.Loans.Remove(loan);
             int result = _context.SaveChanges();
@@ -116,9 +117,7 @@ namespace LoansService.Db
 
         public async Task<List<Loan>> GetAll(int ownerId)
         {
-            List<Loan> loans = await _context.Loans
-                .Where(x => x.OwnerId == ownerId)
-                .ToListAsync();
+            List<Loan> loans = await _context.Loans.Where(x => x.OwnerId == ownerId).ToListAsync();
 
             return loans;
         }

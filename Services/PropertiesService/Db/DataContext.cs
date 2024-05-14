@@ -1,5 +1,5 @@
 ﻿using Common.Models.Loan;
-using Common.Models.Properties;
+using Common.Models.ProductModels.Properties;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -17,6 +17,6 @@ namespace LoansService.Db
         /// <summary>
         /// Gets or sets the collection of income records.
         /// </summary>
-        public DbSet<Property> Properties{ get; set; }
+        public DbSet<Property> Properties { get; set; }
     }
 }

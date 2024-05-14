@@ -1,7 +1,7 @@
 ﻿using Common.Enums;
 using Common.Models;
 using Common.Models.Category;
-using Common.Models.Loan;
+using Common.Models.ProductModels.Loans;
 
 namespace LoansService.Db
 {

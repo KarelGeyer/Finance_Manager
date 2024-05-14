@@ -17,5 +17,10 @@ namespace Common.Models
         /// Get or sets the entity Id attribute
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the creation date of the income.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
     }
 }

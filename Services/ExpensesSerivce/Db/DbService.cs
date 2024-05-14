@@ -30,7 +30,7 @@ namespace CurrencyService.Db
             await _context.Expenses.AddAsync(newExpense);
             int result = await _context.SaveChangesAsync();
 
-            if(result == 0)
+            if (result == 0)
             {
                 throw new FailedToCreateException<Expense>(newExpense.Id);
             }
@@ -41,8 +41,6 @@ namespace CurrencyService.Db
         public async Task<bool> Delete(int ownerId, int Id)
         {
             Expense? expense = await _context.Expenses.FindAsync(Id);
-
-            if
         }
 
         public Task<bool> DeleteAll(int ownerId)
@@ -60,9 +58,15 @@ namespace CurrencyService.Db
             throw new NotImplementedException();
         }
 
-        public Task<List<Expense>> GetAll(int ownerId)
+        public async Task<List<Expense>> GetAll(int ownerId)
         {
-            throw new NotImplementedException();
+            DateTime date = DateTime.Now;
+
+            List<Expense> expenses = await _context.Expenses
+                .Where(x => x.OwnerId == ownerId && x.CreatedAt.Month == date.Month)
+                .ToListAsync();
+
+            return expenses;
         }
 
         public Task<List<Expense>> GetByCategory(int ownerId, int categoryId)

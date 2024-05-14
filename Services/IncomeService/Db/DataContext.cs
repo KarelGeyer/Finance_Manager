@@ -1,4 +1,4 @@
-﻿using Common.Models.Income;
+﻿using Common.Models.ProductModels.Income;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
