@@ -1,16 +1,22 @@
 ﻿using Common.Models.PortfolioModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common.Models.ProductModels.Properties
 {
     public class Property : PortfolioModel
     {
+        /// <summary>
+        /// Gets or sets the name of the property.
+        /// </summary>
         public string Name { get; set; }
-        public double Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the property.
+        /// </summary>
+        public decimal Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category ID of the property.
+        /// </summary>
         public int CategoryId { get; set; }
     }
 }

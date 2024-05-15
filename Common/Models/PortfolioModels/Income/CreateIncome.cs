@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Models.ProductModels.Income
+﻿namespace Common.Models.ProductModels.Income
 {
-	/// <summary>
-	/// Represents a request to create an income.
-	/// </summary>
-	public class CreateIncome
+    public class CreateIncome
 	{
 		/// <summary>
 		/// Gets or sets the owner ID.
@@ -18,17 +8,17 @@ namespace Common.Models.ProductModels.Income
 		public int OwnerId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the name.
+		/// Gets or sets the name of the income.
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets the value.
+		/// Gets or sets the value of the income.
 		/// </summary>
 		public float Value { get; set; }
 
 		/// <summary>
-		/// Gets or sets the category ID.
+		/// Gets or sets the category ID for the income.
 		/// </summary>
 		public int CategoryId { get; set; }
 	}

@@ -1,11 +1,9 @@
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Expenses;
-using Common.Models.ProductModels.Income;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Db;
-using Postgrest.Responses;
 
 namespace PortfolioService.Controllers
 {
@@ -52,7 +50,6 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Get a specific expense for a user.
 		/// </summary>
-		/// <param name="userId">The user ID.</param>
 		/// <param name="id">The income ID.</param>
 		/// <returns>An expense.</returns>
 		[HttpGet]
@@ -83,12 +80,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		/// <summary>
-		/// Create a new expense.
-		/// </summary>
-		/// <param name="req">The expense creation request.</param>
-		/// <returns>A boolean indicating if the creation was successful.</returns>
-		[HttpPost]
+        /// <summary>
+        /// Create a new expense.
+        /// </summary>
+        /// <param name="createExpense">The expense creation request.</param>
+        /// <returns>A boolean indicating if the creation was successful.</returns>
+        [HttpPost]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> CreateExpense([FromBody] CreateExpense createExpense)
 		{
@@ -129,12 +126,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		/// <summary>
-		/// Update the name of an expense.
-		/// </summary>
-		/// <param name="req">The expense update name request.</param>
-		/// <returns>A boolean indicating if the update was successful.</returns>
-		[HttpPut]
+        /// <summary>
+        /// Update the name of an expense.
+        /// </summary>
+        /// <param name="updateExpense">The expense update name request.</param>
+        /// <returns>A boolean indicating if the update was successful.</returns>
+        [HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] UpdateExpense updateExpense)
 		{

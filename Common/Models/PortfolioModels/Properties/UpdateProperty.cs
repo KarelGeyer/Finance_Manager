@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Models.PortfolioModels.Properties
+﻿namespace Common.Models.PortfolioModels.Properties
 {
     public class UpdateProperty
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double Value { get; set; }
+        /// <summary>
+        /// Gets or sets the Id of the property.
+        /// </summary>
+		public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the property.
+        /// </summary>
+		public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the property.
+        /// </summary>
+        public decimal Value { get; set; }
     }
 }

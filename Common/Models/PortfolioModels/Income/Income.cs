@@ -2,9 +2,6 @@
 
 namespace Common.Models.ProductModels.Income
 {
-    /// <summary>
-    /// Represents an income.
-    /// </summary>
     public class Income : PortfolioModel
     {
         /// <summary>

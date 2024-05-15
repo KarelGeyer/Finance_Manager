@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Models.PortfolioModels;
 
 namespace Common.Models.Expenses
 {
-    public class Expense
+    public class Expense : PortfolioModel
     {
-        public int Id { get; set; }
-        public int OwnerId { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the expense.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the expense.
+        /// </summary>
         public decimal Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category ID of the expense.
+        /// </summary>
         public int CategoryId { get; set; }
-        public DateTime CreatedAt { get; set; }
     }
 }

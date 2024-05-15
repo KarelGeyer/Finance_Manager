@@ -1,15 +1,12 @@
 ﻿using Common.Models.PortfolioModels;
-using Postgrest.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common.Models.Savings
 {
     public class Savings : PortfolioModel
     {
+        /// <summary>
+        /// Gets or sets the amount of the savings.
+        /// </summary>
         public double Amount { get; set; }
     }
 }

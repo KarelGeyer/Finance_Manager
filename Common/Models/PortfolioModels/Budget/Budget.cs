@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Models.PortfolioModels.Budget
+﻿namespace Common.Models.PortfolioModels.Budget
 {
     public class Budget : PortfolioModel
     {
         /// <summary>
-        /// An id representation of a <see cref="BudgetOverview"/>
+        /// An id representation of a <see cref="Budget"/>
         /// </summary>
         public int Parent { get; set; }
 

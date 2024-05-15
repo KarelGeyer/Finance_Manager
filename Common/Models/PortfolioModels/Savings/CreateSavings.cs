@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Models.Savings
+﻿namespace Common.Models.Savings
 {
-	public class CreateSavings
+    public class CreateSavings
 	{
-		public int OwnerId { get; set; }
+        /// <summary>
+        /// Gets or sets the owner ID of the savings.
+        /// </summary>
+        public int OwnerId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the amount of the savings.
+        /// </summary>
 		public float Amount { get; set; }
 	}
 }

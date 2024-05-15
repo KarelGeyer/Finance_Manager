@@ -1,10 +1,8 @@
 using Common.Enums;
 using Common.Exceptions;
-using Common.Models.Income;
 using Common.Models.PortfolioModels.Properties;
 using Common.Models.ProductModels.Properties;
 using Common.Response;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Db;
 
@@ -167,7 +165,7 @@ namespace PortfolioService.Controllers
         /// <summary>
         /// Update the name of an property.
         /// </summary>
-        /// <param name="updateLoan">The property update name request.</param>
+        /// <param name="updateProperty">The property update name request.</param>
         /// <returns>A boolean indicating if the update was successful.</returns>
         [HttpPut]
         [Route("[action]")]
@@ -213,7 +211,7 @@ namespace PortfolioService.Controllers
         /// <summary>
         /// Delete an property.
         /// </summary>
-        /// <param name="loanId">The property ID.</param>
+        /// <param name="id">The property ID.</param>
         /// <returns>A boolean indicating if the deletion was successful.</returns>
         [HttpDelete]
         [Route("[action]")]

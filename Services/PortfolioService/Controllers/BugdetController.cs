@@ -1,9 +1,7 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
-using Common.Models.Category;
 using Common.Models.PortfolioModels.Budget;
 using Common.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Db;
 
@@ -90,7 +88,7 @@ namespace PortfolioService.Controllers
         /// <summary>
 		/// Create a new budget.
 		/// </summary>
-		/// <param name="req">The budget creation request.</param>
+		/// <param name="createBudget">The budget creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
         [Route("[action]")]
@@ -134,7 +132,7 @@ namespace PortfolioService.Controllers
         /// <summary>
         /// Update the name of a budget.
         /// </summary>
-        /// <param name="req">The budget update name request.</param>
+        /// <param name="updateBudget">The budget update name request.</param>
         /// <returns>A boolean indicating if the update was successful.</returns>
         [HttpPut]
         [Route("[action]")]

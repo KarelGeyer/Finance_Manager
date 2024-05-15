@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Models.ProductModels.Income
+﻿namespace Common.Models.ProductModels.Income
 {
-	/// <summary>
-	/// Represents a request to update the name of an income.
-	/// </summary>
-	public class UpdateIncome
+    public class UpdateIncome
 	{
 		/// <summary>
 		/// Gets or sets the ID of the income.

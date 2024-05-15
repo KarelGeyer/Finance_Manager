@@ -1,12 +1,10 @@
 ﻿using Common.Models.Expenses;
-using Common.Models.Loan;
 using Common.Models.PortfolioModels.Budget;
 using Common.Models.ProductModels.Income;
 using Common.Models.ProductModels.Loans;
 using Common.Models.ProductModels.Properties;
 using Common.Models.Savings;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace PortfolioService.Db
 {
@@ -47,11 +45,6 @@ namespace PortfolioService.Db
         /// <summary>
         /// Gets or sets the budgets DbSet.
         /// </summary>
-        public virtual DbSet<Budget> Budgets { get; set; }
-
-        /// <summary>
-        /// Gets or sets the budget overview DbSet.
-        /// </summary>
-        public virtual DbSet<BudgetOverview> BudgetOverviews { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
     }
 }

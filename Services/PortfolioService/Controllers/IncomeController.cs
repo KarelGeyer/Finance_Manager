@@ -1,33 +1,34 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
 using Common.Models.ProductModels.Income;
-using Common.Models.ProductModels.Properties;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Db;
 
 namespace PortfolioService.Controllers
 {
-	/// <summary>
-	/// Controller for managing income related operations.
-	/// </summary>
-	[Route("api/income")]
+    /// <summary>
+    /// Controller for managing income related operations.
+    /// </summary>
+    [Route("api/income")]
 	[ApiController]
 	public class IncomeController : ControllerBase
 	{
-		private readonly IDbService<Income> _dbService;
+        private readonly ILogger<BugdetController> _logger;
+        private readonly IDbService<Income> _dbService;
 
-		public IncomeController(IDbService<Income> dbService)
+		public IncomeController(ILogger<BugdetController> logger, IDbService<Income> dbService)
 		{
+			_logger = logger;
 			_dbService = dbService;
 		}
 
-		/// <summary>
-		/// Get all incomes for a specific user.
-		/// </summary>
-		/// <param name="userId">The user ID.</param>
-		/// <returns>A list of incomes.</returns>
-		[HttpGet]
+        /// <summary>
+        /// Get all incomes for a specific user.
+        /// </summary>
+        /// <param name="ownerId">The user ID.</param>
+        /// <returns>A list of incomes.</returns>
+        [HttpGet]
 		[Route("[action]")]
 		public async Task<BaseResponse<List<Income>>> GetAllIncomes(int ownerId)
 		{

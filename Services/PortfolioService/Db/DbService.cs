@@ -1,13 +1,10 @@
 ﻿using Common.Exceptions;
-using Common.Models;
 using Common.Models.PortfolioModels;
-using Common.Models.PortfolioModels.Budget;
-using Common.Models.ProductModels.Properties;
 using Microsoft.EntityFrameworkCore;
 
 namespace PortfolioService.Db
 {
-	public class DbService<T> : IDbService<T>
+    public class DbService<T> : IDbService<T>
 		where T : PortfolioModel
 	{
 		private readonly DataContext _context;

@@ -1,20 +1,17 @@
 using Common.Enums;
 using Common.Exceptions;
-using Common.Models.Income;
-using Common.Models.PortfolioModels.Properties;
 using Common.Models.ProductModels.Properties;
 using Common.Models.Savings;
 using Common.Response;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Db;
 
 namespace PortfolioService.Controllers
 {
-	/// <summary>
-	/// Controller for managing savings.
-	/// </summary>
-	[Route("api/savings")]
+    /// <summary>
+    /// Controller for managing savings.
+    /// </summary>
+    [Route("api/savings")]
 	[ApiController]
 	public class SavingsController
 	{
@@ -62,12 +59,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		/// <summary>
-		/// Adds savings for a user.
-		/// </summary>
-		/// <param name="userId">The user ID.</param>
-		/// <returns>A response indicating the success of the operation.</returns>
-		[HttpPost]
+        /// <summary>
+        /// Creates a new savings.
+        /// </summary>
+        /// <param name="createSavings">The savings creation request.</param>
+        /// <returns>A boolean indicating if the creation was successful.</returns>
+        [HttpPost]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> AddSavings([FromBody] CreateSavings createSavings)
 		{
@@ -105,12 +102,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		/// <summary>
-		/// Updates the savings for a user.
-		/// </summary>
-		/// <param name="req">The update request.</param>
-		/// <returns>A response indicating the success of the operation.</returns>
-		[HttpPut]
+        /// <summary>
+        /// Updates the savings for a user.
+        /// </summary>
+        /// <param name="updateSavings">The update request.</param>
+        /// <returns>A response indicating the success of the operation.</returns>
+        [HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateSavings([FromBody] UpdateSavings updateSavings)
 		{
@@ -147,12 +144,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-		/// <summary>
-		/// Deletes the savings for a user.
-		/// </summary>
-		/// <param name="userId">The user ID.</param>
-		/// <returns>A response indicating the success of the operation.</returns>
-		[HttpDelete]
+        /// <summary>
+        /// Deletes the savings for a user.
+        /// </summary>
+        /// <param name="id">The savings Id.</param>
+        /// <returns>A response indicating the success of the operation.</returns>
+        [HttpDelete]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> DeleteSavings(int id)
 		{
