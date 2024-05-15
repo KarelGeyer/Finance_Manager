@@ -4,15 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Models.Budget
+namespace Common.Models.PortfolioModels.Budget
 {
-    public class Budget
+    public class Budget : PortfolioModel
     {
-        /// <summary>
-        /// Represents a <see cref="Budget"/>'s Id
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// An id representation of a <see cref="BudgetOverview"/>
         /// </summary>

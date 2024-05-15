@@ -1,5 +1,6 @@
 ﻿using Common.Models.Expenses;
 using Common.Models.Loan;
+using Common.Models.PortfolioModels.Budget;
 using Common.Models.ProductModels.Income;
 using Common.Models.ProductModels.Loans;
 using Common.Models.ProductModels.Properties;
@@ -42,5 +43,15 @@ namespace PortfolioService.Db
         /// Gets or sets the savings entities.
         /// </summary>
         public DbSet<Savings> Savings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the budgets DbSet.
+        /// </summary>
+        public virtual DbSet<Budget> Budgets { get; set; }
+
+        /// <summary>
+        /// Gets or sets the budget overview DbSet.
+        /// </summary>
+        public virtual DbSet<BudgetOverview> BudgetOverviews { get; set; }
     }
 }
