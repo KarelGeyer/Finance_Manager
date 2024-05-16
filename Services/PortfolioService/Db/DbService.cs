@@ -61,18 +61,16 @@ namespace PortfolioService.Db
         /// <inheritdoc />
         public async Task<List<T>> GetAllAsync(int ownerId)
 		{
-			List<T> entities = await _context.Set<T>().Where(x => x.OwnerId == ownerId).ToListAsync();
-			return entities;
+            return await _context.Set<T>().Where(x => x.OwnerId == ownerId).ToListAsync();
 		}
 
         /// <inheritdoc />
         public async Task<List<T>> GetAllAsync(int ownerId, int month, int year)
 		{
-			List<T> entities = await _context
+            return await _context
 				.Set<T>()
 				.Where(x => x.OwnerId == ownerId && x.CreatedAt.Month == month && x.CreatedAt.Year == year)
 				.ToListAsync();
-			return entities;
 		}
 
         /// <inheritdoc />
@@ -88,7 +86,8 @@ namespace PortfolioService.Db
                 if (result == 0) throw new FailedToUpdateException<T>(entity.Id);
 
                 return true;
-            } catch (Exception)
+            } 
+			catch (Exception)
 			{                 
 				throw new NotFoundException(entity.Id);
 			}	
