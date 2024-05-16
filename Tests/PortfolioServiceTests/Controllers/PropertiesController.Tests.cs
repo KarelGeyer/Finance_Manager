@@ -36,7 +36,7 @@ namespace PortfolioServiceTests.Controllers
                 OwnerId = _ownerId,
                 Name = "Test",
                 Value = 100,
-                CategoryId = 2
+                CategoryId = 1
             };
             _Property2 = new()
             {
@@ -76,6 +76,43 @@ namespace PortfolioServiceTests.Controllers
 
             // Act
             BaseResponse<List<Property>> result = await _controller.GetAllProperties(_ownerId, 1, 2005);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Data.Should().BeNull();
+            result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        [Fact]
+        public async Task GetPropertiesByCategory_ReturnsCorrectValue()
+        {
+            DateTime date = DateTime.Now;
+            int month = date.Month;
+            int year = date.Year;
+            // Arrange
+            _dbService.GetAllAsync(_ownerId, month, year).Returns(_Propertys);
+
+            // Act
+            BaseResponse<List<Property>> result = await _controller.GetPropertiesByCategory(_ownerId, 1);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(string.Empty);
+            result.Status.Should().Be(EHttpStatus.OK);
+            result.Data.Should().NotBeNull();
+            result.Data.Should().BeOfType<List<Property>>();
+            result.Data.Should().HaveCount(1);
+            result.Data[0].Should().BeEquivalentTo(_Property);
+        }
+
+        [Fact]
+        public async Task GetPropertiesByCategory_ThrowsException()
+        {
+            // Arrange
+            _dbService.GetAllAsync(_ownerId, 1, 2005).Throws(x => new Exception());
+
+            // Act
+            BaseResponse<List<Property>> result = await _controller.GetPropertiesByCategory(_ownerId, 1);
 
             // Assert
             result.Should().NotBeNull();

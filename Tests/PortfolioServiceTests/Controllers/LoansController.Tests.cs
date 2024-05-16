@@ -83,6 +83,40 @@ namespace PortfolioServiceTests.Controllers
         }
 
         [Fact]
+        public async Task GetAllLoansByCreditor_ReturnsCorrectValue()
+        {
+            // Arrange
+            _dbService.GetAllAsync(_ownerId).Returns(_loans);
+
+            // Act
+            BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.To);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(string.Empty);
+            result.Status.Should().Be(EHttpStatus.OK);
+            result.Data.Should().NotBeNull();
+            result.Data.Should().BeOfType<List<Loan>>();
+            result.Data.Should().HaveCount(2);
+            result.Data[0].Should().BeEquivalentTo(_loan);
+        }
+
+        [Fact]
+        public async Task GetAllLoansByCreditor_ThrowsException()
+        {
+            // Arrange
+            _dbService.GetAllAsync(_ownerId).Throws(x => new Exception());
+
+            // Act
+            BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.To);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Data.Should().BeNull();
+            result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        [Fact]
         public async Task GetLoan_ReturnsCorrectValue()
         {
             // Arrange

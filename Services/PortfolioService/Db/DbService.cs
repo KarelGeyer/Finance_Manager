@@ -20,10 +20,7 @@ namespace PortfolioService.Db
 			await _context.Set<T>().AddAsync(entity);
 			int result = await _context.SaveChangesAsync();
 
-			if (result == 0)
-			{
-				throw new FailedToCreateException<T>();
-			}
+			if (result == 0) throw new FailedToCreateException<T>();
 
 			return true;
 		}
@@ -88,10 +85,7 @@ namespace PortfolioService.Db
                 _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
                 int result = await _context.SaveChangesAsync();
 
-                if (result == 0)
-                {
-                    throw new FailedToUpdateException<T>(entity.Id);
-                }
+                if (result == 0) throw new FailedToUpdateException<T>(entity.Id);
 
                 return true;
             } catch (Exception)
