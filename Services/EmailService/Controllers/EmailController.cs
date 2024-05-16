@@ -26,7 +26,6 @@ namespace EmailService.Controllers
 
 			try
 			{
-				/// Not gonna work, needs to configure the email service first
 				res.Data = _emailService.SendEmail(email);
 				res.Status = EHttpStatus.OK;
 			}

@@ -156,3 +156,5 @@ $RECYCLE.BIN/
 .DS_Store
 */.vs
 /.vs
+*/appsettings.Development.json
+/Services/EmailService/appsettings.Development.json
