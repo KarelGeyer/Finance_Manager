@@ -7,8 +7,8 @@ using PortfolioService.Db;
 
 namespace PortfolioService.Controllers
 {
-    [Route("api/expenses")]
-    [Route("[controller]")]
+	[Route("api/expenses")]
+	[Route("[controller]")]
 	public class ExpensesController : ControllerBase
 	{
 		private readonly ILogger<ExpensesController> _logger;
@@ -80,12 +80,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-        /// <summary>
-        /// Create a new expense.
-        /// </summary>
-        /// <param name="createExpense">The expense creation request.</param>
-        /// <returns>A boolean indicating if the creation was successful.</returns>
-        [HttpPost]
+		/// <summary>
+		/// Create a new expense.
+		/// </summary>
+		/// <param name="createExpense">The expense creation request.</param>
+		/// <returns>A boolean indicating if the creation was successful.</returns>
+		[HttpPost]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> CreateExpense([FromBody] CreateExpense createExpense)
 		{
@@ -126,12 +126,12 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-        /// <summary>
-        /// Update the name of an expense.
-        /// </summary>
-        /// <param name="updateExpense">The expense update name request.</param>
-        /// <returns>A boolean indicating if the update was successful.</returns>
-        [HttpPut]
+		/// <summary>
+		/// Update the name of an expense.
+		/// </summary>
+		/// <param name="updateExpense">The expense update name request.</param>
+		/// <returns>A boolean indicating if the update was successful.</returns>
+		[HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] UpdateExpense updateExpense)
 		{

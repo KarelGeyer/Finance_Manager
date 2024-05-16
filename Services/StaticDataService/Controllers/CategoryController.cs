@@ -7,112 +7,112 @@ using StaticDataService.Db;
 
 namespace StaticDataService.Controllers
 {
-    [Route("api/category")]
-    [ApiController]
-    public class CategoryController : ControllerBase
-    {
-        private readonly IDbService<Category> _dbService;
+	[Route("api/category")]
+	[ApiController]
+	public class CategoryController : ControllerBase
+	{
+		private readonly IDbService<Category> _dbService;
 
-        public CategoryController(IDbService<Category> dbService)
-        {
-            _dbService = dbService;
-        }
+		public CategoryController(IDbService<Category> dbService)
+		{
+			_dbService = dbService;
+		}
 
-        /// <summary>
-        /// List of <see cref="Category"/> categories
-        /// </summary>
-        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetAllCategories()
-        {
-            BaseResponse<List<Category>> res = new();
+		/// <summary>
+		/// List of <see cref="Category"/> categories
+		/// </summary>
+		/// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<List<Category>>> GetAllCategories()
+		{
+			BaseResponse<List<Category>> res = new();
 
-            try
-            {
-                List<Category> categories = await _dbService.GetAllAsync();
-                res.Data = categories;
-                res.Status = EHttpStatus.OK;
-            }
-            catch (NotFoundException ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.NOT_FOUND;
-                res.ResponseMessage = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
-                res.ResponseMessage = ex.Message;
-            }
+			try
+			{
+				List<Category> categories = await _dbService.GetAllAsync();
+				res.Data = categories;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (NotFoundException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        /// <summary>
-        /// List of <see cref="Category"/> categories sorted by <see cref="CategoryType"/> type
-        /// </summary>
-        /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int id)
-        {
-            BaseResponse<List<Category>> res = new();
+		/// <summary>
+		/// List of <see cref="Category"/> categories sorted by <see cref="CategoryType"/> type
+		/// </summary>
+		/// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int id)
+		{
+			BaseResponse<List<Category>> res = new();
 
-            try
-            {
-                var categories = await _dbService.GetAllAsync();
-                res.Data = categories.Where(x => x.CategoryTypeId == id).ToList();
-                res.Status = EHttpStatus.OK;
-            }
-            catch (NotFoundException ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.NOT_FOUND;
-                res.ResponseMessage = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
-                res.ResponseMessage = ex.Message;
-            }
+			try
+			{
+				var categories = await _dbService.GetAllAsync();
+				res.Data = categories.Where(x => x.CategoryTypeId == id).ToList();
+				res.Status = EHttpStatus.OK;
+			}
+			catch (NotFoundException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        /// <summary>
-        /// <see cref="Category"/> category
-        /// </summary>
-        /// <param name="req">Id of a <see cref="Category"/> category</param>
-        /// <returns><see cref="Task"/> with <see cref="Category"/> category</returns>
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<BaseResponse<Category>> GetCategoryById(int id)
-        {
-            BaseResponse<Category> res = new();
+		/// <summary>
+		/// <see cref="Category"/> category
+		/// </summary>
+		/// <param name="req">Id of a <see cref="Category"/> category</param>
+		/// <returns><see cref="Task"/> with <see cref="Category"/> category</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<Category>> GetCategoryById(int id)
+		{
+			BaseResponse<Category> res = new();
 
-            try
-            {
-                Category category = await _dbService.GetAsync(id);
-                res.Data = category;
-                res.Status = EHttpStatus.OK;
-            }
-            catch (NotFoundException ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.NOT_FOUND;
-                res.ResponseMessage = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                res.Data = null;
-                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
-                res.ResponseMessage = ex.Message;
-            }
+			try
+			{
+				Category category = await _dbService.GetAsync(id);
+				res.Data = category;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (NotFoundException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
 
-            return res;
-        }
-    }
+			return res;
+		}
+	}
 }

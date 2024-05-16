@@ -7,7 +7,7 @@ using PortfolioService.Db;
 
 namespace PortfolioService.Controllers
 {
-    [Route("api/loans")]
+	[Route("api/loans")]
 	[ApiController]
 	public class LoansController : ControllerBase
 	{
@@ -87,13 +87,13 @@ namespace PortfolioService.Controllers
 			return res;
 		}
 
-        /// <summary>
-        /// Get all loans for a specific user.
-        /// </summary>
-        /// <param name="ownerId">The owner ID</param>
-        /// <param name="ownToId">User id who a loan is owned to</param>
-        /// <returns>A list of loans.</returns>
-        [HttpGet]
+		/// <summary>
+		/// Get all loans for a specific user.
+		/// </summary>
+		/// <param name="ownerId">The owner ID</param>
+		/// <param name="ownToId">User id who a loan is owned to</param>
+		/// <returns>A list of loans.</returns>
+		[HttpGet]
 		[Route("[action]")]
 		public async Task<BaseResponse<List<Loan>>> GetAllLoansByCreditor(int ownerId, int ownToId)
 		{
