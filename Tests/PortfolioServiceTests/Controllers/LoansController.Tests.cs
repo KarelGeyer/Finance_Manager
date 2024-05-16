@@ -1,6 +1,7 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
 using Common.Helpers;
+using Common.Models.ProductModels.Income;
 using Common.Models.ProductModels.Loans;
 using Common.Response;
 using FluentAssertions;
@@ -208,6 +209,29 @@ namespace PortfolioServiceTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+            result.Data.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task CreateLoan_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateLoan createLoan = new()
+            {
+                OwnerId = _ownerId,
+                Name = "Test",
+                Value = 100,
+                OwnToId = 1
+            };
+            _dbService.CreateAsync(Arg.Any<Loan>()).Throws(x => new FailedToCreateException<Loan>());
+
+            // Act
+            BaseResponse<bool> result = await _controller.CreateLoan(createLoan);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Loan>());
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
 

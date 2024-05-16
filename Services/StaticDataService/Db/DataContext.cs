@@ -8,7 +8,7 @@ using Common.Models.ProductModels.Properties;
 using Common.Models.Savings;
 using Microsoft.EntityFrameworkCore;
 
-namespace PortfolioService.Db
+namespace StaticDataService.Db
 {
     public class DataContext : DbContext
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Helpers
+﻿namespace Common.Helpers
 {
     /// <summary>
     /// A static class containing methods and static strings used to get response messages across all services
@@ -17,7 +11,7 @@ namespace Common.Helpers
         /// <param name="model">A string representation of a model used in a request</param>
         /// <returns>A string response message</returns>
         public static string GetNotFoundResponseMessage(string model) =>
-            $"No record of type {nameof(model)} was found";
+            $"No record of type {model} was found";
 
         /// <summary>
         /// Represents a string information of a failed creation of a new object

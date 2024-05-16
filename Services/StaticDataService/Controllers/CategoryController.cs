@@ -3,17 +3,17 @@ using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using StaticDataService.Db;
 
-namespace UsersService.Controllers
+namespace StaticDataService.Controllers
 {
     [Route("api/category")]
     [ApiController]
-    public class BudgetController : ControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly IDbService<Category> _dbService;
 
-        public BudgetController(IDbService<Category> dbService)
+        public CategoryController(IDbService<Category> dbService)
         {
             _dbService = dbService;
         }
@@ -56,7 +56,7 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetCategoryByType(int id)
+        public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int id)
         {
             BaseResponse<List<Category>> res = new();
 

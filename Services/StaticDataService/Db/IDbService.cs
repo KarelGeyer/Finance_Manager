@@ -1,6 +1,6 @@
 ﻿using Common.Exceptions;
 
-namespace PortfolioService.Db
+namespace StaticDataService.Db
 {
 	public interface IDbService<T>
 	{

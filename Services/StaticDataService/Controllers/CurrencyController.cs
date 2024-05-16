@@ -3,9 +3,9 @@ using Common.Exceptions;
 using Common.Models.Currency;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using StaticDataService.Db;
 
-namespace CurrencyService.Controllers
+namespace StaticDataService.Controllers
 {
     /// <summary>
     /// Represents a controller for managing currency-related operations.

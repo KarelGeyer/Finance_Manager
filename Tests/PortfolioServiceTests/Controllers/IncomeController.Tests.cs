@@ -182,6 +182,30 @@ namespace PortfolioServiceTests.Controllers
         }
 
         [Fact]
+        public async Task CreateIncome_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateIncome createIncome = new()
+            {
+                OwnerId = _ownerId,
+                Name = "Test",
+                Value = 100,
+                CategoryId = 1
+            };
+            _dbService.CreateAsync(Arg.Any<Income>()).Throws(x => new FailedToCreateException<Income>(1));
+
+            // Act
+            BaseResponse<bool> result = await _controller.CreateIncome(createIncome);
+
+            // Assert
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Income>(1));
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
+            result.Data.Should().BeFalse();
+        }
+
+        [Fact]
         public async Task UpdateIncome_ReturnsCorrectValue()
         {
             // Arrange
@@ -258,14 +282,14 @@ namespace PortfolioServiceTests.Controllers
                 Value = 100,
             }; 
             _dbService.GetAsync(Arg.Any<int>()).Returns(_income);
-            _dbService.UpdateAsync(Arg.Any<Income>()).Throws(new FailedToUpdateException<Income>());
+            _dbService.UpdateAsync(Arg.Any<Income>()).Throws(new FailedToUpdateException<Income>(updateIncome.Id));
 
             // Act
             BaseResponse<bool> result = await _controller.UpdateIncome(updateIncome);
 
             // Assert
             result.Should().NotBeNull();
-            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToUpdateMessage<Income>());
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToUpdateMessage<Income>(updateIncome.Id));
             result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
@@ -319,14 +343,14 @@ namespace PortfolioServiceTests.Controllers
         public async Task DeleteIncome_ThrowsFailedToDeleteException()
         {
             // Arrange
-            _dbService.DeleteAsync(1).Throws(new FailedToDeleteException<Income>());
+            _dbService.DeleteAsync(1).Throws(new FailedToDeleteException<Income>(1));
 
             // Act
             BaseResponse<bool> result = await _controller.DeleteIncome(1);
 
             // Assert
             result.Should().NotBeNull();
-            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToDeleteMessage<Income>());
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToDeleteMessage<Income>(1));
             result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }

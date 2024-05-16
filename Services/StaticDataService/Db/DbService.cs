@@ -1,12 +1,14 @@
 ﻿using Common.Exceptions;
+using Common.Models;
 using Common.Models.PortfolioModels;
 using Microsoft.EntityFrameworkCore;
+using Postgrest.Models;
 
-namespace PortfolioService.Db
+namespace StaticDataService.Db
 {
     public class DbService<T> : IDbService<T>
-		where T : PortfolioModel
-	{
+		where T : BaseDbModel
+    {
 		private readonly DataContext _context;
 
 		public DbService(DataContext context)

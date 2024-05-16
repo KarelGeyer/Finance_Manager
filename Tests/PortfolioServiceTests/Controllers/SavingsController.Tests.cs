@@ -1,6 +1,7 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
 using Common.Helpers;
+using Common.Models.ProductModels.Properties;
 using Common.Models.Savings;
 using Common.Response;
 using FluentAssertions;
@@ -124,6 +125,28 @@ namespace PortfolioServiceTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+            result.Data.Should().BeFalse();
+        }
+
+
+        [Fact]
+        public async Task CreateProperty_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateSavings createSavings = new()
+            {
+                OwnerId = _ownerId,
+                Amount = 300,
+            };
+            _dbService.CreateAsync(Arg.Any<Savings>()).Throws(x => new FailedToCreateException<Savings>());
+
+            // Act
+            BaseResponse<bool> result = await _controller.AddSavings(createSavings);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Savings>());
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
 

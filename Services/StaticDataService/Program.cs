@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PortfolioService.Db;
+using StaticDataService.Db;
 
 var builder = WebApplication.CreateBuilder(args);
 

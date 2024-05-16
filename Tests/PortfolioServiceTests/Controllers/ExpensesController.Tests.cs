@@ -2,6 +2,7 @@
 using Common.Exceptions;
 using Common.Helpers;
 using Common.Models.Expenses;
+using Common.Models.Savings;
 using Common.Response;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -182,6 +183,29 @@ namespace PortfolioServiceTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+            result.Data.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task CreateProperty_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateExpense createExpense = new()
+            {
+                OwnerId = _ownerId,
+                Name = "Test",
+                Value = 100,
+                CategoryId = 1
+            };
+            _dbService.CreateAsync(Arg.Any<Expense>()).Throws(x => new FailedToCreateException<Expense>());
+
+            // Act
+            BaseResponse<bool> result = await _controller.CreateExpense(createExpense);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Expense>());
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
 

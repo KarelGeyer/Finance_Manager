@@ -2,6 +2,7 @@
 using Common.Exceptions;
 using Common.Helpers;
 using Common.Models.PortfolioModels.Properties;
+using Common.Models.ProductModels.Loans;
 using Common.Models.ProductModels.Properties;
 using Common.Response;
 using FluentAssertions;
@@ -212,6 +213,29 @@ namespace PortfolioServiceTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+            result.Data.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task CreateProperty_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateProperty createProperty = new()
+            {
+                OwnerId = _ownerId,
+                Name = "Test",
+                Value = 100,
+                CategoryId = 1
+            };
+            _dbService.CreateAsync(Arg.Any<Property>()).Throws(x => new FailedToCreateException<Property>());
+
+            // Act
+            BaseResponse<bool> result = await _controller.CreateProperty(createProperty);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Property>());
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
 

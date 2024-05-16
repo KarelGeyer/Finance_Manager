@@ -1,6 +1,7 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
 using Common.Helpers;
+using Common.Models.Expenses;
 using Common.Models.PortfolioModels.Budget;
 using Common.Response;
 using FluentAssertions;
@@ -173,6 +174,31 @@ namespace PortfolioServiceTests.Controllers
             // Assert
             result.Should().NotBeNull();
             result.Status.Should().Be(EHttpStatus.INTERNAL_SERVER_ERROR);
+            result.Data.Should().BeFalse();
+        }
+
+
+
+        [Fact]
+        public async Task CreateProperty_ThrowsFailedToCreateException()
+        {
+            // Arrange
+            CreateBudget createBudget = new()
+            {
+                Parent = 1,
+                Value = 100,
+                CategoryId = 1
+            };
+
+            _dbService.CreateAsync(Arg.Any<Budget>()).Throws(x => new FailedToCreateException<Budget>());
+
+            // Act
+            BaseResponse<bool> result = await _controller.CreateBudget(createBudget);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ResponseMessage.Should().Be(CustomResponseMessage.GetFailedToCreateMessage<Budget>());
+            result.Status.Should().Be(EHttpStatus.BAD_REQUEST);
             result.Data.Should().BeFalse();
         }
 

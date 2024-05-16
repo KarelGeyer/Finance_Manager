@@ -4,9 +4,9 @@ using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using StaticDataService.Db;
 
-namespace UsersService.Controllers
+namespace StaticDataService.Controllers
 {
     [Route("api/categoryType")]
     [ApiController]

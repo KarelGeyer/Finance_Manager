@@ -42,7 +42,7 @@ namespace PortfolioServiceTests.Db
         public async Task DeleteAsync_DeletesEntity()
         {
             // Arrange
-            _context.Add(_property);
+            _context.Properties.Add(_property);
             await _context.SaveChangesAsync();
 
             // Act
@@ -83,7 +83,7 @@ namespace PortfolioServiceTests.Db
         public async Task GetAsync_RetrievesEntity()
         {
             // Arrange
-            _context.Add(_property);
+            _context.Properties.Add(_property);
             await _context.SaveChangesAsync();
 
             // Act
@@ -119,7 +119,7 @@ namespace PortfolioServiceTests.Db
         public async Task GetAllAsync_RetrievesEntities()
         {
             // Arrange
-            _context.Add(_property);
+            _context.Properties.Add(_property);
             await _context.SaveChangesAsync();
 
             // Act
