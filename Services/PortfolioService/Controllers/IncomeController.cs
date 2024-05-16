@@ -14,10 +14,10 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class IncomeController : ControllerBase
 	{
-        private readonly ILogger<BugdetController> _logger;
+        private readonly ILogger<IncomeController> _logger;
         private readonly IDbService<Income> _dbService;
 
-		public IncomeController(ILogger<BugdetController> logger, IDbService<Income> dbService)
+		public IncomeController(ILogger<IncomeController> logger, IDbService<Income> dbService)
 		{
 			_logger = logger;
 			_dbService = dbService;

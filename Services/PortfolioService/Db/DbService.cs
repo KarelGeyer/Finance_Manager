@@ -31,34 +31,34 @@ namespace PortfolioService.Db
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(int id)
 		{
-			T entity = await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
-
-			if (entity == null)
+			try
 			{
-				throw new NotFoundException();
-			}
+                T entity = await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
 
-			_context.Set<T>().Remove(entity);
-			int result = await _context.SaveChangesAsync();
-			if (result == 0)
+                _context.Set<T>().Remove(entity);
+                int result = await _context.SaveChangesAsync();
+                if (result == 0) throw new FailedToDeleteException<T>(id);
+
+                return true;
+            }
+            catch (Exception)
 			{
-				throw new FailedToDeleteException<T>(id);
-			}
-
-			return true;
+                throw new NotFoundException();
+			}			
 		}
 
         /// <inheritdoc />
         public async Task<T> GetAsync(int id)
 		{
-			T entity = await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
-
-			if (entity == null)
+			try
+			{
+                return await _context.Set<T>().Where(x => x.Id == id).SingleAsync();
+			} 
+			catch (Exception) 
 			{
 				throw new NotFoundException();
-			}
+			};
 
-			return entity;
 		}
 
         /// <inheritdoc />
@@ -81,16 +81,23 @@ namespace PortfolioService.Db
         /// <inheritdoc />
         public async Task<bool> UpdateAsync(T entity)
 		{
-			T entityToUpdate = await _context.Set<T>().Where(x => x.Id == entity.Id).SingleAsync();
-
-			_context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
-			int result = await _context.SaveChangesAsync();
-			if (result == 0)
+			try
 			{
-				throw new FailedToUpdateException<T>(entity.Id);
-			}
+                T entityToUpdate = await _context.Set<T>().Where(x => x.Id == entity.Id).SingleAsync();
 
-			return true;
+                _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+                int result = await _context.SaveChangesAsync();
+
+                if (result == 0)
+                {
+                    throw new FailedToUpdateException<T>(entity.Id);
+                }
+
+                return true;
+            } catch (Exception)
+			{                 
+				throw new NotFoundException(entity.Id);
+			}	
 		}
 	}
 }

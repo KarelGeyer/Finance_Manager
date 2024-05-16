@@ -128,7 +128,7 @@ namespace PortfolioService.Controllers
 				res.Status = EHttpStatus.NOT_FOUND;
 				res.ResponseMessage = ex.Message;
 			}
-			catch (FailedToUpdateException<Property> ex)
+			catch (FailedToUpdateException<Savings> ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -167,7 +167,7 @@ namespace PortfolioService.Controllers
 				res.Status = EHttpStatus.NOT_FOUND;
 				res.ResponseMessage = ex.Message;
 			}
-			catch (FailedToDeleteException<Property> ex)
+			catch (FailedToDeleteException<Savings> ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;

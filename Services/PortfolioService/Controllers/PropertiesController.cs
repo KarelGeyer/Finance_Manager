@@ -10,11 +10,11 @@ namespace PortfolioService.Controllers
 {
     [Route("api/properties")]
     [ApiController]
-	public class PropertiesConrtoller : ControllerBase
+	public class PropertiesController : ControllerBase
 	{
 		private readonly IDbService<Property> _dbService;
 
-		public PropertiesConrtoller(IDbService<Property> dbService)
+		public PropertiesController(IDbService<Property> dbService)
 		{
 			_dbService = dbService;
 		}
@@ -74,7 +74,13 @@ namespace PortfolioService.Controllers
 				res.Data = property;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (Exception ex)
+            catch (NotFoundException ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.NOT_FOUND;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
