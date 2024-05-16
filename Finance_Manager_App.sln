@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticDataService", "Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticDataService.Tests", "Tests\StaticDataService.Tests\StaticDataService.Tests.csproj", "{E44D8777-04C4-4575-BC42-71A5C2E5F1E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "Services\EmailService\EmailService.csproj", "{FD9B7693-EBF9-4530-8346-49B119414E2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{E44D8777-04C4-4575-BC42-71A5C2E5F1E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E44D8777-04C4-4575-BC42-71A5C2E5F1E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E44D8777-04C4-4575-BC42-71A5C2E5F1E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD9B7693-EBF9-4530-8346-49B119414E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD9B7693-EBF9-4530-8346-49B119414E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD9B7693-EBF9-4530-8346-49B119414E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD9B7693-EBF9-4530-8346-49B119414E2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{C41A5281-52D7-401F-8C5F-329A8AA9049B} = {1D357A8E-E913-4CA0-8182-8BAB4BF7251F}
 		{ED08A86B-6F03-4274-84D1-BCBC686AFCD5} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
 		{E44D8777-04C4-4575-BC42-71A5C2E5F1E9} = {1D357A8E-E913-4CA0-8182-8BAB4BF7251F}
+		{FD9B7693-EBF9-4530-8346-49B119414E2C} = {DF79664D-15AC-4267-897E-10A6B0D1294D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47B40EC3-D549-4E20-AEAE-5640A2AD5CD4}
