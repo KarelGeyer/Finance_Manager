@@ -1,10 +1,10 @@
-using CategoryService.Service;
 using Common;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioService.Db;
 
 namespace UsersService.Controllers
 {
@@ -12,9 +12,9 @@ namespace UsersService.Controllers
     [ApiController]
     public class CategoryTypeController : ControllerBase
     {
-        private readonly IDbService _dbService;
+        private readonly IDbService<CategoryType> _dbService;
 
-        public CategoryTypeController(IDbService dbService)
+        public CategoryTypeController(IDbService<CategoryType> dbService)
         {
             _dbService = dbService;
         }
@@ -25,13 +25,13 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="CategoryType"/> category type</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<CategoryType>>> GetAll()
+        public async Task<BaseResponse<List<CategoryType>>> GetAllCategoryTypes()
         {
             BaseResponse<List<CategoryType>> res = new();
 
             try
             {
-                List<CategoryType> categoryTypes = await _dbService.GetAllCategoryTypes();
+                List<CategoryType> categoryTypes = await _dbService.GetAllAsync();
                 res.Data = categoryTypes;
                 res.Status = EHttpStatus.OK;
             }
@@ -58,13 +58,13 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="CategoryType"/> category type</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<CategoryType>> GetById(int id)
+        public async Task<BaseResponse<CategoryType>> GetCategoryTypeById(int id)
         {
             BaseResponse<CategoryType> res = new();
 
             try
             {
-                CategoryType categoryType = await _dbService.GetCategoryType(id);
+                CategoryType categoryType = await _dbService.GetAsync(id);
                 res.Data = categoryType;
                 res.Status = EHttpStatus.OK;
             }

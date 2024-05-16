@@ -2,8 +2,8 @@ using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Currency;
 using Common.Response;
-using CurrencyService.Db;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioService.Db;
 
 namespace CurrencyService.Controllers
 {
@@ -14,13 +14,13 @@ namespace CurrencyService.Controllers
     [ApiController]
     public class CurrencyController : ControllerBase
     {
-        private readonly IDbService _dbService;
+        private readonly IDbService<Currency> _dbService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurrencyController"/> class.
         /// </summary>
         /// <param name="dbService">The database service.</param>
-        public CurrencyController(IDbService dbService)
+        public CurrencyController(IDbService<Currency> dbService)
         {
             _dbService = dbService;
         }
@@ -31,13 +31,13 @@ namespace CurrencyService.Controllers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Currency>>> GetAll()
+        public async Task<BaseResponse<List<Currency>>> GetAllCurrencies()
         {
             BaseResponse<List<Currency>> res = new();
 
             try
             {
-                List<Currency> currencies = await _dbService.GetAll();
+                List<Currency> currencies = await _dbService.GetAllAsync();
                 res.Data = currencies;
                 res.Status = EHttpStatus.OK;
             }
@@ -64,13 +64,13 @@ namespace CurrencyService.Controllers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<Currency>> Get(int id)
+        public async Task<BaseResponse<Currency>> GetCurrency(int id)
         {
             BaseResponse<Currency> res = new();
 
             try
             {
-                Currency currency = await _dbService.Get(id);
+                Currency currency = await _dbService.GetAsync(id);
                 res.Data = currency;
                 res.Status = EHttpStatus.OK;
             }

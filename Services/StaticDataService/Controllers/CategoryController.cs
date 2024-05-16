@@ -1,9 +1,9 @@
-using CategoryService.Service;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioService.Db;
 
 namespace UsersService.Controllers
 {
@@ -11,9 +11,9 @@ namespace UsersService.Controllers
     [ApiController]
     public class BudgetController : ControllerBase
     {
-        private readonly IDbService _dbService;
+        private readonly IDbService<Category> _dbService;
 
-        public BudgetController(IDbService dbService)
+        public BudgetController(IDbService<Category> dbService)
         {
             _dbService = dbService;
         }
@@ -24,13 +24,13 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetAll()
+        public async Task<BaseResponse<List<Category>>> GetAllCategories()
         {
             BaseResponse<List<Category>> res = new();
 
             try
             {
-                var categories = await _dbService.GetAllCategories();
+                List<Category> categories = await _dbService.GetAllAsync();
                 res.Data = categories;
                 res.Status = EHttpStatus.OK;
             }
@@ -56,14 +56,14 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<List<Category>>> GetByType(int id)
+        public async Task<BaseResponse<List<Category>>> GetCategoryByType(int id)
         {
             BaseResponse<List<Category>> res = new();
 
             try
             {
-                var categories = await _dbService.GetCategoriesByCategoryType(id);
-                res.Data = categories;
+                var categories = await _dbService.GetAllAsync();
+                res.Data = categories.Where(x => x.CategoryTypeId == id).ToList();
                 res.Status = EHttpStatus.OK;
             }
             catch (NotFoundException ex)
@@ -89,13 +89,13 @@ namespace UsersService.Controllers
         /// <returns><see cref="Task"/> with <see cref="Category"/> category</returns>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<Category>> GetById(int id)
+        public async Task<BaseResponse<Category>> GetCategoryById(int id)
         {
             BaseResponse<Category> res = new();
 
             try
             {
-                Category category = await _dbService.GetCategory(id);
+                Category category = await _dbService.GetAsync(id);
                 res.Data = category;
                 res.Status = EHttpStatus.OK;
             }
