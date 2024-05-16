@@ -8,7 +8,6 @@ using PortfolioService.Db;
 namespace PortfolioService.Controllers
 {
 	[Route("api/expenses")]
-	[Route("[controller]")]
 	public class ExpensesController : ControllerBase
 	{
 		private readonly ILogger<ExpensesController> _logger;
@@ -27,13 +26,13 @@ namespace PortfolioService.Controllers
 		/// <returns>A list of expenses.</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<List<Expense>>> GetAllExpenses(int ownerId)
+		public async Task<BaseResponse<List<Expense>>> GetAllExpenses(int ownerId, int month, int year)
 		{
 			BaseResponse<List<Expense>> res = new();
 
 			try
 			{
-				List<Expense> expenses = await _dbService.GetAllAsync(ownerId);
+				List<Expense> expenses = await _dbService.GetAllAsync(ownerId, month, year);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}

@@ -102,7 +102,7 @@ namespace PortfolioService.Controllers
 			try
 			{
 				List<Loan> loans = await _dbService.GetAllAsync(ownerId);
-				res.Data = loans.Where(x => x.To == ownToId).ToList();
+				res.Data = loans.Where(x => x.ToPerson == ownToId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
 			catch (Exception ex)
@@ -130,7 +130,7 @@ namespace PortfolioService.Controllers
 				new()
 				{
 					Name = createLoan.Name,
-					To = createLoan.OwnToId,
+					ToPerson = createLoan.OwnToId,
 					OwnerId = createLoan.OwnerId,
 					Value = createLoan.Value,
 					CreatedAt = DateTime.Now

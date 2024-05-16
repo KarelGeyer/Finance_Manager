@@ -1,6 +1,6 @@
 ﻿namespace Common.Models.ProductModels.Income
 {
-    public class UpdateIncome
+	public class UpdateIncome
 	{
 		/// <summary>
 		/// Gets or sets the ID of the income.

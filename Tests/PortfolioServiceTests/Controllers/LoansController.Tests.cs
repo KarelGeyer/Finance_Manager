@@ -36,7 +36,7 @@ namespace PortfolioServiceTests.Controllers
 				OwnerId = _ownerId,
 				Name = "Test",
 				Value = 100,
-				To = 2
+				ToPerson = 2
 			};
 			_loan2 = new()
 			{
@@ -44,7 +44,7 @@ namespace PortfolioServiceTests.Controllers
 				OwnerId = _ownerId,
 				Name = "Test2",
 				Value = 200,
-				To = 2
+				ToPerson = 2
 			};
 			_loans = new() { _loan, _loan2 };
 		}
@@ -90,7 +90,7 @@ namespace PortfolioServiceTests.Controllers
 			_dbService.GetAllAsync(_ownerId).Returns(_loans);
 
 			// Act
-			BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.To);
+			BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.ToPerson);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -109,7 +109,7 @@ namespace PortfolioServiceTests.Controllers
 			_dbService.GetAllAsync(_ownerId).Throws(x => new Exception());
 
 			// Act
-			BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.To);
+			BaseResponse<List<Loan>> result = await _controller.GetAllLoansByCreditor(_ownerId, _loan.ToPerson);
 
 			// Assert
 			result.Should().NotBeNull();

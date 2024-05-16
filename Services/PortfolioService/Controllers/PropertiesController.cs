@@ -28,20 +28,16 @@ namespace PortfolioService.Controllers
 		/// <returns>A list of properties.</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<List<Property>>> GetAllProperties(int ownerId, int month, int year)
+		public async Task<BaseResponse<List<Property>>> GetAllProperties(int ownerId)
 		{
 			BaseResponse<List<Property>> res = new();
 
-			if (month == 0 || month > 12)
-				throw new ArgumentNullException(nameof(month));
-			if (year < 1900 || year > DateTime.Now.Year)
-				throw new ArgumentNullException(nameof(year));
 			if (ownerId == 0)
 				throw new ArgumentNullException(nameof(ownerId));
 
 			try
 			{
-				List<Property> properties = await _dbService.GetAllAsync(ownerId, month, year);
+				List<Property> properties = await _dbService.GetAllAsync(ownerId);
 				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
@@ -102,13 +98,9 @@ namespace PortfolioService.Controllers
 		{
 			BaseResponse<List<Property>> res = new();
 
-			DateTime date = DateTime.Now;
-			int month = date.Month;
-			int year = date.Year;
-
 			try
 			{
-				List<Property> properties = await _dbService.GetAllAsync(ownerId, month, year);
+				List<Property> properties = await _dbService.GetAllAsync(ownerId);
 				res.Data = properties.Where(p => p.CategoryId == categoryId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
