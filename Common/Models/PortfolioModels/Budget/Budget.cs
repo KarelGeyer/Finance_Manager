@@ -1,20 +1,16 @@
-﻿namespace Common.Models.PortfolioModels.Budget
+﻿using Common.Interfaces;
+
+namespace Common.Models.PortfolioModels.Budget
 {
-    public class Budget : PortfolioModel
-    {
-        /// <summary>
-        /// An id representation of a <see cref="Budget"/>
-        /// </summary>
-        public int Parent { get; set; }
+	public class Budget : PortfolioModel, IBudget
+	{
+		/// <inheritdoc />
+		public int Parent { get; set; }
 
-        /// <summary>
-        /// Represents a <see cref="Category.Category"/>'s Id
-        /// </summary>
-        public int CategoryId { get; set; }
+		/// <inheritdoc />
+		public int CategoryId { get; set; }
 
-        /// <summary>
-        /// Represents a <see cref="Budget"/>'s Value
-        /// </summary>
-        public float Value { get; set; }
-    }
+		/// <inheritdoc />
+		public float Value { get; set; }
+	}
 }

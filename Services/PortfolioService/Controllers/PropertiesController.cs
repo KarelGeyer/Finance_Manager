@@ -1,8 +1,5 @@
 using Common.Enums;
 using Common.Exceptions;
-using Common.Helpers;
-using Common.Models.PortfolioModels.Properties;
-using Common.Models.ProductModels.Loans;
 using Common.Models.ProductModels.Properties;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +40,12 @@ namespace PortfolioService.Controllers
 				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
 			catch (Exception ex)
 			{
 				res.Data = null;
@@ -72,10 +75,14 @@ namespace PortfolioService.Controllers
 				res.Data = property;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex) when (ex is NotFoundException || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = null;
-				res.Status = EHttpStatus.NOT_FOUND;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -106,6 +113,12 @@ namespace PortfolioService.Controllers
 				res.Data = properties.Where(p => p.CategoryId == categoryId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
 			catch (Exception ex)
 			{
 				res.Data = null;
@@ -133,7 +146,7 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (FailedToCreateException<Property> ex)
+			catch (Exception ex) when (ex is FailedToCreateException<Property> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -169,16 +182,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToUpdateException<Property> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToUpdateException<Property> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -208,16 +220,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToDeleteException<Property> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToDeleteException<Property> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

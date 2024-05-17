@@ -1,22 +1,17 @@
-﻿using Common.Models.PortfolioModels;
+﻿using Common.Interfaces;
+using Common.Models.PortfolioModels;
 
 namespace Common.Models.Expenses
 {
-	public class Expense : PortfolioModel
+	public class Expense : PortfolioModel, ICommonPortfolioModel
 	{
-		/// <summary>
-		/// Gets or sets the name of the expense.
-		/// </summary>
+		/// <inheritdoc />
 		public string Name { get; set; }
 
-		/// <summary>
-		/// Gets or sets the value of the expense.
-		/// </summary>
+		/// <inheritdoc />
 		public double Value { get; set; }
 
-		/// <summary>
-		/// Gets or sets the category ID of the expense.
-		/// </summary>
+		/// <inheritdoc />
 		public int CategoryId { get; set; }
 	}
 }

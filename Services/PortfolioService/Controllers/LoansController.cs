@@ -1,6 +1,5 @@
 using Common.Enums;
 using Common.Exceptions;
-using Common.Helpers;
 using Common.Models.Expenses;
 using Common.Models.ProductModels.Loans;
 using Common.Response;
@@ -33,18 +32,17 @@ namespace PortfolioService.Controllers
 		{
 			BaseResponse<List<Loan>> res = new();
 
-			if (month == 0 || month > 12)
-				throw new ArgumentNullException(nameof(month));
-			if (year < 1900 || year > DateTime.Now.Year)
-				throw new ArgumentNullException(nameof(year));
-			if (ownerId == 0)
-				throw new ArgumentNullException(nameof(ownerId));
-
 			try
 			{
 				List<Loan> loans = await _portfolioCommonService.GetEntities(ownerId, month, year);
 				res.Data = loans;
 				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
 			{
@@ -73,10 +71,14 @@ namespace PortfolioService.Controllers
 				res.Data = loan;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex) when (ex is NotFoundException || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = null;
-				res.Status = EHttpStatus.NOT_FOUND;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -107,6 +109,12 @@ namespace PortfolioService.Controllers
 				res.Data = loans.Where(x => x.ToPerson == ownToId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
 			catch (Exception ex)
 			{
 				res.Data = null;
@@ -134,7 +142,7 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (FailedToCreateException<Loan> ex)
+			catch (Exception ex) when (ex is FailedToDeleteException<Expense> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -167,16 +175,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToUpdateException<Expense> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToUpdateException<Loan> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -206,16 +213,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToDeleteException<Expense> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToDeleteException<Loan> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

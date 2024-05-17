@@ -1,23 +1,17 @@
-﻿using Common.Models.PortfolioModels;
+﻿using Common.Interfaces;
+using Common.Models.PortfolioModels;
 
 namespace Common.Models.ProductModels.Loans
 {
-	public class Loan : PortfolioModel
+	public class Loan : PortfolioModel, ILoan
 	{
-		/// <summary>
-		/// Gets or sets the Id of a user who this is owned to of the loan.
-		/// 0 means the user is not in the system
-		/// </summary>
+		/// <inheritdoc />
 		public int ToPerson { get; set; }
 
-		/// <summary>
-		/// Gets or sets the value of the loan.
-		/// </summary>
+		/// <inheritdoc />
 		public double Value { get; set; }
 
-		/// <summary>
-		/// Gets or sets the name of the loan.
-		/// </summary>
+		/// <inheritdoc />
 		public string Name { get; set; }
 	}
 }

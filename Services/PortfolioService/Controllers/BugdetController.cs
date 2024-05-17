@@ -1,7 +1,5 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
-using Common.Helpers;
-using Common.Models.Expenses;
 using Common.Models.PortfolioModels.Budget;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -68,16 +66,14 @@ namespace PortfolioService.Controllers
 				res.Data = budget;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex) when (ex is NotFoundException || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = null;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (ArgumentNullException ex)
-			{
-				res.Data = null;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -107,13 +103,7 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (ArgumentNullException ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToCreateException<Budget> ex)
+			catch (Exception ex) when (ex is FailedToCreateException<Budget> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -149,22 +139,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToUpdateException<Budget> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToUpdateException<Budget> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (ArgumentNullException ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -194,22 +177,15 @@ namespace PortfolioService.Controllers
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
-			catch (NotFoundException ex)
+			catch (Exception ex)
+				when (ex is NotFoundException || ex is FailedToDeleteException<Budget> || ex is ArgumentException || ex is ArgumentNullException)
 			{
 				res.Data = false;
-				res.Status = EHttpStatus.NOT_FOUND;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (FailedToDeleteException<Budget> ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
-				res.ResponseMessage = ex.Message;
-			}
-			catch (ArgumentNullException ex)
-			{
-				res.Data = false;
-				res.Status = EHttpStatus.BAD_REQUEST;
+				res.Status = ex switch
+				{
+					NotFoundException => EHttpStatus.NOT_FOUND,
+					_ => EHttpStatus.BAD_REQUEST
+				};
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
