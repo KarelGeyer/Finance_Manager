@@ -1,9 +1,11 @@
 using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
+using Common.Models.Expenses;
 using Common.Models.ProductModels.Loans;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioService.Controllers
 {
@@ -11,11 +13,11 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class LoansController : ControllerBase
 	{
-		private readonly IDbService<Loan> _dbService;
+		private readonly IPortfolioCommonService<Loan> _portfolioCommonService;
 
-		public LoansController(IDbService<Loan> dbService)
+		public LoansController(IPortfolioCommonService<Loan> portfolioCommonService)
 		{
-			_dbService = dbService;
+			_portfolioCommonService = portfolioCommonService;
 		}
 
 		/// <summary>
@@ -40,7 +42,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _dbService.GetAllAsync(ownerId, month, year);
+				List<Loan> loans = await _portfolioCommonService.GetEntities(ownerId, month, year);
 				res.Data = loans;
 				res.Status = EHttpStatus.OK;
 			}
@@ -67,7 +69,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Loan loan = await _dbService.GetAsync(loanId);
+				Loan loan = await _portfolioCommonService.GetEntity(loanId);
 				res.Data = loan;
 				res.Status = EHttpStatus.OK;
 			}
@@ -101,7 +103,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _dbService.GetAllAsync(ownerId);
+				List<Loan> loans = await _portfolioCommonService.GetEntities(ownerId);
 				res.Data = loans.Where(x => x.ToPerson == ownToId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
@@ -118,27 +120,17 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Creates a new loan.
 		/// </summary>
-		/// <param name="createLoan">The loan creation request.</param>
+		/// <param name="loanToBeCreated">The loan creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> CreateLoan([FromBody] CreateLoan createLoan)
+		public async Task<BaseResponse<bool>> CreateLoan([FromBody] Loan loanToBeCreated)
 		{
 			BaseResponse<bool> res = new();
 
-			Loan newLoan =
-				new()
-				{
-					Name = createLoan.Name,
-					ToPerson = createLoan.OwnToId,
-					OwnerId = createLoan.OwnerId,
-					Value = createLoan.Value,
-					CreatedAt = DateTime.Now
-				};
-
 			try
 			{
-				bool result = await _dbService.CreateAsync(newLoan);
+				bool result = await _portfolioCommonService.CreateEntity(loanToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -165,17 +157,13 @@ namespace PortfolioService.Controllers
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> UpdateLoan(UpdateLoan updateLoan)
+		public async Task<BaseResponse<bool>> UpdateLoan(Loan updateLoan)
 		{
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				Loan loan = await _dbService.GetAsync(updateLoan.Id);
-				loan.Name = updateLoan.Name;
-				loan.Value = updateLoan.Value;
-
-				bool result = await _dbService.UpdateAsync(loan);
+				bool result = await _portfolioCommonService.UpdateEntity(updateLoan);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -214,7 +202,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				var result = await _dbService.DeleteAsync(loanId);
+				var result = await _portfolioCommonService.DeleteEntity(loanId);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

@@ -1,10 +1,12 @@
 using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
 using Common.Models.PortfolioModels.Properties;
+using Common.Models.ProductModels.Loans;
 using Common.Models.ProductModels.Properties;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioService.Controllers
 {
@@ -12,11 +14,11 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class PropertiesController : ControllerBase
 	{
-		private readonly IDbService<Property> _dbService;
+		private readonly IPortfolioCommonService<Property> _portfolioCommonService;
 
-		public PropertiesController(IDbService<Property> dbService)
+		public PropertiesController(IPortfolioCommonService<Property> portfolioCommonService)
 		{
-			_dbService = dbService;
+			_portfolioCommonService = portfolioCommonService;
 		}
 
 		/// <summary>
@@ -37,7 +39,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Property> properties = await _dbService.GetAllAsync(ownerId);
+				List<Property> properties = await _portfolioCommonService.GetEntities(ownerId);
 				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
@@ -66,7 +68,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Property property = await _dbService.GetAsync(id);
+				Property property = await _portfolioCommonService.GetEntity(id);
 				res.Data = property;
 				res.Status = EHttpStatus.OK;
 			}
@@ -100,7 +102,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Property> properties = await _dbService.GetAllAsync(ownerId);
+				List<Property> properties = await _portfolioCommonService.GetEntities(ownerId);
 				res.Data = properties.Where(p => p.CategoryId == categoryId).ToList();
 				res.Status = EHttpStatus.OK;
 			}
@@ -117,30 +119,17 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Creates a new property.
 		/// </summary>
-		/// <param name="createProperty">The property creation request.</param>
+		/// <param name="propertyToBeCreated">The property creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> CreateProperty([FromBody] CreateProperty createProperty)
+		public async Task<BaseResponse<bool>> CreateProperty([FromBody] Property propertyToBeCreated)
 		{
-			ArgumentNullException.ThrowIfNull(createProperty);
-			ArgumentNullException.ThrowIfNull(createProperty.Name);
-
 			BaseResponse<bool> res = new();
-
-			Property newProperty =
-				new()
-				{
-					Name = createProperty.Name,
-					Value = createProperty.Value,
-					CategoryId = createProperty.CategoryId,
-					OwnerId = createProperty.OwnerId,
-					CreatedAt = DateTime.Now,
-				};
 
 			try
 			{
-				bool result = await _dbService.CreateAsync(newProperty);
+				bool result = await _portfolioCommonService.CreateEntity(propertyToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -167,7 +156,7 @@ namespace PortfolioService.Controllers
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> UpdateProperty([FromBody] UpdateProperty updateProperty)
+		public async Task<BaseResponse<bool>> UpdateProperty([FromBody] Property updateProperty)
 		{
 			ArgumentNullException.ThrowIfNull(updateProperty);
 			ArgumentNullException.ThrowIfNull(updateProperty.Name);
@@ -176,11 +165,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Property foundProperty = await _dbService.GetAsync(updateProperty.Id);
-				foundProperty.Name = updateProperty.Name;
-				foundProperty.Value = updateProperty.Value;
-
-				bool result = await _dbService.UpdateAsync(foundProperty);
+				bool result = await _portfolioCommonService.UpdateEntity(updateProperty);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -219,7 +204,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _dbService.DeleteAsync(id);
+				bool result = await _portfolioCommonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

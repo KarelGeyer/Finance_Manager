@@ -1,9 +1,10 @@
 using Common.Enums;
 using Common.Exceptions;
+using Common.Models.Category;
 using Common.Models.Currency;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using StaticDataService.Db;
+using StaticDataService.Interfaces;
 
 namespace StaticDataService.Controllers
 {
@@ -14,15 +15,15 @@ namespace StaticDataService.Controllers
 	[ApiController]
 	public class CurrencyController : ControllerBase
 	{
-		private readonly IDbService<Currency> _dbService;
+		private readonly IStaticDataCommonService<Currency> _staticDataCommonService;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CurrencyController"/> class.
 		/// </summary>
 		/// <param name="dbService">The database service.</param>
-		public CurrencyController(IDbService<Currency> dbService)
+		public CurrencyController(IStaticDataCommonService<Currency> staticDataCommonService)
 		{
-			_dbService = dbService;
+			_staticDataCommonService = staticDataCommonService;
 		}
 
 		/// <summary>
@@ -37,7 +38,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				List<Currency> currencies = await _dbService.GetAllAsync();
+				List<Currency> currencies = await _staticDataCommonService.GetEntities();
 				res.Data = currencies;
 				res.Status = EHttpStatus.OK;
 			}
@@ -45,6 +46,12 @@ namespace StaticDataService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -70,7 +77,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				Currency currency = await _dbService.GetAsync(id);
+				Currency currency = await _staticDataCommonService.GetEntity(id);
 				res.Data = currency;
 				res.Status = EHttpStatus.OK;
 			}
@@ -78,6 +85,12 @@ namespace StaticDataService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

@@ -2,6 +2,7 @@
 using Common.Models.ProductModels.Properties;
 using FluentAssertions;
 using PortfolioService.Db;
+using PortfolioService.Services;
 
 namespace PortfolioServiceTests.Db
 {

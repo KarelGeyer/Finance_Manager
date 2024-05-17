@@ -1,6 +1,6 @@
 ﻿using Common.Exceptions;
 
-namespace StaticDataService.Db
+namespace StaticDataService.Interfaces
 {
 	public interface IDbService<T>
 	{
@@ -18,6 +18,6 @@ namespace StaticDataService.Db
 		/// <param name="id">Entity Id</param>
 		/// <returns>Entity</returns>
 		/// <exception cref="NotFoundException"></exception>
-		Task<T> GetAsync(int id);
+		Task<T?> GetAsync(int id);
 	}
 }

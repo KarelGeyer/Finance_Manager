@@ -4,7 +4,7 @@ using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using StaticDataService.Db;
+using StaticDataService.Interfaces;
 
 namespace StaticDataService.Controllers
 {
@@ -12,11 +12,11 @@ namespace StaticDataService.Controllers
 	[ApiController]
 	public class CategoryTypeController : ControllerBase
 	{
-		private readonly IDbService<CategoryType> _dbService;
+		private readonly IStaticDataCommonService<CategoryType> _staticDataCommonService;
 
-		public CategoryTypeController(IDbService<CategoryType> dbService)
+		public CategoryTypeController(IStaticDataCommonService<CategoryType> staticDataCommonService)
 		{
-			_dbService = dbService;
+			_staticDataCommonService = staticDataCommonService;
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				List<CategoryType> categoryTypes = await _dbService.GetAllAsync();
+				List<CategoryType> categoryTypes = await _staticDataCommonService.GetEntities();
 				res.Data = categoryTypes;
 				res.Status = EHttpStatus.OK;
 			}
@@ -64,7 +64,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				CategoryType categoryType = await _dbService.GetAsync(id);
+				CategoryType categoryType = await _staticDataCommonService.GetEntity(id);
 				res.Data = categoryType;
 				res.Status = EHttpStatus.OK;
 			}
@@ -72,6 +72,12 @@ namespace StaticDataService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

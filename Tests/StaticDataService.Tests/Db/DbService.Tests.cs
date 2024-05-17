@@ -3,6 +3,7 @@ using Common.Models.Category;
 using Common.Models.ProductModels.Properties;
 using FluentAssertions;
 using StaticDataService.Db;
+using StaticDataService.Services;
 
 namespace StaticDataServiceTests.Db
 {

@@ -1,22 +1,21 @@
 using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
 using Common.Models.Expenses;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioService.Controllers
 {
 	[Route("api/expenses")]
 	public class ExpensesController : ControllerBase
 	{
-		private readonly ILogger<ExpensesController> _logger;
-		private readonly IDbService<Expense> _dbService;
+		private readonly IPortfolioCommonService<Expense> _portfolioCommonService;
 
-		public ExpensesController(ILogger<ExpensesController> logger, IDbService<Expense> dbService)
+		public ExpensesController(IPortfolioCommonService<Expense> portfolioCommonService)
 		{
-			_logger = logger;
-			_dbService = dbService;
+			_portfolioCommonService = portfolioCommonService;
 		}
 
 		/// <summary>
@@ -32,7 +31,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Expense> expenses = await _dbService.GetAllAsync(ownerId, month, year);
+				List<Expense> expenses = await _portfolioCommonService.GetEntities(ownerId, month, year);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}
@@ -59,7 +58,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Expense expense = await _dbService.GetAsync(id);
+				Expense expense = await _portfolioCommonService.GetEntity(id);
 				res.Data = expense;
 				res.Status = EHttpStatus.OK;
 			}
@@ -67,6 +66,12 @@ namespace PortfolioService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -82,34 +87,27 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Create a new expense.
 		/// </summary>
-		/// <param name="createExpense">The expense creation request.</param>
+		/// <param name="expenseToBeCreated">The expense creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> CreateExpense([FromBody] CreateExpense createExpense)
+		public async Task<BaseResponse<bool>> CreateExpense([FromBody] Expense expenseToBeCreated)
 		{
-			ArgumentNullException.ThrowIfNull(createExpense);
-			ArgumentNullException.ThrowIfNull(createExpense.Name);
-
-			Expense newExpense =
-				new()
-				{
-					Name = createExpense.Name,
-					Value = createExpense.Value,
-					CategoryId = createExpense.CategoryId,
-					OwnerId = createExpense.OwnerId,
-					CreatedAt = DateTime.Now,
-				};
-
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				bool result = await _dbService.CreateAsync(newExpense);
+				bool result = await _portfolioCommonService.CreateEntity(expenseToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (FailedToCreateException<Expense> ex)
+			{
+				res.Data = false;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -132,7 +130,7 @@ namespace PortfolioService.Controllers
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] UpdateExpense updateExpense)
+		public async Task<BaseResponse<bool>> UpdateExpense([FromBody] Expense updateExpense)
 		{
 			ArgumentNullException.ThrowIfNull(updateExpense);
 			ArgumentNullException.ThrowIfNull(updateExpense.Name);
@@ -141,11 +139,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Expense expense = await _dbService.GetAsync(updateExpense.Id);
-				expense.Name = updateExpense.Name;
-				expense.Value = updateExpense.Value;
-
-				bool result = await _dbService.UpdateAsync(expense);
+				bool result = await _portfolioCommonService.UpdateEntity(updateExpense);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -156,6 +150,12 @@ namespace PortfolioService.Controllers
 				res.ResponseMessage = ex.Message;
 			}
 			catch (FailedToUpdateException<Expense> ex)
+			{
+				res.Data = false;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;
@@ -184,7 +184,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _dbService.DeleteAsync(id);
+				bool result = await _portfolioCommonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -195,6 +195,12 @@ namespace PortfolioService.Controllers
 				res.ResponseMessage = ex.Message;
 			}
 			catch (FailedToDeleteException<Expense> ex)
+			{
+				res.Data = false;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
 			{
 				res.Data = false;
 				res.Status = EHttpStatus.BAD_REQUEST;

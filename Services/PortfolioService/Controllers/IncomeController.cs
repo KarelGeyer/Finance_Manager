@@ -1,9 +1,11 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
+using Common.Models.Expenses;
 using Common.Models.ProductModels.Income;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioService.Controllers
 {
@@ -14,13 +16,11 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class IncomeController : ControllerBase
 	{
-		private readonly ILogger<IncomeController> _logger;
-		private readonly IDbService<Income> _dbService;
+		private readonly IPortfolioCommonService<Income> _portfolioCommonService;
 
-		public IncomeController(ILogger<IncomeController> logger, IDbService<Income> dbService)
+		public IncomeController(IPortfolioCommonService<Income> portfolioCommonService)
 		{
-			_logger = logger;
-			_dbService = dbService;
+			_portfolioCommonService = portfolioCommonService;
 		}
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Income> incomes = await _dbService.GetAllAsync(ownerId);
+				List<Income> incomes = await _portfolioCommonService.GetEntities(ownerId);
 				res.Data = incomes;
 				res.Status = EHttpStatus.OK;
 			}
@@ -63,7 +63,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Income income = await _dbService.GetAsync(id);
+				Income income = await _portfolioCommonService.GetEntity(id);
 				res.Data = income;
 				res.Status = EHttpStatus.OK;
 			}
@@ -86,30 +86,17 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Create a new income.
 		/// </summary>
-		/// <param name="createIncome">The income creation request.</param>
+		/// <param name="incomeToBeCreated">The income creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> CreateIncome([FromBody] CreateIncome createIncome)
+		public async Task<BaseResponse<bool>> CreateIncome([FromBody] Income incomeToBeCreated)
 		{
-			ArgumentNullException.ThrowIfNull(createIncome);
-			ArgumentNullException.ThrowIfNull(createIncome.Name);
-
-			Income newIncome =
-				new()
-				{
-					Name = createIncome.Name,
-					Value = createIncome.Value,
-					CategoryId = createIncome.CategoryId,
-					OwnerId = createIncome.OwnerId,
-					CreatedAt = DateTime.Now,
-				};
-
 			BaseResponse<bool> res = new();
 
 			try
 			{
-				bool result = await _dbService.CreateAsync(newIncome);
+				bool result = await _portfolioCommonService.CreateEntity(incomeToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -136,7 +123,7 @@ namespace PortfolioService.Controllers
 		/// <returns>A boolean indicating if the update was successful.</returns>
 		[HttpPut]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> UpdateIncome([FromBody] UpdateIncome updateIncome)
+		public async Task<BaseResponse<bool>> UpdateIncome([FromBody] Income updateIncome)
 		{
 			ArgumentNullException.ThrowIfNull(updateIncome);
 			ArgumentNullException.ThrowIfNull(updateIncome.Name);
@@ -145,11 +132,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Income income = await _dbService.GetAsync(updateIncome.Id);
-				income.Name = updateIncome.Name;
-				income.Value = updateIncome.Value;
-
-				bool result = await _dbService.UpdateAsync(income);
+				bool result = await _portfolioCommonService.UpdateEntity(updateIncome);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -188,7 +171,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _dbService.DeleteAsync(id);
+				bool result = await _portfolioCommonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

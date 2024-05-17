@@ -3,7 +3,7 @@ using Common.Exceptions;
 using Common.Models.Category;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using StaticDataService.Db;
+using StaticDataService.Interfaces;
 
 namespace StaticDataService.Controllers
 {
@@ -11,11 +11,11 @@ namespace StaticDataService.Controllers
 	[ApiController]
 	public class CategoryController : ControllerBase
 	{
-		private readonly IDbService<Category> _dbService;
+		private readonly IStaticDataCommonService<Category> _staticDataCommonService;
 
-		public CategoryController(IDbService<Category> dbService)
+		public CategoryController(IStaticDataCommonService<Category> staticDataCommonService)
 		{
-			_dbService = dbService;
+			_staticDataCommonService = staticDataCommonService;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				List<Category> categories = await _dbService.GetAllAsync();
+				List<Category> categories = await _staticDataCommonService.GetEntities();
 				res.Data = categories;
 				res.Status = EHttpStatus.OK;
 			}
@@ -56,20 +56,26 @@ namespace StaticDataService.Controllers
 		/// <returns><see cref="Task"/> with <see cref="List{T}"/> where T equals <see cref="Category"/> category</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int id)
+		public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int category)
 		{
 			BaseResponse<List<Category>> res = new();
 
 			try
 			{
-				var categories = await _dbService.GetAllAsync();
-				res.Data = categories.Where(x => x.CategoryTypeId == id).ToList();
+				List<Category> categories = await _staticDataCommonService.GetCategoriesByCategoryType(category);
+				res.Data = categories;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (NotFoundException ex)
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)
@@ -95,7 +101,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				Category category = await _dbService.GetAsync(id);
+				Category category = await _staticDataCommonService.GetEntity(id);
 				res.Data = category;
 				res.Status = EHttpStatus.OK;
 			}
@@ -103,6 +109,12 @@ namespace StaticDataService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (ArgumentNullException ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

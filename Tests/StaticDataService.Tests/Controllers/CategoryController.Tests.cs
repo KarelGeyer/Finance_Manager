@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using StaticDataService.Controllers;
-using StaticDataService.Db;
+using StaticDataService.Interfaces;
 
 namespace StaticDataServiceTests.Controllers
 {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using PortfolioService.Controllers;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioServiceTests.Controllers
 {

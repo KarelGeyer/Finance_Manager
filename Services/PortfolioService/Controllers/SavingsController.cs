@@ -1,10 +1,11 @@
 using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
 using Common.Models.ProductModels.Properties;
 using Common.Models.Savings;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioService.Controllers
 {
@@ -15,15 +16,15 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class SavingsController
 	{
-		private readonly IDbService<Savings> _dbService;
+		private readonly IPortfolioCommonService<Savings> _portfolioCommonService;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SavingsController"/> class.
 		/// </summary>
 		/// <param name="dbService">The database service.</param>
-		public SavingsController(IDbService<Savings> dbService)
+		public SavingsController(IPortfolioCommonService<Savings> portfolioCommonService)
 		{
-			_dbService = dbService;
+			_portfolioCommonService = portfolioCommonService;
 		}
 
 		/// <summary>
@@ -38,7 +39,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<double> res = new();
 			try
 			{
-				Savings savings = await _dbService.GetAsync(userId);
+				Savings savings = await _portfolioCommonService.GetEntity(userId);
 				res.Data = savings.Amount;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -62,26 +63,16 @@ namespace PortfolioService.Controllers
 		/// <summary>
 		/// Creates a new savings.
 		/// </summary>
-		/// <param name="createSavings">The savings creation request.</param>
+		/// <param name="savingsToBeCreated">The savings creation request.</param>
 		/// <returns>A boolean indicating if the creation was successful.</returns>
 		[HttpPost]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> AddSavings([FromBody] CreateSavings createSavings)
+		public async Task<BaseResponse<bool>> AddSavings([FromBody] Savings savingsToBeCreated)
 		{
-			ArgumentNullException.ThrowIfNull(createSavings);
-
-			Savings savings =
-				new()
-				{
-					OwnerId = createSavings.OwnerId,
-					Amount = createSavings.Amount,
-					CreatedAt = DateTime.Now,
-				};
-
 			BaseResponse<bool> res = new();
 			try
 			{
-				bool success = await _dbService.CreateAsync(savings);
+				bool success = await _portfolioCommonService.CreateEntity(savingsToBeCreated);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -109,15 +100,12 @@ namespace PortfolioService.Controllers
 		/// <returns>A response indicating the success of the operation.</returns>
 		[HttpPut]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> UpdateSavings([FromBody] UpdateSavings updateSavings)
+		public async Task<BaseResponse<bool>> UpdateSavings([FromBody] Savings updateSavings)
 		{
 			BaseResponse<bool> res = new();
 			try
 			{
-				Savings savings = await _dbService.GetAsync(updateSavings.Id);
-				savings.Amount = updateSavings.Amount;
-
-				bool success = await _dbService.UpdateAsync(savings);
+				bool success = await _portfolioCommonService.UpdateEntity(updateSavings);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -156,7 +144,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<bool> res = new();
 			try
 			{
-				bool success = await _dbService.DeleteAsync(id);
+				bool success = await _portfolioCommonService.DeleteEntity(id);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;

@@ -9,7 +9,7 @@ using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using PortfolioService.Controllers;
-using PortfolioService.Db;
+using PortfolioService.Interfaces;
 
 namespace PortfolioServiceTests.Controllers
 {
