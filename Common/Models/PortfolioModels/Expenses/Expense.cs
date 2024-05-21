@@ -3,15 +3,5 @@ using Common.Models.PortfolioModels;
 
 namespace Common.Models.Expenses
 {
-	public class Expense : PortfolioModel, ICommonPortfolioModel
-	{
-		/// <inheritdoc />
-		public string Name { get; set; }
-
-		/// <inheritdoc />
-		public double Value { get; set; }
-
-		/// <inheritdoc />
-		public int CategoryId { get; set; }
-	}
+	public class Expense : CommonPortfolioModel { }
 }

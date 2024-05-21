@@ -3,7 +3,7 @@ using Common.Exceptions;
 using Common.Models.PortfolioModels.Budget;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {

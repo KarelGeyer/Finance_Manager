@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Models.Expenses;
+using Common.Models.ProductModels.Income;
+using Common.Models.ProductModels.Properties;
 
 namespace Common.Interfaces
 {
-	public interface ICommonPortfolioModel
+	/// <summary>
+	/// An interface for a common portfolio model.
+	/// Common portoflio model includes:
+	/// <list type="bullet">
+	/// <item><see cref="Expense"/></item>
+	/// <item><see cref="Income"/></item>
+	/// <item><see cref="Property"/></item>
+	/// </list>
+	/// </summary>
+	public interface ICommonPortfolioModel : IBaseDbModel
 	{
 		/// <summary>
 		/// Gets or sets the name of the property.

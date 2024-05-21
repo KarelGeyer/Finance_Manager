@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using PortfolioService.Db;
 using PortfolioService.Helpers;
 using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Db;
+using PortfolioService.Interfaces.Services;
 using PortfolioService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
 builder.Services.AddScoped(typeof(IPortfolioCommonService<>), typeof(PortfolioCommonService<>));
-builder.Services.AddTransient<IValidation, Validation>();
+builder.Services.AddScoped<ILoansService, LoansService>();
+builder.Services.AddTransient(typeof(IValidation<>), typeof(Validation<>));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

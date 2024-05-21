@@ -1,19 +1,19 @@
-﻿using Azure.Core;
+﻿using Common.Enums;
 using Common.Exceptions;
-using Common.Interfaces;
 using Common.Models.PortfolioModels;
-using PortfolioService.Helpers;
 using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Db;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Services
 {
 	public class PortfolioCommonService<T> : IPortfolioCommonService<T>
 		where T : PortfolioModel
 	{
-		private readonly CommonDbService<T> _commonDbService;
+		private readonly ICommonDbService<T> _commonDbService;
 		private readonly IValidation<T> _validation;
 
-		public PortfolioCommonService(CommonDbService<T> commonDbService, IValidation<T> validation)
+		public PortfolioCommonService(ICommonDbService<T> commonDbService, IValidation<T> validation)
 		{
 			_commonDbService = commonDbService;
 			_validation = validation;
@@ -93,10 +93,28 @@ namespace PortfolioService.Services
 		}
 
 		/// <inheritdoc />
+		public async Task<List<T>> GetEntitiesSortedByDate(int ownerId)
+		{
+			if (ownerId == 0)
+				throw new ArgumentException(nameof(ownerId));
+
+			try
+			{
+				List<T> entities = await _commonDbService.GetAllByOwnerAsync(ownerId);
+				return entities.OrderBy(x => x.CreatedAt).ToList();
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <inheritdoc />
 		public async Task<List<T>> GetEntities(int ownerId)
 		{
 			if (ownerId == 0)
 				throw new ArgumentException(nameof(ownerId));
+
 			try
 			{
 				return await _commonDbService.GetAllByOwnerAsync(ownerId);
@@ -113,12 +131,62 @@ namespace PortfolioService.Services
 			if (ownerId == 0)
 				throw new ArgumentException(nameof(ownerId));
 
-			int monthToFilter = month == 0 ? DateTime.Now.Month : month;
-			int yearToFilter = year == 0 ? DateTime.Now.Year : year;
+			int monthToFilter = month == 0 || month > 12 ? DateTime.Now.Month : month;
+			int yearToFilter = year == 0 || year > DateTime.Now.Year ? DateTime.Now.Year : year;
 
 			try
 			{
 				return await _commonDbService.GetAllByDateAsync(ownerId, monthToFilter, yearToFilter);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <inheritdoc />
+		public async Task<List<P>> GetCommonPortfolioEntitiesSortedByGivenParameter<P>(
+			int ownerId,
+			bool shouldBeInReversedOrder,
+			EPortfolioModelSortBy parameter
+		)
+			where P : CommonPortfolioModel
+		{
+			if (ownerId == 0)
+				throw new ArgumentException(nameof(ownerId));
+
+			try
+			{
+				switch (parameter)
+				{
+					case EPortfolioModelSortBy.Name:
+						return await _commonDbService.GetAllByOwnerSortedByNameAsync<P>(ownerId, shouldBeInReversedOrder);
+					case EPortfolioModelSortBy.Value:
+						return await _commonDbService.GetAllByOwnerSortedByValueAsync<P>(ownerId, shouldBeInReversedOrder);
+					case EPortfolioModelSortBy.Date:
+						return await _commonDbService.GetAllByOwnerSortedByDateAsync<P>(ownerId, shouldBeInReversedOrder);
+					default:
+						throw new ArgumentException(nameof(parameter));
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <inheritdoc />
+		public async Task<List<P>> GetCommonPortfolioEntitiesByCategory<P>(int ownerId, int categoryId)
+			where P : CommonPortfolioModel
+		{
+			if (ownerId == 0)
+				throw new ArgumentException(nameof(ownerId));
+			if (categoryId == 0)
+				throw new ArgumentException(nameof(categoryId));
+
+			try
+			{
+				return await _commonDbService.GetAllByCategory<P>(ownerId, categoryId);
 			}
 			catch (Exception ex)
 			{

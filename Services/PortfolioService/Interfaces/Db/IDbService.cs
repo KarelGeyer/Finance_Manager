@@ -1,4 +1,4 @@
-﻿namespace PortfolioService.Interfaces
+﻿namespace PortfolioService.Interfaces.Db
 {
 	public interface IDbService<T>
 	{

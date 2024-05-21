@@ -4,7 +4,7 @@ using Common.Models.PortfolioModels.Budget;
 using Common.Models.Savings;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {

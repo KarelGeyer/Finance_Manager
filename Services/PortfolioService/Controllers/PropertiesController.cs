@@ -3,7 +3,7 @@ using Common.Exceptions;
 using Common.Models.ProductModels.Properties;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {
@@ -109,8 +109,8 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Property> properties = await _portfolioCommonService.GetEntities(ownerId);
-				res.Data = properties.Where(p => p.CategoryId == categoryId).ToList();
+				List<Property> properties = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory<Property>(ownerId, categoryId);
+				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)

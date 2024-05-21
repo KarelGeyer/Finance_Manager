@@ -6,7 +6,7 @@ using Common.Models.PortfolioModels.Budget;
 using Common.Models.ProductModels.Income;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {
@@ -72,6 +72,40 @@ namespace PortfolioService.Controllers
 			{
 				res.Data = null;
 				res.Status = EHttpStatus.NOT_FOUND;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
+
+			return res;
+		}
+
+		/// <summary>
+		/// Get all incomes for a specific user by a given category.
+		/// </summary>
+		/// <param name="ownerId">The owner ID</param>
+		/// <param name="categoryId">The category ID</param>
+		/// <returns>A list of incomes.</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<List<Income>>> GetIncomesByCategory(int ownerId, int categoryId)
+		{
+			BaseResponse<List<Income>> res = new();
+
+			try
+			{
+				List<Income> properties = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory<Income>(ownerId, categoryId);
+				res.Data = properties;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
 				res.ResponseMessage = ex.Message;
 			}
 			catch (Exception ex)

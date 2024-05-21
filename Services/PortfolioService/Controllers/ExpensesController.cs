@@ -3,7 +3,7 @@ using Common.Exceptions;
 using Common.Models.Expenses;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {
@@ -31,6 +31,79 @@ namespace PortfolioService.Controllers
 			try
 			{
 				List<Expense> expenses = await _portfolioCommonService.GetEntities(ownerId, month, year);
+				res.Data = expenses;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
+
+			return res;
+		}
+
+		/// <summary>
+		/// Get all expenses for a specific user by category.
+		/// </summary>
+		/// <param name="ownerId">User ID</param>
+		/// <param name="categoryId">Category Id</param>
+		/// <returns>A list of expenses.</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<List<Expense>>> GetAllExpensesByCategory(int ownerId, int categoryId)
+		{
+			BaseResponse<List<Expense>> res = new();
+
+			try
+			{
+				List<Expense> expenses = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory<Expense>(ownerId, categoryId);
+				res.Data = expenses;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
+
+			return res;
+		}
+
+		/// <summary>
+		/// Get all expenses for a specific user sorted by <paramref name="sortBy"/> and in order specified by <paramref name="shouldBeReversed"/>.
+		/// </summary>
+		/// <param name="ownerId">user Id</param>
+		/// <param name="shouldBeReversed">wheter entities shoule be in reverse order or not</param>
+		/// <param name="sortBy">specifiy a property to sort by, can be: name, value or date</param>
+		/// <returns>A list of expenses.</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<List<Expense>>> GetAllExpensesSorted(int ownerId, bool shouldBeReversed, EPortfolioModelSortBy sortBy)
+		{
+			BaseResponse<List<Expense>> res = new();
+
+			try
+			{
+				List<Expense> expenses = await _portfolioCommonService.GetCommonPortfolioEntitiesSortedByGivenParameter<Expense>(
+					ownerId,
+					shouldBeReversed,
+					sortBy
+				);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}

@@ -4,7 +4,7 @@ using Common.Models.Expenses;
 using Common.Models.ProductModels.Loans;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
 {
@@ -12,11 +12,11 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class LoansController : ControllerBase
 	{
-		private readonly IPortfolioCommonService<Loan> _portfolioCommonService;
+		private readonly ILoansService _service;
 
-		public LoansController(IPortfolioCommonService<Loan> portfolioCommonService)
+		public LoansController(ILoansService service)
 		{
-			_portfolioCommonService = portfolioCommonService;
+			_service = service;
 		}
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _portfolioCommonService.GetEntities(ownerId, month, year);
+				List<Loan> loans = await _service.GetEntities(ownerId, month, year);
 				res.Data = loans;
 				res.Status = EHttpStatus.OK;
 			}
@@ -67,7 +67,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Loan loan = await _portfolioCommonService.GetEntity(loanId);
+				Loan loan = await _service.GetEntity(loanId);
 				res.Data = loan;
 				res.Status = EHttpStatus.OK;
 			}
@@ -105,8 +105,8 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _portfolioCommonService.GetEntities(ownerId);
-				res.Data = loans.Where(x => x.ToPerson == ownToId).ToList();
+				List<Loan> loans = await _service.GetLoansByOwnTo(ownerId, ownToId);
+				res.Data = loans;
 				res.Status = EHttpStatus.OK;
 			}
 			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
@@ -118,6 +118,73 @@ namespace PortfolioService.Controllers
 			catch (Exception ex)
 			{
 				res.Data = null;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
+
+			return res;
+		}
+
+		/// <summary>
+		/// Get the total debt of a user.
+		/// </summary>
+		/// <param name="ownerId">User id</param>
+		/// <returns>A sum user owns in total</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<double>> GetTotalDebt(int ownerId)
+		{
+			BaseResponse<double> res = new();
+
+			try
+			{
+				double debt = await _service.GetTotalDebt(ownerId);
+				res.Data = debt;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = 0;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = 0;
+				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+				res.ResponseMessage = ex.Message;
+			}
+
+			return res;
+		}
+
+		/// <summary>
+		/// Get the total debt user owns to another user or a an entity.
+		/// </summary>
+		/// <param name="ownerId">User Id</param>
+		/// <param name="ownToId">Debtor Id</param>
+		/// <returns>A sum user owns to a creditor</returns>
+		[HttpGet]
+		[Route("[action]")]
+		public async Task<BaseResponse<double>> GetTotalDebtByCreditor(int ownerId, int ownToId)
+		{
+			BaseResponse<double> res = new();
+
+			try
+			{
+				double debt = await _service.GetTotalDebt(ownerId, ownToId);
+				res.Data = debt;
+				res.Status = EHttpStatus.OK;
+			}
+			catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+			{
+				res.Data = 0;
+				res.Status = EHttpStatus.BAD_REQUEST;
+				res.ResponseMessage = ex.Message;
+			}
+			catch (Exception ex)
+			{
+				res.Data = 0;
 				res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
 				res.ResponseMessage = ex.Message;
 			}
@@ -138,7 +205,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.CreateEntity(loanToBeCreated);
+				bool result = await _service.CreateEntity(loanToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -171,7 +238,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.UpdateEntity(updateLoan);
+				bool result = await _service.UpdateEntity(updateLoan);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -209,7 +276,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				var result = await _portfolioCommonService.DeleteEntity(loanId);
+				var result = await _service.DeleteEntity(loanId);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

@@ -2,10 +2,9 @@
 using Common.Models;
 using Common.Models.PortfolioModels;
 using Microsoft.EntityFrameworkCore;
-using PortfolioService.Db;
-using PortfolioService.Interfaces;
+using PortfolioService.Interfaces.Db;
 
-namespace PortfolioService.Services
+namespace PortfolioService.Db
 {
 	public class DbService<T> : IDbService<T>
 		where T : BaseDbModel
