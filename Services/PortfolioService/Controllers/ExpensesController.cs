@@ -1,9 +1,11 @@
 using Common.Enums;
 using Common.Exceptions;
 using Common.Models.Expenses;
+using Common.Models.PortfolioModels.Budget;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Interfaces.Services;
+using PortfolioService.Services;
 
 namespace PortfolioService.Controllers
 {
@@ -11,9 +13,11 @@ namespace PortfolioService.Controllers
 	public class ExpensesController : ControllerBase
 	{
 		private readonly IPortfolioCommonService<Expense> _portfolioCommonService;
+		private readonly ICommonService<Expense> _commonService;
 
-		public ExpensesController(IPortfolioCommonService<Expense> portfolioCommonService)
+		public ExpensesController(IPortfolioCommonService<Expense> portfolioCommonService, ICommonService<Expense> commonService)
 		{
+			_commonService = commonService;
 			_portfolioCommonService = portfolioCommonService;
 		}
 
@@ -30,7 +34,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Expense> expenses = await _portfolioCommonService.GetEntities(ownerId, month, year);
+				List<Expense> expenses = await _commonService.GetEntities(ownerId, month, year);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}
@@ -64,7 +68,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Expense> expenses = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory<Expense>(ownerId, categoryId);
+				List<Expense> expenses = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory(ownerId, categoryId);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}
@@ -93,17 +97,13 @@ namespace PortfolioService.Controllers
 		/// <returns>A list of expenses.</returns>
 		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<List<Expense>>> GetAllExpensesSorted(int ownerId, bool shouldBeReversed, EPortfolioModelSortBy sortBy)
+		public Task<BaseResponse<List<Expense>>> GetAllExpensesSorted(int ownerId, bool shouldBeReversed, EPortfolioModelSortBy sortBy)
 		{
 			BaseResponse<List<Expense>> res = new();
 
 			try
 			{
-				List<Expense> expenses = await _portfolioCommonService.GetCommonPortfolioEntitiesSortedByGivenParameter<Expense>(
-					ownerId,
-					shouldBeReversed,
-					sortBy
-				);
+				List<Expense> expenses = _portfolioCommonService.GetCommonPortfolioEntitiesSortedByGivenParameter(ownerId, shouldBeReversed, sortBy);
 				res.Data = expenses;
 				res.Status = EHttpStatus.OK;
 			}
@@ -136,7 +136,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Expense expense = await _portfolioCommonService.GetEntity(id);
+				Expense expense = await _commonService.GetEntity(id);
 				res.Data = expense;
 				res.Status = EHttpStatus.OK;
 			}
@@ -173,7 +173,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.CreateEntity(expenseToBeCreated);
+				bool result = await _commonService.CreateEntity(expenseToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -209,7 +209,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.UpdateEntity(updateExpense);
+				bool result = await _commonService.UpdateEntity(updateExpense);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -247,7 +247,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.DeleteEntity(id);
+				bool result = await _commonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

@@ -1,19 +1,16 @@
 ﻿using Common.Models.ProductModels.Loans;
-using PortfolioService.Db;
-using PortfolioService.Interfaces;
-using PortfolioService.Interfaces.Db;
+using DbService;
 using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Services
 {
-	public class LoansService : PortfolioCommonService<Loan>, ILoansService
+	public class LoansService : ILoansService
 	{
-		ILoansDbService _loansDbService;
+		IDbService<Loan> _dbService;
 
-		public LoansService(ILoansDbService loansDbService, ICommonDbService<Loan> commonDbService, IValidation<Loan> validation)
-			: base(commonDbService, validation)
+		public LoansService(IDbService<Loan> dbService)
 		{
-			_loansDbService = loansDbService;
+			_dbService = dbService;
 		}
 
 		/// <inheritdoc />
@@ -26,7 +23,7 @@ namespace PortfolioService.Services
 
 			try
 			{
-				return await _loansDbService.GetAllByOwnTo(ownerId, ownTo);
+				return await _dbService.GetAll(x => x.OwnerId == ownerId && x.ToPerson == ownTo);
 			}
 			catch (Exception ex)
 			{
@@ -42,7 +39,7 @@ namespace PortfolioService.Services
 
 			try
 			{
-				return await _loansDbService.GetTotalDebth(ownerId);
+				return await _dbService.GetSum(x => x.Value, x => x.OwnerId == ownerId);
 			}
 			catch (Exception ex)
 			{
@@ -60,7 +57,7 @@ namespace PortfolioService.Services
 
 			try
 			{
-				return await _loansDbService.GetTotalDebthByOwnTo(ownerId, ownTo);
+				return await _dbService.GetSum(x => x.Value, x => x.OwnerId == ownerId && x.ToPerson == ownTo);
 			}
 			catch (Exception ex)
 			{

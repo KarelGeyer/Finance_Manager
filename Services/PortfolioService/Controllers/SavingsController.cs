@@ -15,15 +15,15 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class SavingsController
 	{
-		private readonly IPortfolioCommonService<Savings> _portfolioCommonService;
+		private readonly ICommonService<Savings> _commonService;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SavingsController"/> class.
 		/// </summary>
 		/// <param name="dbService">The database service.</param>
-		public SavingsController(IPortfolioCommonService<Savings> portfolioCommonService)
+		public SavingsController(ICommonService<Savings> commonService)
 		{
-			_portfolioCommonService = portfolioCommonService;
+			_commonService = commonService;
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<double> res = new();
 			try
 			{
-				Savings savings = await _portfolioCommonService.GetEntity(userId);
+				Savings savings = await _commonService.GetEntity(userId);
 				res.Data = savings.Amount;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -71,7 +71,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<bool> res = new();
 			try
 			{
-				bool success = await _portfolioCommonService.CreateEntity(savingsToBeCreated);
+				bool success = await _commonService.CreateEntity(savingsToBeCreated);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -104,7 +104,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<bool> res = new();
 			try
 			{
-				bool success = await _portfolioCommonService.UpdateEntity(updateSavings);
+				bool success = await _commonService.UpdateEntity(updateSavings);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;
@@ -142,7 +142,7 @@ namespace PortfolioService.Controllers
 			BaseResponse<bool> res = new();
 			try
 			{
-				bool success = await _portfolioCommonService.DeleteEntity(id);
+				bool success = await _commonService.DeleteEntity(id);
 				res.Data = success;
 				res.Status = EHttpStatus.OK;
 				res.ResponseMessage = string.Empty;

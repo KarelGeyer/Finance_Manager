@@ -1,8 +1,8 @@
+using DbService;
 using Microsoft.EntityFrameworkCore;
 using PortfolioService.Db;
 using PortfolioService.Helpers;
 using PortfolioService.Interfaces;
-using PortfolioService.Interfaces.Db;
 using PortfolioService.Interfaces.Services;
 using PortfolioService.Services;
 

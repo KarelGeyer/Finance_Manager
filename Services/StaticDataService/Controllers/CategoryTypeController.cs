@@ -12,11 +12,11 @@ namespace StaticDataService.Controllers
 	[ApiController]
 	public class CategoryTypeController : ControllerBase
 	{
-		private readonly IStaticDataCommonService<CategoryType> _staticDataCommonService;
+		private readonly ICommonService<CategoryType> _commonService;
 
-		public CategoryTypeController(IStaticDataCommonService<CategoryType> staticDataCommonService)
+		public CategoryTypeController(ICommonService<CategoryType> commonService)
 		{
-			_staticDataCommonService = staticDataCommonService;
+			_commonService = commonService;
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				List<CategoryType> categoryTypes = await _staticDataCommonService.GetEntities();
+				List<CategoryType> categoryTypes = await _commonService.GetEntities();
 				res.Data = categoryTypes;
 				res.Status = EHttpStatus.OK;
 			}
@@ -64,7 +64,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				CategoryType categoryType = await _staticDataCommonService.GetEntity(id);
+				CategoryType categoryType = await _commonService.GetEntity(id);
 				res.Data = categoryType;
 				res.Status = EHttpStatus.OK;
 			}

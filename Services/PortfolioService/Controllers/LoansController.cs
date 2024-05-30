@@ -12,11 +12,13 @@ namespace PortfolioService.Controllers
 	[ApiController]
 	public class LoansController : ControllerBase
 	{
-		private readonly ILoansService _service;
+		private readonly ILoansService _loanService;
+		private readonly ICommonService<Loan> _commonService;
 
-		public LoansController(ILoansService service)
+		public LoansController(ILoansService loanService, ICommonService<Loan> commonService)
 		{
-			_service = service;
+			_loanService = loanService;
+			_commonService = commonService;
 		}
 
 		/// <summary>
@@ -34,7 +36,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _service.GetEntities(ownerId, month, year);
+				List<Loan> loans = await _commonService.GetEntities(ownerId, month, year);
 				res.Data = loans;
 				res.Status = EHttpStatus.OK;
 			}
@@ -67,7 +69,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Loan loan = await _service.GetEntity(loanId);
+				Loan loan = await _commonService.GetEntity(loanId);
 				res.Data = loan;
 				res.Status = EHttpStatus.OK;
 			}
@@ -105,7 +107,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Loan> loans = await _service.GetLoansByOwnTo(ownerId, ownToId);
+				List<Loan> loans = await _loanService.GetLoansByOwnTo(ownerId, ownToId);
 				res.Data = loans;
 				res.Status = EHttpStatus.OK;
 			}
@@ -138,7 +140,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				double debt = await _service.GetTotalDebt(ownerId);
+				double debt = await _loanService.GetTotalDebt(ownerId);
 				res.Data = debt;
 				res.Status = EHttpStatus.OK;
 			}
@@ -172,7 +174,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				double debt = await _service.GetTotalDebt(ownerId, ownToId);
+				double debt = await _loanService.GetTotalDebt(ownerId, ownToId);
 				res.Data = debt;
 				res.Status = EHttpStatus.OK;
 			}
@@ -205,7 +207,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _service.CreateEntity(loanToBeCreated);
+				bool result = await _commonService.CreateEntity(loanToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -238,7 +240,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _service.UpdateEntity(updateLoan);
+				bool result = await _commonService.UpdateEntity(updateLoan);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -276,7 +278,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				var result = await _service.DeleteEntity(loanId);
+				var result = await _commonService.DeleteEntity(loanId);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

@@ -1,17 +1,16 @@
 ﻿using Common.Models.Category;
-using StaticDataService.Services;
 
 namespace StaticDataService.Interfaces
 {
-	public interface ICategoryDbService
+	public interface ICategoryService
 	{
 		/// <summary>
-		/// retrieves all all <see cref="Category."/> categories filtered by a <see cref="Category.CategoryTypeId"/>.
+		/// Calls the db service to attempt to retrieve all <see cref="Category."/> categories filtered by a <see cref="Category.CategoryTypeId"/>.
 		/// </summary>
 		/// <returns>List of entities</returns>
 		/// <exception cref="NotFoundException"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="Exception"></exception>
-		Task<List<Category>> GetCategoriesByCategoryTypesAsync(int category);
+		Task<List<Category>> GetCategoriesByCategoryType(int category);
 	}
 }

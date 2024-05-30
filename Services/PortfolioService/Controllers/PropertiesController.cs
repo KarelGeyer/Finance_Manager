@@ -12,10 +12,12 @@ namespace PortfolioService.Controllers
 	public class PropertiesController : ControllerBase
 	{
 		private readonly IPortfolioCommonService<Property> _portfolioCommonService;
+		private readonly ICommonService<Property> _commonService;
 
-		public PropertiesController(IPortfolioCommonService<Property> portfolioCommonService)
+		public PropertiesController(IPortfolioCommonService<Property> portfolioCommonService, ICommonService<Property> commonService)
 		{
 			_portfolioCommonService = portfolioCommonService;
+			_commonService = commonService;
 		}
 
 		/// <summary>
@@ -36,7 +38,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Property> properties = await _portfolioCommonService.GetEntities(ownerId);
+				List<Property> properties = await _commonService.GetEntities(ownerId);
 				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
@@ -71,7 +73,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Property property = await _portfolioCommonService.GetEntity(id);
+				Property property = await _commonService.GetEntity(id);
 				res.Data = property;
 				res.Status = EHttpStatus.OK;
 			}
@@ -109,7 +111,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Property> properties = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory<Property>(ownerId, categoryId);
+				List<Property> properties = await _portfolioCommonService.GetCommonPortfolioEntitiesByCategory(ownerId, categoryId);
 				res.Data = properties;
 				res.Status = EHttpStatus.OK;
 			}
@@ -142,7 +144,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.CreateEntity(propertyToBeCreated);
+				bool result = await _commonService.CreateEntity(propertyToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -178,7 +180,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.UpdateEntity(updateProperty);
+				bool result = await _commonService.UpdateEntity(updateProperty);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -216,7 +218,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.DeleteEntity(id);
+				bool result = await _commonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

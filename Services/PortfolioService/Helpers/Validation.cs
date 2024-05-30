@@ -8,28 +8,26 @@ namespace PortfolioService.Helpers
 		// <inheritdoc />
 		public void ValidatePortfolioModel(T model)
 		{
-			if (model is ICommonPortfolioModel)
+			switch (model)
 			{
-				ICommonPortfolioModel modelToValidate = (ICommonPortfolioModel)model;
-				ValidateCommonPortfolioModel(modelToValidate);
-			}
+				case ICommonPortfolioModel:
+					ValidateCommonPortfolioModel((ICommonPortfolioModel)model);
+					break;
 
-			if (model is IBudget)
-			{
-				IBudget modelToValidate = (IBudget)model;
-				ValidateBudget(modelToValidate);
-			}
+				case IBudget:
+					ValidateBudget((IBudget)model);
+					break;
 
-			if (model is ILoan)
-			{
-				ILoan modelToValidate = (ILoan)model;
-				ValidateLoan(modelToValidate);
-			}
+				case ILoan:
+					ValidateLoan((ILoan)model);
+					break;
 
-			if (model is ISavings)
-			{
-				ISavings modelToValidate = (ISavings)model;
-				ValidateSavings(modelToValidate);
+				case ISavings:
+					ValidateSavings((ISavings)model);
+					break;
+
+				default:
+					throw new ArgumentException("Invalid model type.");
 			}
 		}
 
@@ -59,7 +57,7 @@ namespace PortfolioService.Helpers
 		/// <param name="budget"></param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException"></exception>
-		public void ValidateBudget(IBudget budget)
+		private void ValidateBudget(IBudget budget)
 		{
 			if (budget == null)
 				throw new ArgumentNullException();
@@ -75,7 +73,7 @@ namespace PortfolioService.Helpers
 		/// <param name="loan"></param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException"></exception>
-		public void ValidateLoan(ILoan loan)
+		private void ValidateLoan(ILoan loan)
 		{
 			if (loan == null)
 				throw new ArgumentNullException();
@@ -95,7 +93,7 @@ namespace PortfolioService.Helpers
 		/// <param name="savings"></param>
 		/// <exception cref="ArgumentNullException"></exception>
 		/// <exception cref="ArgumentException"></exception>
-		public void ValidateSavings(ISavings savings)
+		private void ValidateSavings(ISavings savings)
 		{
 			if (savings == null)
 				throw new ArgumentNullException();

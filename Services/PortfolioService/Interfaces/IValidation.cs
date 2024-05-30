@@ -15,6 +15,7 @@ namespace PortfolioService.Interfaces
 		/// </list>
 		/// </summary>
 		/// <param name="model"></param>
+		/// <exception cref="ArgumentException"></exception>
 		void ValidatePortfolioModel(T model);
 	}
 }

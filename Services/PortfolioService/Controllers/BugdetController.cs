@@ -11,11 +11,11 @@ namespace PortfolioService.Controllers
 	[Route("[controller]")]
 	public class BugdetController : ControllerBase
 	{
-		private readonly IPortfolioCommonService<Budget> _portfolioCommonService;
+		private readonly ICommonService<Budget> _commonService;
 
-		public BugdetController(IPortfolioCommonService<Budget> portfolioCommonService)
+		public BugdetController(ICommonService<Budget> commonService)
 		{
-			_portfolioCommonService = portfolioCommonService;
+			_commonService = commonService;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				List<Budget> budgets = await _portfolioCommonService.GetEntities(ownerId);
+				List<Budget> budgets = await _commonService.GetEntities(ownerId);
 				res.Data = budgets;
 				res.Status = EHttpStatus.OK;
 			}
@@ -62,7 +62,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				Budget budget = await _portfolioCommonService.GetEntity(id);
+				Budget budget = await _commonService.GetEntity(id);
 				res.Data = budget;
 				res.Status = EHttpStatus.OK;
 			}
@@ -99,7 +99,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.CreateEntity(budgetToBeCreated);
+				bool result = await _commonService.CreateEntity(budgetToBeCreated);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}
@@ -134,7 +134,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.UpdateEntity(updateBudget);
+				bool result = await _commonService.UpdateEntity(updateBudget);
 
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
@@ -173,7 +173,7 @@ namespace PortfolioService.Controllers
 
 			try
 			{
-				bool result = await _portfolioCommonService.DeleteEntity(id);
+				bool result = await _commonService.DeleteEntity(id);
 				res.Data = result;
 				res.Status = EHttpStatus.OK;
 			}

@@ -15,15 +15,15 @@ namespace StaticDataService.Controllers
 	[ApiController]
 	public class CurrencyController : ControllerBase
 	{
-		private readonly IStaticDataCommonService<Currency> _staticDataCommonService;
+		private readonly ICommonService<Currency> _commonService;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CurrencyController"/> class.
 		/// </summary>
 		/// <param name="dbService">The database service.</param>
-		public CurrencyController(IStaticDataCommonService<Currency> staticDataCommonService)
+		public CurrencyController(ICommonService<Currency> staticDataCommonService)
 		{
-			_staticDataCommonService = staticDataCommonService;
+			_commonService = staticDataCommonService;
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				List<Currency> currencies = await _staticDataCommonService.GetEntities();
+				List<Currency> currencies = await _commonService.GetEntities();
 				res.Data = currencies;
 				res.Status = EHttpStatus.OK;
 			}
@@ -77,7 +77,7 @@ namespace StaticDataService.Controllers
 
 			try
 			{
-				Currency currency = await _staticDataCommonService.GetEntity(id);
+				Currency currency = await _commonService.GetEntity(id);
 				res.Data = currency;
 				res.Status = EHttpStatus.OK;
 			}

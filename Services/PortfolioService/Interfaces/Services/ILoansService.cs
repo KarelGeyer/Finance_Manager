@@ -3,7 +3,7 @@ using PortfolioService.Services;
 
 namespace PortfolioService.Interfaces.Services
 {
-	public interface ILoansService : IPortfolioCommonService<Loan>
+	public interface ILoansService
 	{
 		/// <summary>
 		/// Calls a db service to retrieve all entities for a specific owner and a person they are indebted to.
