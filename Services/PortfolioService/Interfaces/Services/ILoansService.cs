@@ -1,5 +1,4 @@
 ﻿using Common.Models.ProductModels.Loans;
-using PortfolioService.Services;
 
 namespace PortfolioService.Interfaces.Services
 {

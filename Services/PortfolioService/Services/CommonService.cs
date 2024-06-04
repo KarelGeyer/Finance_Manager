@@ -37,6 +37,24 @@ namespace PortfolioService.Services
 		}
 
 		/// <inheritdoc />
+		public async Task<bool> CreateEntity(T entity, int id)
+		{
+			_validation.ValidatePortfolioModel(entity);
+
+			try
+			{
+				int newEntity = await _dbService.Create(entity);
+				if (newEntity == 0)
+					throw new FailedToCreateException<T>(entity.Id);
+				return true;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+		/// <inheritdoc />
 		public async Task<bool> UpdateEntity(T entity)
 		{
 			_validation.ValidatePortfolioModel(entity);
