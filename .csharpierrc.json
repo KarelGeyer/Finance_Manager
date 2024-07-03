@@ -2,5 +2,5 @@
   "printWidth": 150,
   "useTabs": true,
   "tabWidth": 4,
-  "preprocessorSymbolSets": [ "", "DEBUG", "DEBUG,CODE_STYLE" ]
+  "preprocessorSymbolSets": ["", "DEBUG", "DEBUG,CODE_STYLE"]
 }

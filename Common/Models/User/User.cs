@@ -27,11 +27,11 @@ namespace Common.Models.User
 		[Column("Password")]
 		public string Password { get; set; }
 
-		[Column("IsVerified")]
-		public bool IsVerified { get; set; }
-
 		[Column("CurrencyId")]
 		public int CurrencyId { get; set; }
+
+		[Column("IsVerified")]
+		public bool IsVerified { get; set; }
 
 		[Column("CreatedAt")]
 		public DateTime CreatedAt { get; set; }
