@@ -1,5 +1,6 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
+using Common.Models.Response;
 using Common.Models.User;
 using Common.Response;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,11 @@ namespace UserService.Controllers
 			_authService = authService;
 		}
 
+		/// <summary>
+		///	Attempts to log in the user
+		/// </summary>
+		/// <param name="username">username</param>
+		/// <param name="password">password</param>
 		[HttpPost]
 		[Route("[action]")]
 		public async Task<BaseResponse<string>> Login([FromBody] Login login)
@@ -36,6 +42,11 @@ namespace UserService.Controllers
 				response.Status = EHttpStatus.NOT_FOUND;
 				response.ResponseMessage = ex.Message;
 			}
+			catch (UserNotVerifiedException ex)
+			{
+				response.Status = EHttpStatus.FORBIDDEN;
+				response.ResponseMessage = ex.Message;
+			}
 			catch (Exception ex)
 			{
 				response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
@@ -45,16 +56,23 @@ namespace UserService.Controllers
 			return response;
 		}
 
-		[HttpPost]
+		/// <summary>
+		/// Verifies whether passed token is correct
+		/// </summary>
+		/// <param name="token">token to be verified</param>
+		[HttpGet]
 		[Route("[action]")]
-		public async Task<BaseResponse<bool>> ValidateUserLogin()
+		public BaseResponse<bool> VerifyToken(string token)
 		{
 			BaseResponse<bool> response = new();
 
-			try
-			{
+			VerifyTokenResponse result = _authService.VerifyToken(token);
 
-			}
+			response.Data = result.IsCorrect;
+			response.ResponseMessage = result.Message;
+			response.Status = EHttpStatus.OK;
+
+			return response;
 		}
 	}
 }

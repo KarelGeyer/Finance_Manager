@@ -9,12 +9,12 @@ namespace Common.Exceptions
 	/// <summary>
 	/// Represents an exception that is thrown when a user does not exist.
 	/// </summary>
-	public class UserNotVerifiedException : Exception
+	public class UserDoesNotExistException : Exception
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UserNotVerifiedException"/> class.
+		/// Initializes a new instance of the <see cref="UserDoesNotExistException"/> class.
 		/// </summary>
-		public UserNotVerifiedException()
-			: base(string.Format("User is not verified")) { }
+		public UserDoesNotExistException()
+			: base(string.Format("User does not exist")) { }
 	}
 }

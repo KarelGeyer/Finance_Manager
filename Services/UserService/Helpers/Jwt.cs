@@ -1,15 +1,15 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Common.Models.User;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Common.Models.User;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
 using UserService.Interfaces;
 
 namespace UserService.Helpers
 {
 	public class Jwt : IJwt
 	{
+		/// <inheritdoc/>
 		public string CreateJWT(User user)
 		{
 			JwtSecurityToken token =
@@ -25,7 +25,8 @@ namespace UserService.Helpers
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
-		public bool VerifyJWT(string token, out JwtSecurityToken jwt, out string errorMessage)
+		/// <inheritdoc/>
+		public bool VerifyJWT(string token, out string errorMessage)
 		{
 			TokenValidationParameters validationParameters =
 				new()
@@ -43,7 +44,6 @@ namespace UserService.Helpers
 			{
 				var tokenHandler = new JwtSecurityTokenHandler();
 				tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-				jwt = (JwtSecurityToken)validatedToken;
 				errorMessage = string.Empty;
 
 				return true;
@@ -51,7 +51,6 @@ namespace UserService.Helpers
 			catch (Exception ex)
 			{
 				errorMessage = ex.Message;
-				jwt = null;
 				return false;
 			}
 		}

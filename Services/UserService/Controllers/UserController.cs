@@ -18,6 +18,10 @@ namespace UsersService.Controllers
 			_service = service;
 		}
 
+		/// <summary>
+		/// Gets user by ID
+		/// </summary>
+		/// <param name="id">user's id</param>
 		[HttpGet]
 		[Route("[action]")]
 		public async Task<BaseResponse<User>> GetUserById(int id)
@@ -43,6 +47,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Attempts to retrieve a user from database by id
+		/// </summary>
+		/// <param name="username">username</param>
 		[HttpGet]
 		[Route("[action]")]
 		public async Task<BaseResponse<User>> GetUserByUsername(string username)
@@ -68,6 +76,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Attempts to update User's data
+		/// </summary>
+		/// <param name="updateUser">user to update</param>
 		[HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdateUser([FromBody] UpdateUser updateUser)
@@ -93,6 +105,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Attempts to change user's password
+		/// </summary>
+		/// <param name="updatePassword">update password</param>
 		[HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> UpdatePassword([FromBody] UpdatePassword updatePassword)
@@ -123,6 +139,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Verify whetever user account has already been verified
+		/// </summary>
+		/// <param name="id">User's id</param>
 		[HttpPut]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> VerifyUser(int id)
@@ -153,6 +173,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Attempts to delete user's account
+		/// </summary>
+		/// <param name="id">User's ID</param>
 		[HttpDelete]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> DeleteUser(int id)
@@ -179,6 +203,10 @@ namespace UsersService.Controllers
 			return response;
 		}
 
+		/// <summary>
+		/// Attempts to create a new user account
+		/// </summary>
+		/// <param name="newUser">new user</param>
 		[HttpPost]
 		[Route("[action]")]
 		public async Task<BaseResponse<bool>> CreateUser([FromBody] CreateUser createUser)

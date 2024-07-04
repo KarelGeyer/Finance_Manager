@@ -8,6 +8,7 @@ namespace PortfolioService.Helpers
 {
 	public class Validation : IValidation
 	{
+		/// <inheritdoc/>
 		public void ValidateCreateUser(CreateUser user)
 		{
 			if (user == null)
@@ -24,7 +25,8 @@ namespace PortfolioService.Helpers
 				throw new ArgumentException("Password is required", nameof(user.Password));
 		}
 
-		public void ValidatePasswordRequests(
+		/// <inheritdoc/>
+		public void ValidatePasswordRequest(
 			string currentPassword,
 			string oldPassword,
 			string data,
@@ -43,6 +45,24 @@ namespace PortfolioService.Helpers
 
 			if (isOldPasswordValid == PasswordVerificationResult.Failed)
 				throw new ArgumentException("Old password is incorrect", nameof(oldPassword));
+		}
+
+		/// <inheritdoc/>
+		public bool ValidatePasswordRequest(string currentPassword, string oldPassword, IPasswordHasher<User> hasher)
+		{
+			PasswordVerificationResult isOldPasswordValid = hasher.VerifyHashedPassword(null, currentPassword, oldPassword);
+
+			if (isOldPasswordValid == PasswordVerificationResult.Failed)
+				return false;
+
+			return true;
+		}
+
+		/// <inheritdoc/>
+		public void ValidateString(string attribute)
+		{
+			if (!string.IsNullOrWhiteSpace(attribute))
+				throw new ArgumentException(attribute, nameof(attribute));
 		}
 	}
 }

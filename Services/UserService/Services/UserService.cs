@@ -22,6 +22,7 @@ namespace UserService.Services
 			_validator = validator;
 		}
 
+		/// <inheritdoc/>
 		public async Task<User> GetUser(int id)
 		{
 			try
@@ -37,6 +38,7 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<User> GetUser(string username)
 		{
 			try
@@ -52,6 +54,7 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<bool> UpdateUser(UpdateUser updateUser)
 		{
 			try
@@ -82,21 +85,17 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<bool> UpdatePassword(UpdatePassword updatePassword)
 		{
+			_validator.ValidateString(updatePassword.NewPassword);
 			try
 			{
 				User? user = await _dbService.Get(updatePassword.Id);
 				if (user == null)
 					throw new NotFoundException();
 
-				_validator.ValidatePasswordRequests(
-					user.Password,
-					updatePassword.OldPassword,
-					updatePassword.NewPassword,
-					_passwordHasher,
-					EAuthRequestType.UPDATE_PASSWORD
-				);
+				_validator.ValidatePasswordRequest(user.Password, updatePassword.OldPassword, _passwordHasher, EAuthRequestType.UPDATE_PASSWORD);
 
 				string password = _passwordHasher.HashPassword(user, updatePassword.NewPassword);
 				user.Password = password;
@@ -112,6 +111,7 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<bool> DeleteUser(int id)
 		{
 			try
@@ -127,6 +127,7 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<bool> CreateUser(CreateUser newUser)
 		{
 			_validator.ValidateCreateUser(newUser);
@@ -150,6 +151,7 @@ namespace UserService.Services
 				int user = await _dbService.Create(userToCreate);
 				if (user == 0)
 					throw new FailedToCreateException<User>();
+				// Todo: send email to allow account verification
 				return true;
 			}
 			catch (Exception ex)
@@ -158,6 +160,7 @@ namespace UserService.Services
 			}
 		}
 
+		/// <inheritdoc/>
 		public async Task<bool> VerifyUser(int id)
 		{
 			try
