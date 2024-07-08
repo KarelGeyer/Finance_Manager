@@ -10,8 +10,13 @@ namespace Common.Models.Currency
     /// <summary>
     /// Represents a currency.
     /// </summary>
-    public class Currency : BaseDbModel
+    public class Currency
     {
+        /// <summary>
+        /// Get or sets the entity Id attribute
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// Gets or sets the value of the currency.
         /// </summary>

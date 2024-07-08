@@ -1,6 +1,5 @@
 using DbService;
 using Microsoft.EntityFrameworkCore;
-using StaticDataService.Db;
 using StaticDataService.Interfaces;
 using StaticDataService.Services;
 
@@ -15,19 +14,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
+builder.Services.AddScoped(typeof(ICommonService<>), typeof(CommonService<>));
+builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

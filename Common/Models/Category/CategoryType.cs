@@ -13,8 +13,13 @@ namespace Common.Models.Category
     /// <summary>
     /// Represents a Category Type Entity
     /// </summary>
-    public class CategoryType : BaseDbModel
+    public class CategoryType
     {
+        /// <summary>
+        /// Get or sets the entity Id attribute
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// Integer representation of a <see cref="CategoryType"/>
         /// </summary>
