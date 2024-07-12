@@ -10,8 +10,7 @@
         /// </summary>
         /// <param name="model">A string representation of a model used in a request</param>
         /// <returns>A string response message</returns>
-        public static string GetNotFoundResponseMessage(string model) =>
-            $"No record of type {model} was found";
+        public static string GetNotFoundResponseMessage(string model) => $"No record of type {model} was found";
 
         /// <summary>
         /// Represents a string information of a failed creation of a new object
@@ -63,5 +62,10 @@
         /// <returns>A string response message</returns>
         public static string GetFailedToDeleteMessage<T>()
             where T : class => $"Failed to delete {nameof(T)}";
+
+        public static string GetRecordAlreadyExistsMessage()
+        {
+            return "Record already exists";
+        }
     }
 }

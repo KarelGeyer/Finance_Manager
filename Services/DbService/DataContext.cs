@@ -69,10 +69,5 @@ namespace DbService
         /// Gets or sets the collection of users.
         /// </summary>
         public DbSet<User> Users { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of user auths.
-        /// </summary>
-        public DbSet<UserAuth> UserAuths { get; set; }
     }
 }

@@ -57,7 +57,9 @@ namespace DbService
         public async Task<int> Create(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+
+            return 1;
         }
 
         /// <inheritdoc />

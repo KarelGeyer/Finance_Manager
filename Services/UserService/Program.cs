@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PortfolioService.Helpers;
 using UserService.Helpers;
 using UserService.Interfaces;
+using UserService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,7 @@ builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 builder.Services.AddScoped<IValidation, Validation>();
 builder.Services.AddScoped<IUserService, UserService.Services.UserService>();
+builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IJwt, Jwt>();
 var app = builder.Build();
 

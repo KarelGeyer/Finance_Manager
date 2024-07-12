@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Models.User
 {
-	public class UserAuth : BaseDbModel
-	{
-		public int UserId;
+    public class UserGroupSingleUser
+    {
+        public string UserName { get; set; }
 
-		public int LoginCounter;
-	}
+        public string Email { get; set; }
+    }
 }
