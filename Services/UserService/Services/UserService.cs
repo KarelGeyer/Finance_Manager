@@ -297,7 +297,7 @@ namespace UserService.Services
                 throw new ArgumentNullException(nameof(userGroupId));
             try
             {
-                UserResponse? user = await GetUser(userId);
+                User? user = await _dbService.Get(userId);
                 if (user != null)
                 {
                     user.UserGroupId = userGroupId;
