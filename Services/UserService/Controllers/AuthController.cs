@@ -10,7 +10,7 @@ using UserService.Services;
 
 namespace UserService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
