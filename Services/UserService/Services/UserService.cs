@@ -1,5 +1,6 @@
 ﻿using Common.Enums;
 using Common.Exceptions;
+using Common.Helpers;
 using Common.Models.User;
 using DbService;
 using Microsoft.AspNetCore.Authorization;
@@ -23,14 +24,16 @@ namespace UserService.Services
         }
 
         /// <inheritdoc/>
-        public async Task<User> GetUser(int id)
+        public async Task<UserResponse> GetUser(int id)
         {
             try
             {
                 User? user = await _dbService.Get(id);
                 if (user == null)
                     throw new NotFoundException();
-                return user;
+
+                UserResponse userResponse = Creators.GetUserResponse(user);
+                return userResponse;
             }
             catch (Exception ex)
             {
@@ -39,14 +42,16 @@ namespace UserService.Services
         }
 
         /// <inheritdoc/>
-        public async Task<User> GetUser(string username)
+        public async Task<UserResponse> GetUser(string username)
         {
             try
             {
                 User? user = await _dbService.Get(x => x.Username == username);
                 if (user == null)
                     throw new NotFoundException();
-                return user;
+
+                UserResponse userResponse = Creators.GetUserResponse(user);
+                return userResponse;
             }
             catch (Exception ex)
             {
@@ -224,7 +229,9 @@ namespace UserService.Services
         {
             try
             {
-                User? user = await GetUser(id);
+                User? user = await _dbService.Get(id);
+                if (user == null)
+                    throw new NotFoundException();
 
                 if (user.IsBlocked)
                 {
@@ -290,12 +297,12 @@ namespace UserService.Services
                 throw new ArgumentNullException(nameof(userGroupId));
             try
             {
-                User? user = await GetUser(userId);
+                UserResponse? user = await GetUser(userId);
                 if (user != null)
                 {
                     user.UserGroupId = userGroupId;
 
-                    User? updatedUser = await _dbService.Update(user, x => x.Id == user.Id);
+                    User? updatedUser = await _dbService.Update(user, x => x.Id == userId);
                     if (updatedUser == null)
                         throw new FailedToUpdateException<User>();
 
@@ -315,7 +322,7 @@ namespace UserService.Services
         {
             try
             {
-                User? user = await GetUser(userId);
+                User? user = await _dbService.Get(userId);
                 if (user != null)
                 {
                     user.UserGroupId = Guid.Empty;
@@ -374,9 +381,9 @@ namespace UserService.Services
             try
             {
                 User? user = await _dbService.Get(x => x.UserGroupId == userGroupId);
-
                 if (user != null)
                     return true;
+
                 return false;
             }
             catch (Exception ex)

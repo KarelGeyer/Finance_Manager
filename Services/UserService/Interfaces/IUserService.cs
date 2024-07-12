@@ -12,7 +12,7 @@ namespace UserService.Interfaces
         /// <returns><see cref="User"/> user</returns>
         /// <exception cref="NotFoundException" />
         /// <exception cref="Exception" />
-        Task<User> GetUser(int id);
+        Task<UserResponse> GetUser(int id);
 
         /// <summary>
         /// Attempts to retrieve a user from database by id
@@ -21,7 +21,7 @@ namespace UserService.Interfaces
         /// <returns><see cref="User"/> user</returns>
         /// <exception cref="NotFoundException" />
         /// <exception cref="Exception" />
-        Task<User> GetUser(string username);
+        Task<UserResponse> GetUser(string username);
 
         /// <summary>
         /// Attempts to retrieve a list of users based on user group

@@ -24,12 +24,12 @@ namespace UsersService.Controllers
         /// <param name="id">user's id</param>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<User>> GetUserById(int id)
+        public async Task<BaseResponse<UserResponse>> GetUserById(int id)
         {
-            BaseResponse<User> response = new BaseResponse<User>();
+            BaseResponse<UserResponse> response = new BaseResponse<UserResponse>();
             try
             {
-                User user = await _service.GetUser(id);
+                UserResponse user = await _service.GetUser(id);
                 response.Data = user;
                 response.Status = EHttpStatus.OK;
             }
@@ -53,12 +53,12 @@ namespace UsersService.Controllers
         /// <param name="username">username</param>
         [HttpGet]
         [Route("[action]")]
-        public async Task<BaseResponse<User>> GetUserByUsername(string username)
+        public async Task<BaseResponse<UserResponse>> GetUserByUsername(string username)
         {
-            BaseResponse<User> response = new BaseResponse<User>();
+            BaseResponse<UserResponse> response = new BaseResponse<UserResponse>();
             try
             {
-                User user = await _service.GetUser(username);
+                UserResponse user = await _service.GetUser(username);
                 response.Data = user;
                 response.Status = EHttpStatus.OK;
             }
