@@ -124,6 +124,39 @@ namespace PortfolioService.Controllers
         }
 
         /// <summary>
+        /// Get all expenses for a range of users represented by <paramref name="ids"/>.
+        /// </summary>
+        /// <param name="ids">array of user id's</param>
+        /// <returns>A list of expenses.</returns>
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<BaseResponse<List<Expense>>> GetAllExpensesByGroup(int[] ids)
+        {
+            BaseResponse<List<Expense>> res = new();
+
+            try
+            {
+                List<Expense> expenses = await _portfolioCommonService.GetAllPortfolioEntitiesByGroup(ids);
+                res.Data = expenses;
+                res.Status = EHttpStatus.OK;
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.BAD_REQUEST;
+                res.ResponseMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                res.Data = null;
+                res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                res.ResponseMessage = ex.Message;
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Get a specific expense for a user.
         /// </summary>
         /// <param name="id">The income ID.</param>

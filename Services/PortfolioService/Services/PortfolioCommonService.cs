@@ -5,68 +5,91 @@ using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Services
 {
-	public class PortfolioCommonService<T> : IPortfolioCommonService<T>
-		where T : CommonPortfolioModel
-	{
-		protected IDbService<T> _dbService;
+    public class PortfolioCommonService<T> : IPortfolioCommonService<T>
+        where T : CommonPortfolioModel
+    {
+        protected IDbService<T> _dbService;
 
-		public PortfolioCommonService(IDbService<T> dbService)
-		{
-			_dbService = dbService;
-		}
+        public PortfolioCommonService(IDbService<T> dbService)
+        {
+            _dbService = dbService;
+        }
 
-		/// <inheritdoc />
-		public List<T> GetCommonPortfolioEntitiesSortedByGivenParameter(int ownerId, bool shouldBeInReversedOrder, EPortfolioModelSortBy parameter)
-		{
-			if (ownerId == 0)
-				throw new ArgumentException(nameof(ownerId));
+        /// <inheritdoc />
+        public async Task<List<T>> GetAllPortfolioEntitiesByGroup(int[] userIds)
+        {
+            if (userIds.Length < 2)
+                throw new ArgumentException(nameof(userIds));
 
-			try
-			{
-				List<T> entities;
+            try
+            {
+                List<T> portfolioEntities = new List<T>();
+                foreach (var userId in userIds)
+                {
+                    List<T> entities = await _dbService.GetAll(x => x.OwnerId == userId);
+                    portfolioEntities.AddRange(entities);
+                }
 
-				switch (parameter)
-				{
-					case EPortfolioModelSortBy.Name:
-						entities = _dbService.GetAll(x => x.Name, x => x.OwnerId == ownerId);
-						break;
-					case EPortfolioModelSortBy.Value:
-						entities = _dbService.GetAll(x => x.Value, x => x.OwnerId == ownerId);
-						break;
-					case EPortfolioModelSortBy.Date:
-						entities = _dbService.GetAll(x => x.CreatedAt, x => x.OwnerId == ownerId);
-						break;
-					default:
-						throw new ArgumentException(nameof(parameter));
-				}
+                return portfolioEntities;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-				if (shouldBeInReversedOrder)
-					entities.Reverse();
+        /// <inheritdoc />
+        public List<T> GetCommonPortfolioEntitiesSortedByGivenParameter(int ownerId, bool shouldBeInReversedOrder, EPortfolioModelSortBy parameter)
+        {
+            if (ownerId == 0)
+                throw new ArgumentException(nameof(ownerId));
 
-				return entities;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
+            try
+            {
+                List<T> entities;
 
-		/// <inheritdoc />
-		public async Task<List<T>> GetCommonPortfolioEntitiesByCategory(int ownerId, int categoryId)
-		{
-			if (ownerId == 0)
-				throw new ArgumentException(nameof(ownerId));
-			if (categoryId == 0)
-				throw new ArgumentException(nameof(categoryId));
+                switch (parameter)
+                {
+                    case EPortfolioModelSortBy.Name:
+                        entities = _dbService.GetAll(x => x.Name, x => x.OwnerId == ownerId);
+                        break;
+                    case EPortfolioModelSortBy.Value:
+                        entities = _dbService.GetAll(x => x.Value, x => x.OwnerId == ownerId);
+                        break;
+                    case EPortfolioModelSortBy.Date:
+                        entities = _dbService.GetAll(x => x.CreatedAt, x => x.OwnerId == ownerId);
+                        break;
+                    default:
+                        throw new ArgumentException(nameof(parameter));
+                }
 
-			try
-			{
-				return await _dbService.GetAll(x => x.OwnerId == ownerId && x.CategoryId == categoryId);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-		}
-	}
+                if (shouldBeInReversedOrder)
+                    entities.Reverse();
+
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<List<T>> GetCommonPortfolioEntitiesByCategory(int ownerId, int categoryId)
+        {
+            if (ownerId == 0)
+                throw new ArgumentException(nameof(ownerId));
+            if (categoryId == 0)
+                throw new ArgumentException(nameof(categoryId));
+
+            try
+            {
+                return await _dbService.GetAll(x => x.OwnerId == ownerId && x.CategoryId == categoryId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }
 }
