@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Finance_Manager_UI
+namespace FinanceManagerUI
 {
     public static class MauiProgram
     {
@@ -16,7 +16,7 @@ namespace Finance_Manager_UI
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

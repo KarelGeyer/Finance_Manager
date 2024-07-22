@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Finance_Manager_UI
+namespace FinanceManagerUI
 {
     public class Program
     {
