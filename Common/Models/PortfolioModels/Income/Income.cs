@@ -3,5 +3,5 @@ using Common.Models.PortfolioModels;
 
 namespace Common.Models.ProductModels.Income
 {
-	public class Income : CommonPortfolioModel { }
+    public class Income : CommonPortfolioModel { }
 }

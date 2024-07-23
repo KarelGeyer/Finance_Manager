@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Models.User
 {
-	public class Login
-	{
-		public string Username { get; set; }
+    public class Login
+    {
+        public string Username { get; set; }
 
-		public string Password { get; set; }
-	}
+        public string Password { get; set; }
+    }
 }

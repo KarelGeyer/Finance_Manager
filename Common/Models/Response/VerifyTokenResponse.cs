@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Models.Response
 {
-	public class VerifyTokenResponse
-	{
-		public bool IsCorrect;
+    public class VerifyTokenResponse
+    {
+        public bool IsCorrect;
 
-		public string Message;
-	}
+        public string Message;
+    }
 }

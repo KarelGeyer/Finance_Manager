@@ -3,5 +3,5 @@ using Common.Models.PortfolioModels;
 
 namespace Common.Models.ProductModels.Properties
 {
-	public class Property : CommonPortfolioModel { }
+    public class Property : CommonPortfolioModel { }
 }

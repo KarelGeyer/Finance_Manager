@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Models.Response
 {
-	public class LoginResponse
-	{
-		public string Token;
+    public class LoginResponse
+    {
+        public string Token;
 
-		public int LoginAttemptsCounter;
-	}
+        public int LoginAttemptsCounter;
+    }
 }

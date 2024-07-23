@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Common.Enums
 {
-	public enum EPortfolioModelSortBy
-	{
-		Name,
-		Value,
-		Date
-	}
+    public enum EPortfolioModelSortBy
+    {
+        Name,
+        Value,
+        Date
+    }
 }

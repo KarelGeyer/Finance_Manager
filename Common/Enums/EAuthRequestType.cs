@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Identity.Data;
 
 namespace Common.Enums
 {
-	public enum EAuthRequestType
-	{
-		LOGIN,
-		UPDATE_PASSWORD,
-	}
+    public enum EAuthRequestType
+    {
+        LOGIN,
+        UPDATE_PASSWORD,
+    }
 }
