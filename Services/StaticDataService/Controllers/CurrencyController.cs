@@ -16,14 +16,16 @@ namespace StaticDataService.Controllers
     public class CurrencyController : ControllerBase
     {
         private readonly ICommonService<Currency> _commonService;
+        private readonly ILogger<CurrencyController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurrencyController"/> class.
         /// </summary>
         /// <param name="dbService">The database service.</param>
-        public CurrencyController(ICommonService<Currency> staticDataCommonService)
+        public CurrencyController(ICommonService<Currency> staticDataCommonService, ILogger<CurrencyController> logger)
         {
             _commonService = staticDataCommonService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace StaticDataService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Currency>>> GetAllCurrencies()
         {
+            _logger.LogInformation($"{nameof(GetAllCurrencies)} - method start");
             BaseResponse<List<Currency>> res = new();
 
             try
@@ -47,18 +50,21 @@ namespace StaticDataService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.NOT_FOUND;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllCurrencies)} - {res.Status} - {ex.Message}");
             }
             catch (ArgumentNullException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllCurrencies)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllCurrencies)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -73,6 +79,7 @@ namespace StaticDataService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<Currency>> GetCurrency(int id)
         {
+            _logger.LogInformation($"{nameof(GetCurrency)} - method start");
             BaseResponse<Currency> res = new();
 
             try
@@ -86,18 +93,21 @@ namespace StaticDataService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.NOT_FOUND;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCurrency)} - {res.Status} - {ex.Message}");
             }
             catch (ArgumentNullException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCurrency)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCurrency)} - {res.Status} - {ex.Message}");
             }
 
             return res;

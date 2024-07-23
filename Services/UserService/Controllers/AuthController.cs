@@ -15,10 +15,12 @@ namespace UserService.Controllers
     public class AuthController : ControllerBase
     {
         private readonly Interfaces.IAuthorizationService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(Interfaces.IAuthorizationService authService)
+        public AuthController(Interfaces.IAuthorizationService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace UserService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<string>> Login([FromBody] Login login)
         {
+            _logger.LogInformation($"{nameof(Login)} - method start");
             BaseResponse<string> response = new();
 
             try
@@ -42,16 +45,19 @@ namespace UserService.Controllers
             {
                 response.Status = EHttpStatus.NOT_FOUND;
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(Login)} - {response.Status} - {ex.Message}");
             }
             catch (UserNotVerifiedException ex)
             {
                 response.Status = EHttpStatus.FORBIDDEN;
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(Login)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(Login)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -65,9 +71,13 @@ namespace UserService.Controllers
         [Route("[action]")]
         public BaseResponse<bool> VerifyToken(string token)
         {
+            _logger.LogInformation($"{nameof(VerifyToken)} - method start");
             BaseResponse<bool> response = new();
 
             VerifyTokenResponse result = _authService.VerifyToken(token);
+
+            if (!result.IsCorrect)
+                _logger.LogError($"{nameof(VerifyToken)} - Incorrect token");
 
             response.Data = result.IsCorrect;
             response.ResponseMessage = result.Message;

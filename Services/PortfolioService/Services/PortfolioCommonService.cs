@@ -9,15 +9,18 @@ namespace PortfolioService.Services
         where T : CommonPortfolioModel
     {
         protected IDbService<T> _dbService;
+        private readonly ILogger<LoansService> _logger;
 
-        public PortfolioCommonService(IDbService<T> dbService)
+        public PortfolioCommonService(IDbService<T> dbService, ILogger<LoansService> logger)
         {
             _dbService = dbService;
+            _logger = logger;
         }
 
         /// <inheritdoc />
         public async Task<List<T>> GetAllPortfolioEntitiesByGroup(int[] userIds)
         {
+            _logger.LogInformation($"{nameof(GetAllPortfolioEntitiesByGroup)} - method start");
             if (userIds.Length < 2)
                 throw new ArgumentException(nameof(userIds));
 
@@ -34,6 +37,7 @@ namespace PortfolioService.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(GetAllPortfolioEntitiesByGroup)} - ${ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
@@ -41,8 +45,12 @@ namespace PortfolioService.Services
         /// <inheritdoc />
         public List<T> GetCommonPortfolioEntitiesSortedByGivenParameter(int ownerId, bool shouldBeInReversedOrder, EPortfolioModelSortBy parameter)
         {
+            _logger.LogInformation($"{nameof(GetCommonPortfolioEntitiesSortedByGivenParameter)} - method start");
             if (ownerId == 0)
+            {
+                _logger.LogError($"{nameof(GetCommonPortfolioEntitiesSortedByGivenParameter)} - ${nameof(ownerId)} must be provided");
                 throw new ArgumentException(nameof(ownerId));
+            }
 
             try
             {
@@ -60,6 +68,9 @@ namespace PortfolioService.Services
                         entities = _dbService.GetAll(x => x.CreatedAt, x => x.OwnerId == ownerId);
                         break;
                     default:
+                        _logger.LogError(
+                            $"{nameof(GetCommonPortfolioEntitiesSortedByGivenParameter)} - ${nameof(parameter)} incorrect value was provided"
+                        );
                         throw new ArgumentException(nameof(parameter));
                 }
 
@@ -70,6 +81,7 @@ namespace PortfolioService.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(GetCommonPortfolioEntitiesSortedByGivenParameter)} - ${ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
@@ -77,10 +89,17 @@ namespace PortfolioService.Services
         /// <inheritdoc />
         public async Task<List<T>> GetCommonPortfolioEntitiesByCategory(int ownerId, int categoryId)
         {
+            _logger.LogInformation($"{nameof(GetCommonPortfolioEntitiesByCategory)} - method start");
             if (ownerId == 0)
+            {
+                _logger.LogError($"{nameof(GetCommonPortfolioEntitiesByCategory)} - ${ownerId} must be provided");
                 throw new ArgumentException(nameof(ownerId));
+            }
             if (categoryId == 0)
+            {
+                _logger.LogError($"{nameof(GetCommonPortfolioEntitiesByCategory)} - ${categoryId} must be provided");
                 throw new ArgumentException(nameof(categoryId));
+            }
 
             try
             {
@@ -88,6 +107,7 @@ namespace PortfolioService.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(GetCommonPortfolioEntitiesByCategory)} - ${ex.Message}");
                 throw new Exception(ex.Message);
             }
         }

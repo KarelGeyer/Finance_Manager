@@ -13,11 +13,17 @@ namespace StaticDataService.Controllers
     {
         private readonly ICommonService<Category> _commonService;
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICommonService<Category> staticDataCommonService, ICategoryService categoryService)
+        public CategoryController(
+            ICommonService<Category> staticDataCommonService,
+            ICategoryService categoryService,
+            ILogger<CategoryController> logger
+        )
         {
             _commonService = staticDataCommonService;
             _categoryService = categoryService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -28,6 +34,7 @@ namespace StaticDataService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Category>>> GetAllCategories()
         {
+            _logger.LogInformation($"{nameof(GetAllCategories)} - method start");
             BaseResponse<List<Category>> res = new();
 
             try
@@ -41,12 +48,14 @@ namespace StaticDataService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.NOT_FOUND;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllCategories)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllCategories)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -60,6 +69,7 @@ namespace StaticDataService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Category>>> GetCategoriesByType(int category)
         {
+            _logger.LogInformation($"{nameof(GetCategoriesByType)} - method start");
             BaseResponse<List<Category>> res = new();
 
             try
@@ -73,18 +83,21 @@ namespace StaticDataService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.NOT_FOUND;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoriesByType)} - {res.Status} - {ex.Message}");
             }
             catch (ArgumentNullException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoriesByType)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoriesByType)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -99,6 +112,7 @@ namespace StaticDataService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<Category>> GetCategoryById(int id)
         {
+            _logger.LogInformation($"{nameof(GetCategoryById)} - method start");
             BaseResponse<Category> res = new();
 
             try
@@ -112,18 +126,21 @@ namespace StaticDataService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.NOT_FOUND;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoryById)} - {res.Status} - {ex.Message}");
             }
             catch (ArgumentNullException ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoryById)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetCategoryById)} - {res.Status} - {ex.Message}");
             }
 
             return res;

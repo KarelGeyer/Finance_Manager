@@ -1,5 +1,6 @@
 using DbService;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using StaticDataService.Interfaces;
 using StaticDataService.Services;
 
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));

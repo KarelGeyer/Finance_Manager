@@ -3,6 +3,7 @@ using Common.Exceptions;
 using Common.Models.User;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
+using UserService.Controllers;
 using UserService.Interfaces;
 
 namespace UsersService.Controllers
@@ -12,10 +13,12 @@ namespace UsersService.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, ILogger<UserController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         /// <summary>
@@ -26,6 +29,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<UserResponse>> GetUserById(int id)
         {
+            _logger.LogInformation($"{nameof(GetUserById)} - method start");
             BaseResponse<UserResponse> response = new BaseResponse<UserResponse>();
             try
             {
@@ -37,11 +41,13 @@ namespace UsersService.Controllers
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.NOT_FOUND;
+                _logger.LogError($"{nameof(GetUserById)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(GetUserById)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -55,6 +61,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<UserResponse>> GetUserByUsername(string username)
         {
+            _logger.LogInformation($"{nameof(GetUserByUsername)} - method start");
             BaseResponse<UserResponse> response = new BaseResponse<UserResponse>();
             try
             {
@@ -66,11 +73,13 @@ namespace UsersService.Controllers
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.NOT_FOUND;
+                _logger.LogError($"{nameof(GetUserByUsername)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(GetUserByUsername)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -84,6 +93,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<UserGroup>> GetUsersByUserGroup(Guid userGroup)
         {
+            _logger.LogInformation($"{nameof(GetUsersByUserGroup)} - method start");
             BaseResponse<UserGroup> response = new BaseResponse<UserGroup>();
             try
             {
@@ -95,11 +105,13 @@ namespace UsersService.Controllers
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.NOT_FOUND;
+                _logger.LogError($"{nameof(GetUsersByUserGroup)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(GetUsersByUserGroup)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -113,6 +125,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DoesUserGroupAlreadyExist(Guid userId)
         {
+            _logger.LogInformation($"{nameof(DoesUserGroupAlreadyExist)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -124,6 +137,7 @@ namespace UsersService.Controllers
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(DoesUserGroupAlreadyExist)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -137,6 +151,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateUser([FromBody] UpdateUser updateUser)
         {
+            _logger.LogInformation($"{nameof(UpdateUser)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -148,11 +163,13 @@ namespace UsersService.Controllers
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.NOT_FOUND;
+                _logger.LogError($"{nameof(UpdateUser)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex) when (ex is Exception || ex is FailedToUpdateException<User>)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(UpdateUser)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -166,6 +183,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdatePassword([FromBody] UpdatePassword updatePassword)
         {
+            _logger.LogInformation($"{nameof(UpdatePassword)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -182,11 +200,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(UpdatePassword)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(UpdatePassword)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -200,6 +220,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> VerifyUser(int id)
         {
+            _logger.LogInformation($"{nameof(VerifyUser)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -216,11 +237,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(VerifyUser)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(VerifyUser)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -234,6 +257,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> CreateUserGroup([FromBody] int[] userIds, Guid userGroup)
         {
+            _logger.LogInformation($"{nameof(CreateUserGroup)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -241,7 +265,7 @@ namespace UsersService.Controllers
                 response.Data = result;
                 response.Status = EHttpStatus.OK;
             }
-            catch (Exception ex) when (ex is FailedToUpdateException<User> || ex is NotFoundException)
+            catch (Exception ex) when (ex is FailedToUpdateException<User> || ex is NotFoundException || ex is UserAlreadyExistsException)
             {
                 response.Data = false;
                 response.Status = ex switch
@@ -250,11 +274,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(CreateUserGroup)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(CreateUserGroup)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -268,6 +294,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> AddUserToGroup([FromBody] int userId, Guid userGroup)
         {
+            _logger.LogInformation($"{nameof(AddUserToGroup)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -284,11 +311,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(AddUserToGroup)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(AddUserToGroup)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -302,6 +331,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> RemoveUserFromGroup([FromBody] int userId)
         {
+            _logger.LogInformation($"{nameof(RemoveUserFromGroup)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -318,11 +348,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(RemoveUserFromGroup)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(RemoveUserFromGroup)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -336,6 +368,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteUserGroup(Guid userGroup)
         {
+            _logger.LogInformation($"{nameof(DeleteUserGroup)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -352,11 +385,13 @@ namespace UsersService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteUserGroup)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(DeleteUserGroup)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -370,6 +405,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteUser(int id)
         {
+            _logger.LogInformation($"{nameof(DeleteUser)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -382,11 +418,13 @@ namespace UsersService.Controllers
                 response.Data = false;
                 response.Status = EHttpStatus.BAD_REQUEST;
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteUser)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(DeleteUser)} - {response.Status} - {ex.Message}");
             }
 
             return response;
@@ -400,6 +438,7 @@ namespace UsersService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> CreateUser([FromBody] CreateUser createUser)
         {
+            _logger.LogInformation($"{nameof(CreateUser)} - method start");
             BaseResponse<bool> response = new BaseResponse<bool>();
             try
             {
@@ -412,11 +451,13 @@ namespace UsersService.Controllers
                 response.Data = false;
                 response.Status = EHttpStatus.BAD_REQUEST;
                 response.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(CreateUser)} - {response.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 response.ResponseMessage = ex.Message;
                 response.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
+                _logger.LogError($"{nameof(CreateUser)} - {response.Status} - {ex.Message}");
             }
 
             return response;

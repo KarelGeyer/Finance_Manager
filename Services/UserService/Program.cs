@@ -1,10 +1,11 @@
 using System.Text;
+using Common.Interfaces;
+using Common.Validations;
 using DbService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PortfolioService.Helpers;
 using UserService.Helpers;
 using UserService.Interfaces;
 using UserService.Services;
@@ -35,7 +36,7 @@ builder.Services
 builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped(typeof(IDbService<>), typeof(DbService<>));
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
-builder.Services.AddScoped<IValidation, Validation>();
+builder.Services.AddScoped<IUserValidation, UserValidation>();
 builder.Services.AddScoped<IUserService, UserService.Services.UserService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IJwt, Jwt>();

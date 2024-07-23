@@ -58,6 +58,7 @@ namespace UserService.Interfaces
         /// <returns>a bool value</returns>
         /// <exception cref="Exception" />
         /// <exception cref="FailedToCreateException" />
+        /// <exception cref="UserAlreadyExistsException" />
         Task<bool> CreateUser(CreateUser newUser);
 
         /// <summary>

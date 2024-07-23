@@ -8,15 +8,18 @@ namespace StaticDataService.Services
     public class CommonService<T> : ICommonService<T>
     {
         private readonly IDbService<T> _dbService;
+        private readonly ILogger<CommonService<T>> _logger;
 
-        public CommonService(IDbService<T> dbService)
+        public CommonService(IDbService<T> dbService, ILogger<CommonService<T>> logger)
         {
             _dbService = dbService;
+            _logger = logger;
         }
 
         /// <inheritdoc />
         public async Task<List<T>> GetEntities()
         {
+            _logger.LogInformation($"{nameof(GetEntities)} - method start");
             try
             {
                 List<T> list = await _dbService.GetAll();
@@ -26,6 +29,7 @@ namespace StaticDataService.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(GetEntities)} - {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
@@ -33,6 +37,7 @@ namespace StaticDataService.Services
         /// <inheritdoc />
         public async Task<T> GetEntity(int id)
         {
+            _logger.LogInformation($"{nameof(GetEntity)} - method start");
             if (id == 0 || id < 0)
                 throw new ArgumentNullException("id");
 
@@ -45,6 +50,7 @@ namespace StaticDataService.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError($"{nameof(GetEntity)} - {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }

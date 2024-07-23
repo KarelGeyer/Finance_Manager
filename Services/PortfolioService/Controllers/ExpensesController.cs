@@ -14,11 +14,17 @@ namespace PortfolioService.Controllers
     {
         private readonly IPortfolioCommonService<Expense> _portfolioCommonService;
         private readonly ICommonService<Expense> _commonService;
+        private readonly ILogger<ExpensesController> _logger;
 
-        public ExpensesController(IPortfolioCommonService<Expense> portfolioCommonService, ICommonService<Expense> commonService)
+        public ExpensesController(
+            IPortfolioCommonService<Expense> portfolioCommonService,
+            ICommonService<Expense> commonService,
+            ILogger<ExpensesController> logger
+        )
         {
             _commonService = commonService;
             _portfolioCommonService = portfolioCommonService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -30,6 +36,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Expense>>> GetAllExpenses(int ownerId, int month, int year)
         {
+            _logger.LogInformation($"{nameof(GetAllExpenses)} - method start");
             BaseResponse<List<Expense>> res = new();
 
             try
@@ -37,20 +44,27 @@ namespace PortfolioService.Controllers
                 List<Expense> expenses = await _commonService.GetEntities(ownerId, month, year);
                 res.Data = expenses;
                 res.Status = EHttpStatus.OK;
+
+                _logger.LogInformation($"{nameof(GetAllExpenses)} - OK");
             }
             catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpenses)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpenses)} - {res.Status} - {ex.Message}");
             }
 
+            _logger.LogInformation($"{nameof(GetAllExpenses)} - method end");
             return res;
         }
 
@@ -64,6 +78,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Expense>>> GetAllExpensesByCategory(int ownerId, int categoryId)
         {
+            _logger.LogInformation($"{nameof(GetAllExpensesByCategory)} - method start");
             BaseResponse<List<Expense>> res = new();
 
             try
@@ -77,12 +92,16 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesByCategory)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesByCategory)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -99,6 +118,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public BaseResponse<List<Expense>> GetAllExpensesSorted(int ownerId, bool shouldBeReversed, EPortfolioModelSortBy sortBy)
         {
+            _logger.LogInformation($"{nameof(GetAllExpensesSorted)} - method start");
             BaseResponse<List<Expense>> res = new();
 
             try
@@ -112,12 +132,16 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesSorted)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesSorted)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -132,6 +156,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Expense>>> GetAllExpensesByGroup(int[] ids)
         {
+            _logger.LogInformation($"{nameof(GetAllExpensesByGroup)} - method start");
             BaseResponse<List<Expense>> res = new();
 
             try
@@ -145,12 +170,16 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesByGroup)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetAllExpensesByGroup)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -165,6 +194,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<Expense>> GetExpense(int id)
         {
+            _logger.LogInformation($"{nameof(GetExpense)} - method start");
             BaseResponse<Expense> res = new();
 
             try
@@ -182,12 +212,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetExpense)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetExpense)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -202,6 +236,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> CreateExpense([FromBody] Expense expenseToBeCreated)
         {
+            _logger.LogInformation($"{nameof(CreateExpense)} - method start");
             BaseResponse<bool> res = new();
 
             try
@@ -215,12 +250,16 @@ namespace PortfolioService.Controllers
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(CreateExpense)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(CreateExpense)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -235,6 +274,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateExpense([FromBody] Expense updateExpense)
         {
+            _logger.LogInformation($"{nameof(UpdateExpense)} - method start");
             ArgumentNullException.ThrowIfNull(updateExpense);
             ArgumentNullException.ThrowIfNull(updateExpense.Name);
 
@@ -256,12 +296,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(UpdateExpense)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(UpdateExpense)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -276,6 +320,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteExpense(int id)
         {
+            _logger.LogInformation($"{nameof(DeleteExpense)} - method start");
             BaseResponse<bool> res = new();
 
             try
@@ -294,12 +339,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(DeleteExpense)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(DeleteExpense)} - {res.Status} - {ex.Message}");
             }
 
             return res;

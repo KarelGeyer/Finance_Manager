@@ -16,14 +16,16 @@ namespace PortfolioService.Controllers
     public class SavingsController
     {
         private readonly ICommonService<Savings> _commonService;
+        private readonly ILogger<SavingsController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SavingsController"/> class.
         /// </summary>
         /// <param name="dbService">The database service.</param>
-        public SavingsController(ICommonService<Savings> commonService)
+        public SavingsController(ICommonService<Savings> commonService, ILogger<SavingsController> logger)
         {
             _commonService = commonService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +37,8 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<double>> GetSavings(int userId)
         {
+            _logger.LogInformation($"{nameof(GetSavings)} - method start");
+
             BaseResponse<double> res = new();
             try
             {
@@ -48,12 +52,14 @@ namespace PortfolioService.Controllers
                 res.Data = 0;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetSavings)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = 0;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetSavings)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -68,6 +74,8 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> AddSavings([FromBody] Savings savingsToBeCreated)
         {
+            _logger.LogInformation($"{nameof(AddSavings)} - method start");
+
             BaseResponse<bool> res = new();
             try
             {
@@ -81,12 +89,14 @@ namespace PortfolioService.Controllers
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(AddSavings)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(AddSavings)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -101,6 +111,8 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateSavings([FromBody] Savings updateSavings)
         {
+            _logger.LogInformation($"{nameof(UpdateSavings)} - method start");
+
             BaseResponse<bool> res = new();
             try
             {
@@ -119,12 +131,14 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(UpdateSavings)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(UpdateSavings)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -139,6 +153,8 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteSavings(int id)
         {
+            _logger.LogInformation($"{nameof(DeleteSavings)} - method start");
+
             BaseResponse<bool> res = new();
             try
             {
@@ -157,12 +173,14 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteSavings)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteSavings)} - {res.Status} - {ex.Message}");
             }
 
             return res;

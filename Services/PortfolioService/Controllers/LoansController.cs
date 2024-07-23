@@ -4,6 +4,7 @@ using Common.Models.Expenses;
 using Common.Models.ProductModels.Loans;
 using Common.Response;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PortfolioService.Interfaces.Services;
 
 namespace PortfolioService.Controllers
@@ -15,12 +16,19 @@ namespace PortfolioService.Controllers
         private readonly ILoansService _loanService;
         private readonly ICommonService<Loan> _commonService;
         private readonly IPortfolioCommonService<Loan> _portfolioCommonService;
+        private readonly ILogger<LoansController> _logger;
 
-        public LoansController(ILoansService loanService, ICommonService<Loan> commonService, IPortfolioCommonService<Loan> portfolioCommonService)
+        public LoansController(
+            ILoansService loanService,
+            ICommonService<Loan> commonService,
+            IPortfolioCommonService<Loan> portfolioCommonService,
+            ILogger<LoansController> logger
+        )
         {
             _loanService = loanService;
             _commonService = commonService;
             _portfolioCommonService = portfolioCommonService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,6 +42,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Loan>>> GetAllLoans(int ownerId, int month, int year)
         {
+            _logger.LogInformation($"Getting all loans for user {ownerId} for {month}/{year}");
             BaseResponse<List<Loan>> res = new();
 
             try
@@ -47,12 +56,14 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoans)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoans)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -67,6 +78,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Loan>>> GetAllLoansByGroup(int[] ids)
         {
+            _logger.LogInformation($"Getting all loans for user group with IDs: {string.Join(", ", ids)}");
             BaseResponse<List<Loan>> res = new();
 
             try
@@ -80,12 +92,14 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoansByGroup)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoansByGroup)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -100,6 +114,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<Loan>> GetLoan(int loanId)
         {
+            _logger.LogInformation($"Getting loan with ID: {loanId}");
             BaseResponse<Loan> res = new();
 
             try
@@ -117,12 +132,14 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetLoan)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetLoan)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -138,6 +155,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Loan>>> GetAllLoansByCreditor(int ownerId, int ownToId)
         {
+            _logger.LogInformation($"Getting all loans for user {ownerId} that are owned to user {ownToId}");
             BaseResponse<List<Loan>> res = new();
 
             try
@@ -151,12 +169,14 @@ namespace PortfolioService.Controllers
                 res.Data = null;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoansByCreditor)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetAllLoansByCreditor)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -171,6 +191,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<double>> GetTotalDebt(int ownerId)
         {
+            _logger.LogInformation($"Getting total debt for user {ownerId}");
             BaseResponse<double> res = new();
 
             try
@@ -184,12 +205,14 @@ namespace PortfolioService.Controllers
                 res.Data = 0;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetTotalDebt)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = 0;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetTotalDebt)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -205,6 +228,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<double>> GetTotalDebtByCreditor(int ownerId, int ownToId)
         {
+            _logger.LogInformation($"Getting total debt for user {ownerId} to creditor {ownToId}");
             BaseResponse<double> res = new();
 
             try
@@ -218,12 +242,14 @@ namespace PortfolioService.Controllers
                 res.Data = 0;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetTotalDebtByCreditor)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = 0;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(GetTotalDebtByCreditor)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -238,6 +264,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> CreateLoan([FromBody] Loan loanToBeCreated)
         {
+            _logger.LogInformation($"Creating a new loan");
             BaseResponse<bool> res = new();
 
             try
@@ -251,12 +278,14 @@ namespace PortfolioService.Controllers
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(CreateLoan)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(CreateLoan)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -271,6 +300,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateLoan(Loan updateLoan)
         {
+            _logger.LogInformation($"Updating loan with ID: {updateLoan.Id}");
             BaseResponse<bool> res = new();
 
             try
@@ -289,12 +319,14 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(UpdateLoan)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(UpdateLoan)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -309,6 +341,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteLoan(int loanId)
         {
+            _logger.LogInformation($"Deleting loan with ID: {loanId}");
             BaseResponse<bool> res = new();
 
             try
@@ -327,12 +360,14 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteLoan)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+                _logger.LogError($"{nameof(DeleteLoan)} - {res.Status} - {ex.Message}");
             }
 
             return res;

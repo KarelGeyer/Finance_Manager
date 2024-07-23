@@ -12,10 +12,12 @@ namespace PortfolioService.Controllers
     public class BugdetController : ControllerBase
     {
         private readonly ICommonService<Budget> _commonService;
+        private readonly ILogger<BugdetController> _logger;
 
-        public BugdetController(ICommonService<Budget> commonService)
+        public BugdetController(ICommonService<Budget> commonService, ILogger<BugdetController> logger)
         {
             _commonService = commonService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<List<Budget>>> GetBudgets(int ownerId)
         {
+            _logger.LogInformation($"{nameof(GetBudgets)} - method start");
             BaseResponse<List<Budget>> res = new();
 
             try
@@ -34,17 +37,25 @@ namespace PortfolioService.Controllers
                 res.Data = budgets;
                 res.Status = EHttpStatus.OK;
             }
-            catch (NotFoundException ex)
+            catch (Exception ex) when (ex is NotFoundException || ex is ArgumentException || ex is ArgumentNullException)
             {
                 res.Data = null;
-                res.Status = EHttpStatus.NOT_FOUND;
+                res.Status = ex switch
+                {
+                    NotFoundException => EHttpStatus.NOT_FOUND,
+                    _ => EHttpStatus.BAD_REQUEST
+                };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetBudgets)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetBudgets)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -58,10 +69,12 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<Budget>> GetBudget(int id)
         {
+            _logger.LogInformation($"{nameof(GetBudget)} - method start");
             BaseResponse<Budget> res = new();
 
             try
             {
+                _logger.LogInformation($"{nameof(GetBudget)} - retrieving budget");
                 Budget budget = await _commonService.GetEntity(id);
                 res.Data = budget;
                 res.Status = EHttpStatus.OK;
@@ -75,12 +88,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetBudget)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = null;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(GetBudget)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -95,10 +112,12 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> CreateBudget([FromBody] Budget budgetToBeCreated)
         {
+            _logger.LogInformation($"{nameof(CreateBudget)} - method start");
             BaseResponse<bool> res = new();
 
             try
             {
+                _logger.LogInformation($"{nameof(CreateBudget)} - creating budget");
                 bool result = await _commonService.CreateEntity(budgetToBeCreated);
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
@@ -108,12 +127,16 @@ namespace PortfolioService.Controllers
                 res.Data = false;
                 res.Status = EHttpStatus.BAD_REQUEST;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(CreateBudget)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(CreateBudget)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -128,14 +151,13 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> UpdateBudget([FromBody] Budget updateBudget)
         {
-            ArgumentNullException.ThrowIfNull(updateBudget);
-
+            _logger.LogInformation($"{nameof(UpdateBudget)} - method start");
             BaseResponse<bool> res = new();
 
             try
             {
+                _logger.LogInformation($"{nameof(UpdateBudget)} - updating budget");
                 bool result = await _commonService.UpdateEntity(updateBudget);
-
                 res.Data = result;
                 res.Status = EHttpStatus.OK;
             }
@@ -149,12 +171,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(UpdateBudget)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(UpdateBudget)} - {res.Status} - {ex.Message}");
             }
 
             return res;
@@ -169,6 +195,7 @@ namespace PortfolioService.Controllers
         [Route("[action]")]
         public async Task<BaseResponse<bool>> DeleteBudget(int id)
         {
+            _logger.LogInformation($"{nameof(DeleteBudget)} - method start");
             BaseResponse<bool> res = new();
 
             try
@@ -187,12 +214,16 @@ namespace PortfolioService.Controllers
                     _ => EHttpStatus.BAD_REQUEST
                 };
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(DeleteBudget)} - {res.Status} - {ex.Message}");
             }
             catch (Exception ex)
             {
                 res.Data = false;
                 res.Status = EHttpStatus.INTERNAL_SERVER_ERROR;
                 res.ResponseMessage = ex.Message;
+
+                _logger.LogError($"{nameof(DeleteBudget)} - {res.Status} - {ex.Message}");
             }
 
             return res;
