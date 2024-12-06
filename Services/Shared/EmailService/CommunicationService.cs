@@ -21,7 +21,7 @@ namespace EmailService
 
         public EmailResponse SendEmail(Email email)
         {
-            _logger.LogInformation($"{nameof(SendEmail)} - method start");
+            _logger.LogInformation($"{nameof(SendEmail)} - start");
             MimeMessage newEmail = new();
             EmailResponse response = new();
 
