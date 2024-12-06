@@ -19,5 +19,7 @@ namespace Common.Models.User
         public string Password { get; set; }
 
         public int CurrencyId { get; set; }
+
+        public Guid UserGroupId { get; set; } = Guid.Empty;
     }
 }

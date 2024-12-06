@@ -19,7 +19,7 @@ namespace Common.Helpers
                 Surname = user.Surname,
                 Username = user.Username,
                 Email = user.Email,
-                UserGroupId = user.UserGroupId
+                UserGroupId = (Guid)(user.UserGroupId)
             };
         }
     }

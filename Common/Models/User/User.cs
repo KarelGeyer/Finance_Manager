@@ -6,7 +6,7 @@ namespace Common.Models.User
     [Table("Users")]
     public class User : BaseDbModel
     {
-        public Guid UserGroupId { get; set; }
+        public Guid? UserGroupId { get; set; }
 
         public string Name { get; set; }
 

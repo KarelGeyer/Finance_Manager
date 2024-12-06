@@ -1,0 +1,64 @@
+﻿@model Common.Models.UI.Property.PropertyVM
+@using Common.Models.ProductModels.Properties
+@{
+    ViewData["Title"] = "Properties";
+    Model.ShouldDeletePartialBeVisible = false;
+}
+
+<h1>Properties</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Property.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Property.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Property.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Property.CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in (IEnumerable<Property>)ViewData["properties"])
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id, name = item.Name }) | 
+                    <form asp-action="ShowDeletePartial" asp-controller="Property" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            
+        }
+    </tbody>
+    
+    @if (Model.ShouldDeletePartialBeVisible)
+    {
+        <partial name="~/Views/Shared/Modals/_DeleteProperty.cshtml" model="Model" />
+    }
+
+</table>
