@@ -66,9 +66,6 @@ The is to have a software provided through several stores for free and that will
         ![multiplatform app tab](assets/images/multiplatform-tab.png)
 
 ## Roadmap
-
-- [ ] Add basic setup files, create project folder structure
-- [ ] Build a Database
 - [ ] Add .NET Web API with Microservices architecture
 - [ ] Add Frontend
   - [ ] Desktop version of application
@@ -78,7 +75,6 @@ The is to have a software provided through several stores for free and that will
     - [ ] Android
     - [ ] iOS
   - [ ] Add Web version of application
-  - [ ] Allow Excel/PDF exports - export income, expenses and properties overview
   - [ ] Multilanguage support
     - [ ] Czech
     - [ ] English
@@ -89,7 +85,3 @@ The is to have a software provided through several stores for free and that will
     - [ ] Outlook
   - [ ] User Role support
     - [ ] Admins can add categories as they wish
-
-## Contact
-
-Karel Geyer - karelgeyer@gmail.com
