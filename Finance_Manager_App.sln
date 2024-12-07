@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Finance_Manager_UI", "Finance_Manager_UI\Finance_Manager_UI.csproj", "{8D8765D1-B080-42EE-A67B-67FF1BEF3DE8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Finance_Manager_Backend", "Finance_Manager_Backend", "{E7FF467E-7ACA-4950-A692-07449CE1B1BB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{CA6FC670-5FAB-4093-A231-7920D2A4D419}"
