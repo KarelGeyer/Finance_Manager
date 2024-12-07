@@ -1,4 +1,4 @@
-﻿namespace AppMP
+﻿namespace AppUI
 {
     public partial class App : Application
     {

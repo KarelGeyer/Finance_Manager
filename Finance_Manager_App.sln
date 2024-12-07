@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DailyOverview", "DailyOverv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "Web\WebUI\WebUI.csproj", "{7D80C7CB-F4DC-482A-BAB2-916E68773EDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppMP", "AppMP\AppMP.csproj", "{5A1A7A0D-6D46-4342-96A6-A6457274FA78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppUI", "AppUI\AppUI.csproj", "{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,12 +73,12 @@ Global
 		{7D80C7CB-F4DC-482A-BAB2-916E68773EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D80C7CB-F4DC-482A-BAB2-916E68773EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D80C7CB-F4DC-482A-BAB2-916E68773EDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A1A7A0D-6D46-4342-96A6-A6457274FA78}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3AA946-ABFE-47B2-A097-1E2D7DE244D4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
