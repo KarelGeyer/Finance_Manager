@@ -40,8 +40,6 @@ The is to have a software provided through several stores for free and that will
 - [MAUI](https://dotnet.microsoft.com/en-us/apps/maui) for desktop layer
 - [MimeKit](https://mimekit.net/) as a mail client
 - [MSSQL](https://www.mssql.cz/) as a database layer
-- [XUnit](https://xunit.net/) for C# unit testing
-- [NSubstitute](https://nsubstitute.github.io/) for unit test mockin purposes
 
 ## Getting Started
 
