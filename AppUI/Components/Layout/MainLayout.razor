@@ -1,13 +1,22 @@
-﻿@inherits LayoutComponentBase
+﻿@using AppUI.Helpers.Enums
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+@inherits LayoutComponentBase
 
 <div class="page">
+    <MudThemeProvider />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <NavMenu Type="@ENavType.Sub" />
         </div>
 
         <article class="content px-4">

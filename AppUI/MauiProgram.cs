@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AppUI.State;
+using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 
 namespace AppUI
 {
@@ -15,10 +17,12 @@ namespace AppUI
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton<RouterState>();
+            builder.Services.AddMudServices();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

@@ -1,0 +1,41 @@
+﻿@page "/finances"
+@using AppUI.State
+@using AppUI.Components.Views.Finance
+@inject RouterState RouterState
+
+<h1>Finances</h1>
+
+@if (@RouterState.SectionName == "General Overview")
+{
+    <GeneralOverview />
+}
+
+@if (@RouterState.SectionName == "Majetek")
+{
+    <Properties />
+}
+
+@if (@RouterState.SectionName == "Náklady a dluhy")
+{
+    <Expenses />
+    <Debts />
+}
+
+@if (@RouterState.SectionName == "Příjmy a úspory")
+{
+    <Incomes />
+    <Savings />
+}
+
+@if (@RouterState.SectionName == "Rozpočty")
+{
+    <Budgets />
+}
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        RouterState.OnChange += StateHasChanged;
+    }
+}
