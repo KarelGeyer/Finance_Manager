@@ -1,9 +1,9 @@
 ﻿@page "/finances"
 @using AppUI.State
 @using AppUI.Components.Views.Finance
-@inject RouterState RouterState
+@using AppUI.Components.Views.Finance.Properties
 
-<h1>Finances</h1>
+@inject RouterState RouterState
 
 @if (@RouterState.SectionName == "General Overview")
 {

@@ -1,7 +1,10 @@
 ﻿@using AppUI.Helpers.Enums
+@using AppUI.State
+@inherits LayoutComponentBase
+@inject StaticDataState StaticDataState
+
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
 <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-@inherits LayoutComponentBase
 
 <div class="page">
     <MudThemeProvider />
@@ -24,3 +27,16 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        StaticDataState.GetCategories();
+        StaticDataState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StaticDataState.OnChange -= StateHasChanged;
+    }
+}

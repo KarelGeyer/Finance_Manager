@@ -1,0 +1,111 @@
+﻿@using AppUI.Helpers.Enums
+@using AppUI.Services;
+@using AppUI.State;
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common.Enums;
+@using Common;
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using AppUI.Components.Views.Finance.Properties
+
+@inject PropertiesService service
+@inject IDialogService DialogService
+
+<MudText Typo="Typo.h3">Properties</MudText>
+
+@if(type == EPageViewType.View)
+{
+    @if (@isLoading == true)
+    {
+        <Loader />
+    }
+    else
+    {
+        <MudPaper Class="d-flex flex-wrap gap-4 pa-4" Elevation="0">
+            @foreach (var property in properties)
+            {
+                <MudCard Class="mud_paper_custom ">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@property.Name</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.EditNote" Color="Color.Success" Size="Size.Medium" OnClick="@(() => Edit(property.Id))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Medium" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <div class="pa-2 d-flex">
+                            <MudText>Value:</MudText>
+                            <MudSpacer />
+                            <MudText>@property.Value</MudText>
+                        </div>
+                        <div class="pa-2 d-flex">
+                            <MudText>Created:</MudText>
+                            <MudSpacer />
+                            <MudText>@property.CreatedAt.ToString("dd.MM.yyyy")</MudText>
+                        </div>
+                        <div class="pa-2 d-flex">
+                            <MudText>Category:</MudText>
+                            <MudSpacer />
+                            <MudText>@Convertor.CategoryIdToString(@property.CategoryId)</MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            }
+        </MudPaper>
+    }
+} 
+else if (type == EPageViewType.Edit)
+{
+    <Edit Property="@currentItem" Cancel=@Cancel />
+}
+else if (type == EPageViewType.Create)
+{
+    
+
+}
+
+@code {
+    private BaseResponse<List<Property>> res = new();
+    private List<Property> properties = new();
+    private bool isLoading = true;
+    private bool isError = false;
+    private EPageViewType type = EPageViewType.View;
+    private Property? currentItem = null;
+
+    // EDIT
+    string value;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProperties();
+    }
+
+    private async Task GetProperties()
+    {
+        res = await service.GetPropertiesAsync();
+
+        if (res.Status != EHttpStatus.OK) isError = true;
+
+        properties = res.Data!;
+        isLoading = false;
+    }
+
+    private void Edit(int id)
+    {
+        currentItem = properties.Where(item => item.Id == id).Single();
+        if(currentItem == null)
+        {
+            throw new Exception("No item was found");
+        }
+
+        type = EPageViewType.Edit;
+    }
+
+    private void Cancel()
+    {
+        type = EPageViewType.View;
+    }
+}

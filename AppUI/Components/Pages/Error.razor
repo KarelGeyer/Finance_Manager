@@ -1,0 +1,20 @@
+﻿@page "/error"
+
+@using AppUI.State;
+
+@inject NavigationManager NavigationManager
+@inject StaticDataState StaticDataState
+
+<MudText Typo="Typo.h3">Error</MudText>
+<MudPaper Class="pa-16 ma-2 d-flex" Elevation="2" Outlined="true">
+    <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Style="font-size: 4rem;" />
+    <MudText Typo="Typo.h4" Class="m-3">@StaticDataState.ErrorMessage</MudText>
+</MudPaper>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(5000);
+        NavigationManager.NavigateTo($"/{StaticDataState.LinkToPage}");
+    }
+}

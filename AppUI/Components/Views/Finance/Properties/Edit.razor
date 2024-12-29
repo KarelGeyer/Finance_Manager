@@ -1,0 +1,61 @@
+﻿@using AppUI.Services;
+@using AppUI.State;
+@using AppUI.Helpers.Enums
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common.Enums;
+@using Common;
+@using AppUI.Components.Views.Finance
+
+@inject PropertiesService Service
+@inject StaticDataState StaticDataState
+@inject NavigationManager NavigationManager
+
+<div class="main-container">
+    <MudPaper Class="pa-8" Width="50%" MinWidth="350px" Elevation="0">
+        <MudForm>
+            <MudTextField Variant="Variant.Outlined" T="string" Label="Name" Value="@Property!.Name" ValueChanged="((e) => Property.Name = e)" />
+            <MudTextField Variant="Variant.Outlined" T="double" Label="Value" Value="@Property!.Value" ValueChanged="((e) => Property.Value = e)" />
+            <MudSelect T="string" Variant="Variant.Outlined" Label="Category" @bind-Value="value" >
+                @foreach (var category in StaticDataState.Categories)
+                {
+                    <MudSelectItem T="string" Value="category.Value" />
+                }
+            </MudSelect>
+            <MudSpacer />
+            <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Primary" OnClick="(() => UpdateProperty())"> Save</MudButton>
+            <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Error" OnClick="(() => Cancel.InvokeAsync())">Cancel</MudButton>
+        </MudForm>
+    </MudPaper>
+</div>
+
+@code {
+    #region Params
+    [Parameter]
+    public Property Property { get; set; }
+
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+    #endregion
+
+    private string value;
+
+    private async void UpdateProperty()
+    {
+        if(value != null)
+        {
+            Property.CategoryId = Convertor.CategoryIdNameToInt(value, (int)ECategoryType.Properties);
+        }
+
+        BaseResponse<bool> response = await Service.UpdateProperty(Property);
+        if(response.Status == Common.Enums.EHttpStatus.OK && response.Data)
+        {
+            StaticDataState.SuccessMessage = $"Property with id {Property.Id} was sucesfully updated";
+            NavigationManager.NavigateTo("success");
+        } else
+        {
+            StaticDataState.ErrorMessage = $"Property with id {Property.Id} could not be updated";
+            NavigationManager.NavigateTo("error");
+        }
+    }
+}

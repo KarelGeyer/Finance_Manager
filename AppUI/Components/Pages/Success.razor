@@ -1,0 +1,25 @@
+﻿@page "/success"
+
+@using AppUI.Services;
+@using AppUI.State;
+@using AppUI.Helpers.Enums
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common;
+
+@inject NavigationManager NavigationManager
+@inject StaticDataState StaticDataState
+
+<MudText Typo="Typo.h3">Success</MudText>
+<MudPaper Class="pa-16 ma-2 d-flex" Elevation="2" Outlined="true">
+    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Style="font-size: 4rem;" />
+    <MudText Typo="Typo.h4" Class="m-3">@StaticDataState.SuccessMessage</MudText>
+</MudPaper>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(5000);
+        NavigationManager.NavigateTo($"/{StaticDataState.LinkToPage}");
+    }
+}
