@@ -1,9 +1,11 @@
 ﻿@page "/finances"
 @using AppUI.State
 @using AppUI.Components.Views.Finance
-@inject RouterState RouterState
+@using AppUI.Components.Views.Finance.Properties
+@using AppUI.Services
 
-<h1>Finances</h1>
+@inject RouterState RouterState
+@inject StaticDataState StaticDataState
 
 @if (@RouterState.SectionName == "General Overview")
 {
@@ -12,7 +14,7 @@
 
 @if (@RouterState.SectionName == "Majetek")
 {
-    <Properties />
+    <Properties /> 
 }
 
 @if (@RouterState.SectionName == "Náklady a dluhy")
@@ -34,8 +36,15 @@
 
 
 @code {
+
     protected override void OnInitialized()
     {
+        if (RouterState.Params.LinkToSection != string.Empty)
+        {
+            RouterState.SectionName = RouterState.Params.LinkToSection;
+            RouterState.Params.LinkToSection = string.Empty;
+        }
+        
         RouterState.OnChange += StateHasChanged;
     }
 }

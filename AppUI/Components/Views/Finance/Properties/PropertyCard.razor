@@ -1,0 +1,42 @@
+﻿@using Common.Helpers;
+@using Common.Models.ProductModels.Properties;
+
+<MudCard Class="mud_paper_custom ">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Property.Name</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.EditNote" Color="Color.Success" Size="Size.Medium" OnClick="@(() => ChangeToEdit.InvokeAsync(Property))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Medium" OnClick="@(() => ChangeToDelete.InvokeAsync(Property))" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <div class="pa-2 d-flex">
+            <MudText>Value:</MudText>
+            <MudSpacer />
+            <MudText>@Property.Value</MudText>
+        </div>
+        <div class="pa-2 d-flex">
+            <MudText>Created:</MudText>
+            <MudSpacer />
+            <MudText>@Property.CreatedAt.ToString("dd.MM.yyyy")</MudText>
+        </div>
+        <div class="pa-2 d-flex">
+            <MudText>Category:</MudText>
+            <MudSpacer />
+            <MudText>@Convertor.CategoryIdToString(@Property.CategoryId)</MudText>
+        </div>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public Property Property { get; set; }
+
+    [Parameter]
+    public EventCallback<Property> ChangeToEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<Property> ChangeToDelete { get; set; }
+}

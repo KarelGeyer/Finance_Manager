@@ -1,0 +1,109 @@
+﻿@using AppUI.Services;
+@using AppUI.State;
+@using AppUI.Helpers;
+@using AppUI.Helpers.Enums;
+@using AppUI.Helpers.ViewModels;
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common.Enums;
+@using Common.Helpers;
+@using AppUI.Components.Views.Finance;
+
+@inject PropertiesService Service
+@inject StaticDataState StaticDataState
+@inject RouterState RouterState;
+@inject UserState UserState;
+@inject NavigationManager NavigationManager
+
+<div class="main-container">
+    <MudPaper Class="pa-8" Width="50%" MinWidth="350px" Elevation="0">
+        <MudForm>
+            <MudTextField Variant="Variant.Outlined" T="string" Label="Name" Value="@itemName" ValueChanged="((e) => itemName = e)" />
+            <MudTextField Variant="Variant.Outlined" T="double" Label="Value" Value="@value" ValueChanged="((e) => value = e)" />
+            <MudSelect T="string" Variant="Variant.Outlined" Label="Category" @bind-Value="categoryValue">
+                @foreach (var category in StaticDataState.Categories)
+                {
+                    <MudSelectItem T="string" Value="category.Value" />
+                }
+            </MudSelect>
+            <MudSpacer />
+            @if(loading == false)
+            {
+                <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Primary" OnClick="(() => CreateNewItem())">Create</MudButton>
+            }
+            else
+            {
+                <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" Disabled DropShadow="false" Color="Color.Primary">
+                    <MudProgressCircular Color="Color.Success" Indeterminate="true" />
+                </MudButton>
+            }
+
+            <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Error" OnClick="(() => Cancel.InvokeAsync())">Cancel</MudButton>
+        </MudForm>
+    </MudPaper>
+</div>
+
+
+@code {
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
+    [Parameter]
+    public EItemType CreateItemType { get; set; }
+
+    private string itemName;
+    private double value;
+    private string categoryValue;
+
+    private bool loading = false;
+
+    private async void CreateNewItem()
+    {
+        loading = true;
+        BaseResponse<bool> result =
+            new()
+                {
+                    Data = false,
+                    Status = Common.Enums.EHttpStatus.INTERNAL_SERVER_ERROR,
+                    ResponseMessage = "Something Went Wrong",
+                };
+
+        switch (CreateItemType)
+        {
+            case EItemType.Property:
+                {
+                    Property newProperty = new()
+                        {
+                            Name = itemName,
+                            Value = value,
+                            CategoryId = Convertor.CategoryIdNameToInt(categoryValue, (int)ECategoryType.Properties),
+                            OwnerId = UserState.UserId
+                        };
+
+                    result = await Service.CreateProperty(newProperty);
+                    break;
+                }
+            default: break;
+        }
+
+        loading = false;
+        if (result.Status == Common.Enums.EHttpStatus.OK && result.Data)
+        {
+            StaticDataState.ResultState = EResult.Success;
+            StaticDataState.SuccessMessage = $"Item was sucesfully created";
+        }
+        else
+        {
+            StaticDataState.ResultState = EResult.Error;
+            StaticDataState.ErrorMessage = $"Item could not be created";
+        }
+
+        RouterState.Params = new RouterParams()
+            {
+                LinkToPage = "finances",
+                LinkToSection = "Majetek",
+            };
+
+        NavigationManager.NavigateTo("result");
+    }
+}

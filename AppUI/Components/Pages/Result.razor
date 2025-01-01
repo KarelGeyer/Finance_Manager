@@ -1,0 +1,56 @@
+﻿@page "/result"
+
+@using AppUI.Services;
+@using AppUI.State;
+@using AppUI.Helpers.Enums
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common;
+
+@inject NavigationManager NavigationManager
+@inject StaticDataState StaticDataState
+@inject RouterState RouterState
+
+@if (StaticDataState.ResultState == EResult.Success)
+{
+    <MudText Typo="Typo.h3">Success</MudText>
+} else
+{
+    <MudText Typo="Typo.h3">Error</MudText>
+}
+
+<MudPaper Class="pa-16 ma-2 d-flex" Elevation="2" Outlined="true">
+    @if (StaticDataState.ResultState == EResult.Success)
+    {
+        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Style="font-size: 4rem;" />
+        <MudText Typo="Typo.h4" Class="m-3">@StaticDataState.SuccessMessage</MudText>
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Style="font-size: 4rem;" />
+        <MudText Typo="Typo.h4" Class="m-3">@StaticDataState.ErrorMessage</MudText>
+    }
+</MudPaper>
+
+<MudText Typo="Typo.subtitle1" Class="mt-4">You will be redirected back to previous page in @secondsLeft seconds...</MudText>
+
+
+@code {
+    private int secondsLeft = 5; // Countdown duration
+
+    protected override async Task OnInitializedAsync()
+    {
+        while (secondsLeft > 0)
+        {
+            StateHasChanged();
+            await Task.Delay(1000);
+            secondsLeft--;
+        }
+
+        if (StaticDataState.ErrorMessage != string.Empty) StaticDataState.ErrorMessage = "";
+        if (StaticDataState.SuccessMessage != string.Empty) StaticDataState.SuccessMessage = "";
+        StaticDataState.ResultState = EResult.Default;
+        
+        NavigationManager.NavigateTo($"/{RouterState.Params.LinkToPage}");
+    }
+}

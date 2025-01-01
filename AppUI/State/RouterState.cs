@@ -2,10 +2,11 @@
 
 namespace AppUI.State
 {
-    public class RouterState
+    public class RouterState : BaseState
     {
         private string? _pageName = "Test";
         private string? _sectionName = "General Overview";
+        private RouterParams _params = new() { LinkToPage = "", LinkToSection = "" };
 
         private readonly List<string> financeSubPageNames = ["General Overview", "Majetek", "Náklady a dluhy", "Příjmy a úspory", "Rozpočty"];
         private readonly List<PageData> pageNames =
@@ -20,7 +21,7 @@ namespace AppUI.State
 
         public string PageName
         {
-            get => _pageName ?? string.Empty;
+            get => _pageName;
             set
             {
                 _pageName = value;
@@ -30,10 +31,20 @@ namespace AppUI.State
 
         public string SectionName
         {
-            get => _sectionName ?? string.Empty;
+            get => _sectionName;
             set
             {
                 _sectionName = value;
+                NotifyStateChanged();
+            }
+        }
+
+        public RouterParams Params
+        {
+            get { return _params; }
+            set
+            {
+                _params = value;
                 NotifyStateChanged();
             }
         }
@@ -47,9 +58,5 @@ namespace AppUI.State
         {
             get => pageNames;
         }
-
-        public event Action? OnChange;
-
-        private void NotifyStateChanged() => OnChange?.Invoke();
     }
 }

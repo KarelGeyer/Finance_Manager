@@ -1,0 +1,41 @@
+﻿@using AppUI.State
+
+@inject StaticDataState StaticDataState;
+
+<MudText Typo="Typo.h3">Delete Item</MudText>
+<MudPaper Class="pa-16 ma-2 d-flex" Elevation="2" Outlined="true">
+    <MudText Typo="Typo.h4">Are you sure you want to delete item with id: @Id</MudText>
+    @if (loading == false)
+    {
+        <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Primary" OnClick="(() => DeleteItemById())"> Delete</MudButton>
+    }
+    else
+    {
+        <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" Disabled DropShadow="false" Color="Color.Default">
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        </MudButton>
+    }
+    
+    <MudButton Class="pa-4 mt-3 button" Variant="Variant.Filled" DropShadow="false" Color="Color.Error" OnClick="(() => Cancel.InvokeAsync())">Cancel</MudButton>
+</MudPaper>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public EventCallback Cancel { get; set; }
+
+    [Parameter]
+    public EventCallback<int> DeleteItem { get; set; }
+
+    private bool loading;
+
+    private void DeleteItemById()
+    {
+        loading = true;
+        DeleteItem.InvokeAsync(Id);
+        loading = false;
+    }
+}

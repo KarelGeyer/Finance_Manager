@@ -1,4 +1,6 @@
-﻿using AppUI.State;
+﻿using AppUI.Helpers;
+using AppUI.Services;
+using AppUI.State;
 using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 
@@ -17,8 +19,16 @@ namespace AppUI
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddSingleton<RouterState>();
             builder.Services.AddMudServices();
+            builder.Services.AddHttpClient();
+
+            builder.Services.AddScoped<PropertiesService>();
+            builder.Services.AddScoped<StaticDataService>();
+
+            // State DI
+            builder.Services.AddSingleton<RouterState>();
+            builder.Services.AddSingleton<UserState>();
+            builder.Services.AddSingleton<StaticDataState>();
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

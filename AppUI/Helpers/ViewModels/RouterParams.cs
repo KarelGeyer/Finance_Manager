@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppUI.Helpers.ViewModels
 {
-    public class PageData
+    public class RouterParams
     {
-        public string Name { get; set; }
-        public string Href { get; set; }
+        public string LinkToPage { get; set; }
+        public string LinkToSection { get; set; }
     }
 }

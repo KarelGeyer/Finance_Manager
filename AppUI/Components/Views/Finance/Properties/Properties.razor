@@ -1,0 +1,178 @@
+﻿@using AppUI.Helpers.Enums;
+@using AppUI.Helpers.ViewModels;
+@using AppUI.Services;
+@using AppUI.State;
+@using AppUI.Components.Generic;
+@using Common.Models.ProductModels.Properties;
+@using Common.Response;
+@using Common.Enums;
+@using Common.Helpers;
+
+@inject PropertiesService Service;
+@inject StaticDataState StaticDataState;
+@inject RouterState RouterState;
+@inject NavigationManager NavigationManager;
+
+<MudGrid Justify="Justify.SpaceBetween">
+    <MudItem>
+            <MudText Typo="Typo.h3">Properties</MudText>
+    </MudItem>
+    <MudItem>
+        <MudPaper>
+            <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                <MudButton OnClick="(() => ChangeDisplayType(EDisplayType.All))">All</MudButton>
+                <MudButton OnClick="(() => ChangeDisplayType(EDisplayType.ByCategory))">By Category</MudButton>
+            </MudButtonGroup>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@if (type == EPageViewType.View)
+{
+    @if (@isLoading == true)
+    {
+        <Loader />
+    }
+    else
+    {
+        <MudButton Class="pa-4 mt-3 button"
+            Variant="Variant.Filled"
+            DropShadow="false"
+            Color="Color.Primary"
+            OnClick="@(() => {type = EPageViewType.Create;})"
+        >
+            Create New Property
+        </MudButton>
+
+        
+            @if(displayType == EDisplayType.All)
+            {
+            <MudPaper Class="d-flex flex-wrap gap-4 pa-4" Elevation="0">
+                @foreach (var property in properties)
+                {
+                    <PropertyCard Property="property" ChangeToEdit="ChangeToEdit" ChangeToDelete="ChangeToDelete" />
+                }
+            </MudPaper>
+        } 
+        else
+        {
+            @foreach (int category in categories)
+            {
+                @if(category == 1)
+                {
+                    <MudText Typo="Typo.h4">Real Estate</MudText>
+                }
+                else if(category == 2)
+                {
+                    <MudText Typo="Typo.h4">Investments</MudText>
+                }
+                else if (category == 3)
+                {
+                    <MudText Typo="Typo.h4">Others</MudText>
+                }
+
+                <MudPaper Class="d-flex flex-wrap gap-4 pa-4" Elevation="0">
+                    @foreach (var property in properties.Where(x => x.CategoryId == category))
+                    {
+                        <PropertyCard Property="property" ChangeToEdit="ChangeToEdit" ChangeToDelete="ChangeToDelete" />
+                    }
+                </MudPaper>
+            }
+         }
+
+
+    }
+}
+else if (type == EPageViewType.Edit)
+{
+    <Edit ItemId="@currentItem!.Id" Name="@currentItem!.Name" Value="@currentItem!.Value" Category="@currentItem!.CategoryId" Cancel=@Cancel UpdateItemType="@EItemType.Property" />
+}
+else if (type == EPageViewType.Delete)
+{
+    <Delete Id="@currentItem!.Id" Cancel="@Cancel" DeleteItem="@Delete" />
+}
+else if (type == EPageViewType.Create)
+{
+    <Create Cancel="@Cancel"  CreateItem="EItemType.Property"/>
+}
+
+
+@code {
+    private BaseResponse<List<Property>> res = new();
+    private List<Property> properties = new();
+    private int[] categories = [1, 2, 3];
+    private bool isLoading = true;
+    private bool isError = false;
+    private EPageViewType type = EPageViewType.View;
+    private EDisplayType displayType = EDisplayType.All;
+    private Property? currentItem = null;
+
+    // EDIT
+    string value;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProperties();
+    }
+
+    private async Task GetProperties()
+    {
+        res = await Service.GetPropertiesAsync();
+
+        if (res.Status != EHttpStatus.OK) isError = true;
+
+        properties = res.Data!;
+        isLoading = false;
+    }
+
+    private void ChangeToEdit(Property property)
+    {
+        currentItem = property;
+        type = EPageViewType.Edit;
+    }
+
+    private void ChangeToDelete(Property property)
+    {
+        currentItem = property;
+        type = EPageViewType.Delete;
+    }
+
+    private void ChangeToCreate()
+    {
+        type = EPageViewType.Create;
+    }
+
+    private void ChangeDisplayType(EDisplayType type)
+    {
+        if (displayType != type) displayType = type;
+    }
+
+    private async Task Delete(int id)
+    {
+        BaseResponse<bool> response = await Service.DeleteProperty(id);
+        if (response.Status == Common.Enums.EHttpStatus.OK && response.Data)
+        {
+            StaticDataState.ResultState = EResult.Success;
+            StaticDataState.SuccessMessage = $"Property with id {id} was sucesfully updated";
+        }
+        else
+        {
+            StaticDataState.ResultState = EResult.Error;
+            StaticDataState.ErrorMessage = $"Property with id {id} could not be updated";
+        }
+
+        RouterState.Params = new RouterParams()
+            {
+                LinkToPage = "finances",
+                LinkToSection = "Majetek",
+            };
+
+        NavigationManager.NavigateTo("result");
+    }
+
+    private void Cancel()
+    {
+        type = EPageViewType.View;
+    }
+}
