@@ -2,11 +2,12 @@
 @using AppUI.State;
 @using AppUI.Helpers.Enums;
 @using AppUI.Helpers.ViewModels;
+@using AppUI.Components.Views.Finance;
+@using AppUI.Components.Generic.Form;
 @using Common.Models.ProductModels.Properties;
 @using Common.Response;
 @using Common.Enums;
 @using Common.Helpers;
-@using AppUI.Components.Views.Finance;
 
 @inject PropertiesService Service
 @inject StaticDataState StaticDataState
@@ -20,12 +21,7 @@
         <MudForm>
             <MudTextField Variant="Variant.Outlined" T="string" Label="Name" Value="@Name" ValueChanged="((e) => Name = e)" />
             <MudTextField Variant="Variant.Outlined" T="double" Label="Value" Value="@Value" ValueChanged="((e) => Value = e)" />
-            <MudSelect T="string" Variant="Variant.Outlined" Label="Category" @bind-Value="value">
-                @foreach (var category in StaticDataState.Categories.Where(x => x.CategoryTypeId == (int)ECategoryType.Properties))
-                {
-                    <MudSelectItem T="string" Value="category.Value" />
-                }
-            </MudSelect>
+            <CustomSelect CategoryType="@CategoryType" ActiveValue="@Convertor.CategoryIdToString(Category)" OnSelect="OnSelectCategory" />
             <MudSpacer />
             @if (loading == false)
             {
@@ -61,16 +57,13 @@
     public EventCallback Cancel { get; set; }
 
     [Parameter]
+    public ECategoryType CategoryType { get; set; } = ECategoryType.Properties;
+
+    [Parameter]
     public EItemType UpdateItemType { get; set; }
     #endregion
 
     private bool loading;
-    private string value;
-
-    protected override void OnInitialized()
-    {
-        value = Convertor.CategoryIdToString(Category);
-    }
 
     private async void UpdateItem()
     {
@@ -108,6 +101,11 @@
         Redirect();
     }
 
+    private void OnSelectCategory(string categoryValue)
+    {
+        Category = Convertor.CategoryIdNameToInt(categoryValue, (int)ECategoryType.Properties);
+    }
+
     private async Task<BaseResponse<bool>> UpdateProperty()
     {
         Property property = new()
@@ -115,7 +113,7 @@
                 Id = ItemId,
                 Name = Name,
                 Value = Value,
-                CategoryId = Convertor.CategoryIdNameToInt(value, (int)ECategoryType.Properties),
+                CategoryId = Category,
                 OwnerId = UserState.UserId
             };
 

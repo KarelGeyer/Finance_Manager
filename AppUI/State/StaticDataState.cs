@@ -1,7 +1,5 @@
 ﻿using AppUI.Helpers.Enums;
-using AppUI.Services;
 using Common.Models.Category;
-using Common.Response;
 
 namespace AppUI.State
 {

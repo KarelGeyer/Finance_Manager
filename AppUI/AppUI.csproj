@@ -69,4 +69,20 @@
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Generic\Crud\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Components\Generic\Crud\Create.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\Generic\Crud\Delete.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+      <Content Update="Components\Generic\Crud\Edit.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+    </ItemGroup>
+
 </Project>

@@ -1,0 +1,54 @@
+﻿@using AppUI.State;
+@using Common.Enums;
+
+@inject StaticDataState StaticDataState
+
+<MudPaper Width="450px" Class="pa-2" Elevation="0">
+    <MudSwitch @bind-Value="on" Label="Change Category?" Color="Color.Info" />
+    @if (on)
+    {
+        <MudPaper Class="d-flex flex-wrap gap-4 pa-4" Elevation="0">
+            @foreach (var category in StaticDataState.Categories.Where(x => x.CategoryTypeId == (int)CategoryType))
+            {
+                @if (category.Value != ActiveValue)
+                {
+                    <MudPaper Class="d-flex">
+                        <MudButton 
+                            Variant="Variant.Filled" 
+                            StartIcon="@Icons.Material.Filled.Save" 
+                            Color="Color.Info" 
+                            Size="Size.Small"
+                            Class="object-fill"
+                            OnClick="(() => ChooseItem(category.Value))"
+                        >
+                        @category.Value
+                        </MudButton>
+                    </MudPaper>
+                }
+            }
+        </MudPaper>
+    }
+</MudPaper>
+
+
+
+@code {
+    [Parameter]
+    public ECategoryType CategoryType { get; set; } = ECategoryType.Properties;
+
+    [Parameter]
+    public string ActiveValue { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> OnSelect { get; set; }
+
+
+    private bool on { get; set; } = false;
+
+    private void ChooseItem(string value)
+    {
+        on = false;
+        ActiveValue = value;
+        OnSelect.InvokeAsync(ActiveValue);
+    }
+}

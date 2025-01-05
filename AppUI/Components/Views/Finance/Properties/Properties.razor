@@ -2,7 +2,7 @@
 @using AppUI.Helpers.ViewModels;
 @using AppUI.Services;
 @using AppUI.State;
-@using AppUI.Components.Generic;
+@using AppUI.Components.Generic.Crud;
 @using Common.Models.ProductModels.Properties;
 @using Common.Response;
 @using Common.Enums;
@@ -94,7 +94,7 @@ else if (type == EPageViewType.Delete)
 }
 else if (type == EPageViewType.Create)
 {
-    <Create Cancel="@Cancel"  CreateItem="EItemType.Property"/>
+    <Create Cancel="@Cancel" CreateItemType="@EItemType.Property" CategoryType="@ECategoryType.Properties" />
 }
 
 
