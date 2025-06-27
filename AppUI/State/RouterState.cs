@@ -12,6 +12,8 @@ namespace AppUI.State
         private readonly List<PageData> pageNames =
             new()
             {
+                new PageData { Name = "Dashboard", Href = "dashboard" },
+                new PageData { Name = "Portfolios", Href = "portfolios" },
                 new PageData { Name = "Finance", Href = "finances" },
                 new PageData { Name = "Nákupní seznam", Href = "shopping-list" },
                 new PageData { Name = "Recepty", Href = "receips" },

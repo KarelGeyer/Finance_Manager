@@ -1,0 +1,259 @@
+@page "/dashboard"
+@using AppUI.State
+@using System.Globalization
+
+@inject UserState UserState
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">
+        Dashboard - Welcome back, @(UserState.Username ?? "User")!
+    </MudText>
+
+    <!-- Summary Cards Row -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.h6" Color="Color.Primary">Total Portfolio</MudText>
+                            <MudText Typo="Typo.h4">$@portfolioValue.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Success">+@portfolioChange.ToString("P1") this month</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.AccountBalanceWallet" Size="Size.Large" Color="Color.Primary" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.h6" Color="Color.Secondary">Monthly Income</MudText>
+                            <MudText Typo="Typo.h4">$@monthlyIncome.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Success">+@incomeChange.ToString("P1") vs last month</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.TrendingUp" Size="Size.Large" Color="Color.Success" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.h6" Color="Color.Warning">Monthly Expenses</MudText>
+                            <MudText Typo="Typo.h4">$@monthlyExpenses.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Error">+@expenseChange.ToString("P1") vs last month</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.TrendingDown" Size="Size.Large" Color="Color.Error" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.h6" Color="Color.Info">Net Worth</MudText>
+                            <MudText Typo="Typo.h4">$@netWorth.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Success">+@netWorthChange.ToString("P1") this year</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Assessment" Size="Size.Large" Color="Color.Info" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Charts Row -->
+    <MudGrid Class="mb-6">
+        <!-- Portfolio Performance Chart -->
+        <MudItem xs="12" md="8">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Portfolio Performance (Last 6 Months)</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Line"
+                        ChartSeries="@portfolioSeries"
+                        XAxisLabels="@portfolioLabels"
+                        Width="100%" 
+                        Height="300px"
+                        ChartOptions="@portfolioChartOptions" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Asset Allocation Pie Chart -->
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Asset Allocation</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Pie"
+                        InputData="@assetAllocationData"
+                        InputLabels="@assetAllocationLabels"
+                        Width="100%"
+                        Height="250px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Recent Transactions and Quick Actions Row -->
+    <MudGrid>
+        <!-- Recent Transactions -->
+        <MudItem xs="12" md="8">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Recent Transactions</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudButton Size="Size.Small" Variant="Variant.Text" Color="Color.Primary">View All</MudButton>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTable Items="@recentTransactions" Hover="true" Dense="true">
+                        <HeaderContent>
+                            <MudTh>Date</MudTh>
+                            <MudTh>Description</MudTh>
+                            <MudTh>Category</MudTh>
+                            <MudTh Style="text-align: right">Amount</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Date">@context.Date.ToString("MMM dd")</MudTd>
+                            <MudTd DataLabel="Description">@context.Description</MudTd>
+                            <MudTd DataLabel="Category">
+                                <MudChip Size="Size.Small" Color="@GetCategoryColor(context.Category)">@context.Category</MudChip>
+                            </MudTd>
+                            <MudTd DataLabel="Amount" Style="text-align: right">
+                                <span style="color: @(context.Amount >= 0 ? "green" : "red")">
+                                    @(context.Amount >= 0 ? "+" : "")@context.Amount.ToString("C")
+                                </span>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Quick Actions -->
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Quick Actions</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudStack Spacing="3">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" StartIcon="Icons.Material.Filled.Add">
+                            Add Transaction
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" FullWidth="true" StartIcon="Icons.Material.Filled.AccountBalance">
+                            View Portfolios
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Tertiary" FullWidth="true" StartIcon="Icons.Material.Filled.PieChart">
+                            Budget Planning
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Info" FullWidth="true" StartIcon="Icons.Material.Filled.Timeline">
+                            Generate Report
+                        </MudButton>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    // Mock data - Replace with actual service calls
+    private decimal portfolioValue = 125000;
+    private decimal portfolioChange = 0.085m;
+    private decimal monthlyIncome = 8500;
+    private decimal incomeChange = 0.032m;
+    private decimal monthlyExpenses = 6200;
+    private decimal expenseChange = 0.021m;
+    private decimal netWorth = 245000;
+    private decimal netWorthChange = 0.126m;
+
+    // Chart data
+    private List<ChartSeries> portfolioSeries = new();
+    private string[] portfolioLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+    private ChartOptions portfolioChartOptions = new();
+    
+    private double[] assetAllocationData = { 45, 25, 15, 10, 5 };
+    private string[] assetAllocationLabels = { "Stocks", "Bonds", "Real Estate", "Cash", "Crypto" };
+
+    // Recent transactions mock data
+    private List<TransactionItem> recentTransactions = new();
+
+    protected override void OnInitialized()
+    {
+        InitializeChartData();
+        InitializeTransactionData();
+    }
+
+    private void InitializeChartData()
+    {
+        portfolioSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "Portfolio Value",
+                Data = new double[] { 98000, 105000, 112000, 118000, 122000, 125000 }
+            }
+        };
+
+        portfolioChartOptions = new ChartOptions
+        {
+            YAxisTicks = 1000,
+            LineStrokeWidth = 3
+        };
+    }
+
+    private void InitializeTransactionData()
+    {
+        recentTransactions = new List<TransactionItem>
+        {
+            new() { Date = DateTime.Now.AddDays(-1), Description = "Salary Deposit", Category = "Income", Amount = 4500 },
+            new() { Date = DateTime.Now.AddDays(-2), Description = "Grocery Shopping", Category = "Food", Amount = -125.50m },
+            new() { Date = DateTime.Now.AddDays(-3), Description = "Investment Purchase", Category = "Investment", Amount = -2000 },
+            new() { Date = DateTime.Now.AddDays(-4), Description = "Utility Bill", Category = "Bills", Amount = -150.75m },
+            new() { Date = DateTime.Now.AddDays(-5), Description = "Restaurant", Category = "Food", Amount = -85.20m },
+            new() { Date = DateTime.Now.AddDays(-6), Description = "Freelance Payment", Category = "Income", Amount = 800 }
+        };
+    }
+
+    private Color GetCategoryColor(string category) => category switch
+    {
+        "Income" => Color.Success,
+        "Investment" => Color.Primary,
+        "Food" => Color.Warning,
+        "Bills" => Color.Error,
+        _ => Color.Default
+    };
+
+    public class TransactionItem
+    {
+        public DateTime Date { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+    }
+}

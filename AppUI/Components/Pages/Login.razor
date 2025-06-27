@@ -1,0 +1,142 @@
+@page "/login"
+@using AppUI.Services
+@using AppUI.State
+@using Common.Response
+@using Common.Enums
+
+@inject AuthService AuthService
+@inject UserState UserState
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex justify-center align-center" Style="min-height: 100vh;">
+    <MudPaper Class="pa-8" Width="100%" MaxWidth="400px" Elevation="8">
+        <MudText Typo="Typo.h4" Class="mb-6" Align="Align.Center">
+            Finance Manager
+        </MudText>
+        <MudText Typo="Typo.h6" Class="mb-4" Align="Align.Center" Color="Color.Primary">
+            Sign In to Your Account
+        </MudText>
+
+        <MudForm @ref="form" @bind-IsValid="@success">
+            <MudTextField 
+                @bind-Value="username" 
+                Label="Username" 
+                Variant="Variant.Outlined" 
+                Required="true" 
+                RequiredError="Username is required!"
+                Class="mb-3"
+                IconSize="Size.Medium"
+                Adornment="Adornment.Start"
+                AdornmentIcon="Icons.Material.Filled.Person" />
+
+            <MudTextField 
+                @bind-Value="password" 
+                Label="Password" 
+                Variant="Variant.Outlined" 
+                InputType="InputType.Password" 
+                Required="true" 
+                RequiredError="Password is required!"
+                Class="mb-4"
+                IconSize="Size.Medium"
+                Adornment="Adornment.Start"
+                AdornmentIcon="Icons.Material.Filled.Lock" />
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-3">
+                    @errorMessage
+                </MudAlert>
+            }
+
+            <MudButton 
+                Variant="Variant.Filled" 
+                Color="Color.Primary" 
+                Size="Size.Large"
+                FullWidth="true"
+                OnClick="HandleLogin"
+                Disabled="@(!success || isLoading)"
+                Class="mb-3">
+                @if (isLoading)
+                {
+                    <MudProgressCircular Color="Color.Default" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ml-2">Signing In...</MudText>
+                }
+                else
+                {
+                    <MudText>Sign In</MudText>
+                }
+            </MudButton>
+
+            <MudDivider Class="mb-3" />
+            
+            <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary">
+                Don't have an account? Contact your administrator.
+            </MudText>
+        </MudForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm form;
+    private bool success;
+    private bool isLoading = false;
+    private string username = string.Empty;
+    private string password = string.Empty;
+    private string errorMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        // If user is already authenticated, redirect to home
+        if (UserState.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        if (!success) return;
+
+        isLoading = true;
+        errorMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            BaseResponse<string> response = await AuthService.LoginAsync(username, password);
+
+            if (response.Status == EHttpStatus.OK && !string.IsNullOrEmpty(response.Data))
+            {
+                // TODO: Parse JWT token to extract user information
+                // For now, we'll use placeholder values
+                UserState.SetAuthenticatedUser(response.Data, username, 1);
+                
+                Snackbar.Add("Login successful! Welcome back.", Severity.Success);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = response.ResponseMessage ?? "Login failed. Please try again.";
+                
+                if (response.Status == EHttpStatus.UNAUTHORIZED)
+                {
+                    errorMessage = "Invalid username or password.";
+                }
+                else if (response.Status == EHttpStatus.FORBIDDEN)
+                {
+                    errorMessage = "Account is blocked or not verified.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred during login. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

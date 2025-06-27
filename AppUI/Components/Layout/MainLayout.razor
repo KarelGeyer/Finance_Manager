@@ -1,4 +1,4 @@
-﻿@using AppUI.Helpers.Enums
+@using AppUI.Helpers.Enums
 @using AppUI.Services
 @using AppUI.State
 @using Common.Response;
@@ -10,7 +10,9 @@
 @inherits LayoutComponentBase
 
 @inject StaticDataState StaticDataState
-@inject StaticDataService StaticDataService;
+@inject StaticDataService StaticDataService
+@inject UserState UserState
+@inject NavigationManager Navigation
 
 <div class="page">
     <MudThemeProvider />
@@ -24,19 +26,40 @@
     }
     else
     {
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-
-        <main>
-            <div class="top-row px-4">
-                <NavMenu Type="@ENavType.Sub" />
+        @* Only show navigation if user is authenticated and not on login page *@
+        @if (UserState.IsAuthenticated && !IsLoginPage())
+        {
+            <div class="sidebar">
+                <NavMenu />
             </div>
 
-            <article class="content px-4">
-                @Body
-            </article>
-        </main>
+            <main>
+                <div class="top-row px-4">
+                    <div class="d-flex justify-space-between align-center">
+                        <NavMenu Type="@ENavType.Sub" />
+                        <div class="d-flex align-center">
+                            <MudText Typo="Typo.body2" Class="mr-3">Welcome, @UserState.Username</MudText>
+                            <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="Icons.Material.Filled.Logout" OnClick="HandleLogout">
+                                Logout
+                            </MudButton>
+                        </div>
+                    </div>
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        }
+        else
+        {
+            @* Show content without navigation for unauthenticated users *@
+            <main style="width: 100%;">
+                <article class="content">
+                    @Body
+                </article>
+            </main>
+        }
     }
    
 </div>
@@ -48,17 +71,46 @@
     {
         loading = true;
 
-        await AssignCategories();
+        if (UserState.IsAuthenticated)
+        {
+            await AssignCategories();
+        }
 
         loading = false;
+        
+        UserState.OnChange += StateHasChanged;
     }
 
     private async Task AssignCategories()
     {
-        BaseResponse<List<Category>> response = await StaticDataService.GetCategoriesAsync();
-        if (response != null && response.Data != null && response.Status == Common.Enums.EHttpStatus.OK)
+        try
         {
-            StaticDataState.SetCategories(response.Data);
+            BaseResponse<List<Category>> response = await StaticDataService.GetCategoriesAsync();
+            if (response != null && response.Data != null && response.Status == Common.Enums.EHttpStatus.OK)
+            {
+                StaticDataState.SetCategories(response.Data);
+            }
         }
+        catch (Exception)
+        {
+            // Handle error silently for now
+        }
+    }
+
+    private bool IsLoginPage()
+    {
+        var uri = new Uri(Navigation.Uri);
+        return uri.AbsolutePath.Equals("/login", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void HandleLogout()
+    {
+        UserState.ClearAuthentication();
+        Navigation.NavigateTo("/login");
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
     }
 }

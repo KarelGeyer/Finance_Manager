@@ -1,0 +1,271 @@
+@page "/portfolios"
+@using AppUI.State
+@using AppUI.Components.Generic.Crud
+@using Common.Models.ProductModels.Properties
+@using Common.Response
+@using Common.Enums
+
+@inject UserState UserState
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Portfolio Management</MudText>
+
+    <MudTabs Elevation="4" Rounded="true" Centered="true" Color="Color.Primary">
+        <!-- Properties Tab -->
+        <MudTabPanel Text="Properties" Icon="Icons.Material.Filled.Home">
+            <div class="pa-4">
+                <div class="d-flex justify-space-between align-center mb-4">
+                    <MudText Typo="Typo.h6">Manage Your Properties</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="Icons.Material.Filled.Add" OnClick="@(() => ShowCreateDialog("Property"))">
+                        Add Property
+                    </MudButton>
+                </div>
+
+                <MudDataGrid Items="@properties" Dense="true" Hover="true" Bordered="true" Striped="true">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Name" Title="Name" />
+                        <PropertyColumn Property="x => x.Value" Title="Value" Format="C0" />
+                        <PropertyColumn Property="x => x.CategoryId" Title="Category" />
+                        <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                <MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+                                    <MudButton Color="Color.Primary" StartIcon="Icons.Material.Filled.Edit" OnClick="@(() => ShowEditDialog(context.Item, "Property"))">
+                                        Edit
+                                    </MudButton>
+                                    <MudButton Color="Color.Error" StartIcon="Icons.Material.Filled.Delete" OnClick="@(() => ShowDeleteDialog(context.Item, "Property"))">
+                                        Delete
+                                    </MudButton>
+                                </MudButtonGroup>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </div>
+        </MudTabPanel>
+
+        <!-- Assets Tab -->
+        <MudTabPanel Text="Assets" Icon="Icons.Material.Filled.AccountBalance">
+            <div class="pa-4">
+                <div class="d-flex justify-space-between align-center mb-4">
+                    <MudText Typo="Typo.h6">Manage Your Assets</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="Icons.Material.Filled.Add" OnClick="@(() => ShowCreateDialog("Asset"))">
+                        Add Asset
+                    </MudButton>
+                </div>
+
+                <MudDataGrid Items="@assets" Dense="true" Hover="true" Bordered="true" Striped="true">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Name" Title="Asset Name" />
+                        <PropertyColumn Property="x => x.Type" Title="Type" />
+                        <PropertyColumn Property="x => x.CurrentValue" Title="Current Value" Format="C0" />
+                        <PropertyColumn Property="x => x.PurchasePrice" Title="Purchase Price" Format="C0" />
+                        <PropertyColumn Property="x => x.PurchaseDate" Title="Purchase Date" Format="d" />
+                        <TemplateColumn Title="Performance" CellClass="text-center">
+                            <CellTemplate>
+                                @{
+                                    var change = context.Item.CurrentValue - context.Item.PurchasePrice;
+                                    var changePercent = context.Item.PurchasePrice > 0 ? (change / context.Item.PurchasePrice) : 0;
+                                }
+                                <MudChip Size="Size.Small" Color="@(change >= 0 ? Color.Success : Color.Error)">
+                                    @(change >= 0 ? "+" : "")@changePercent.ToString("P1")
+                                </MudChip>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                <MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+                                    <MudButton Color="Color.Primary" StartIcon="Icons.Material.Filled.Edit" OnClick="@(() => ShowEditDialog(context.Item, "Asset"))">
+                                        Edit
+                                    </MudButton>
+                                    <MudButton Color="Color.Error" StartIcon="Icons.Material.Filled.Delete" OnClick="@(() => ShowDeleteDialog(context.Item, "Asset"))">
+                                        Delete
+                                    </MudButton>
+                                </MudButtonGroup>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </div>
+        </MudTabPanel>
+
+        <!-- Transactions Tab -->
+        <MudTabPanel Text="Transactions" Icon="Icons.Material.Filled.Receipt">
+            <div class="pa-4">
+                <div class="d-flex justify-space-between align-center mb-4">
+                    <MudText Typo="Typo.h6">Recent Transactions</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" StartIcon="Icons.Material.Filled.Add" OnClick="@(() => ShowCreateDialog("Transaction"))">
+                        Add Transaction
+                    </MudButton>
+                </div>
+
+                <MudDataGrid Items="@transactions" Dense="true" Hover="true" Bordered="true" Striped="true">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Date" Title="Date" Format="d" />
+                        <PropertyColumn Property="x => x.Description" Title="Description" />
+                        <PropertyColumn Property="x => x.Category" Title="Category" />
+                        <PropertyColumn Property="x => x.Amount" Title="Amount" Format="C" />
+                        <TemplateColumn Title="Type" CellClass="text-center">
+                            <CellTemplate>
+                                <MudChip Size="Size.Small" Color="@(context.Item.Amount >= 0 ? Color.Success : Color.Error)">
+                                    @(context.Item.Amount >= 0 ? "Income" : "Expense")
+                                </MudChip>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                <MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+                                    <MudButton Color="Color.Primary" StartIcon="Icons.Material.Filled.Edit" OnClick="@(() => ShowEditDialog(context.Item, "Transaction"))">
+                                        Edit
+                                    </MudButton>
+                                    <MudButton Color="Color.Error" StartIcon="Icons.Material.Filled.Delete" OnClick="@(() => ShowDeleteDialog(context.Item, "Transaction"))">
+                                        Delete
+                                    </MudButton>
+                                </MudButtonGroup>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </div>
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>
+
+<!-- Create/Edit/Delete Dialogs -->
+@if (showCreateDialog)
+{
+    <MudDialog IsVisible="true" Options="@dialogOptions">
+        <DialogContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Create New @currentItemType</MudText>
+            @* TODO: Replace with actual CRUD Create component *@
+            <Create CreateItemType="@GetItemType(currentItemType)" Cancel="@(async () => await CloseDialog())" />
+        </DialogContent>
+    </MudDialog>
+}
+
+@if (showEditDialog)
+{
+    <MudDialog IsVisible="true" Options="@dialogOptions">
+        <DialogContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Edit @currentItemType</MudText>
+            @* TODO: Replace with actual CRUD Edit component *@
+            <Edit EditItem="@currentEditItem" Cancel="@(async () => await CloseDialog())" />
+        </DialogContent>
+    </MudDialog>
+}
+
+@if (showDeleteDialog)
+{
+    <MudDialog IsVisible="true" Options="@dialogOptions">
+        <DialogContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Delete @currentItemType</MudText>
+            @* TODO: Replace with actual CRUD Delete component *@
+            <Delete DeleteItem="@currentDeleteItem" Cancel="@(async () => await CloseDialog())" />
+        </DialogContent>
+    </MudDialog>
+}
+
+@code {
+    // Mock data - Replace with actual service calls
+    private List<Property> properties = new();
+    private List<AssetItem> assets = new();
+    private List<TransactionItem> transactions = new();
+
+    // Dialog state
+    private bool showCreateDialog = false;
+    private bool showEditDialog = false;
+    private bool showDeleteDialog = false;
+    private string currentItemType = string.Empty;
+    private object? currentEditItem = null;
+    private object? currentDeleteItem = null;
+    private DialogOptions dialogOptions = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+    protected override void OnInitialized()
+    {
+        LoadMockData();
+    }
+
+    private void LoadMockData()
+    {
+        // Mock Properties
+        properties = new List<Property>
+        {
+            new() { Id = 1, Name = "Main Residence", Value = 450000, CategoryId = 1, OwnerId = UserState.UserId },
+            new() { Id = 2, Name = "Rental Property", Value = 280000, CategoryId = 2, OwnerId = UserState.UserId },
+            new() { Id = 3, Name = "Vacation Home", Value = 320000, CategoryId = 3, OwnerId = UserState.UserId }
+        };
+
+        // Mock Assets
+        assets = new List<AssetItem>
+        {
+            new() { Id = 1, Name = "Stock Portfolio", Type = "Stocks", CurrentValue = 75000, PurchasePrice = 65000, PurchaseDate = DateTime.Now.AddMonths(-8) },
+            new() { Id = 2, Name = "Corporate Bonds", Type = "Bonds", CurrentValue = 45000, PurchasePrice = 44000, PurchaseDate = DateTime.Now.AddMonths(-12) },
+            new() { Id = 3, Name = "Cryptocurrency", Type = "Crypto", CurrentValue = 12000, PurchasePrice = 15000, PurchaseDate = DateTime.Now.AddMonths(-6) }
+        };
+
+        // Mock Transactions
+        transactions = new List<TransactionItem>
+        {
+            new() { Id = 1, Date = DateTime.Now.AddDays(-1), Description = "Salary Deposit", Category = "Income", Amount = 4500 },
+            new() { Id = 2, Date = DateTime.Now.AddDays(-2), Description = "Grocery Shopping", Category = "Food", Amount = -125.50m },
+            new() { Id = 3, Date = DateTime.Now.AddDays(-3), Description = "Investment Purchase", Category = "Investment", Amount = -2000 },
+            new() { Id = 4, Date = DateTime.Now.AddDays(-4), Description = "Utility Bill", Category = "Bills", Amount = -150.75m }
+        };
+    }
+
+    private void ShowCreateDialog(string itemType)
+    {
+        currentItemType = itemType;
+        showCreateDialog = true;
+    }
+
+    private void ShowEditDialog(object item, string itemType)
+    {
+        currentEditItem = item;
+        currentItemType = itemType;
+        showEditDialog = true;
+    }
+
+    private void ShowDeleteDialog(object item, string itemType)
+    {
+        currentDeleteItem = item;
+        currentItemType = itemType;
+        showDeleteDialog = true;
+    }
+
+    private async Task CloseDialog()
+    {
+        showCreateDialog = false;
+        showEditDialog = false;
+        showDeleteDialog = false;
+        currentEditItem = null;
+        currentDeleteItem = null;
+        currentItemType = string.Empty;
+        StateHasChanged();
+    }
+
+    private AppUI.Helpers.Enums.EItemType GetItemType(string itemType) => itemType switch
+    {
+        "Property" => AppUI.Helpers.Enums.EItemType.Property,
+        _ => AppUI.Helpers.Enums.EItemType.Property // Default fallback
+    };
+
+    public class AssetItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public decimal CurrentValue { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public DateTime PurchaseDate { get; set; }
+    }
+
+    public class TransactionItem
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+    }
+}

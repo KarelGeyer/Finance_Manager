@@ -24,6 +24,7 @@ namespace AppUI
 
             builder.Services.AddScoped<PropertiesService>();
             builder.Services.AddScoped<StaticDataService>();
+            builder.Services.AddScoped<AuthService>();
 
             // State DI
             builder.Services.AddSingleton<RouterState>();
