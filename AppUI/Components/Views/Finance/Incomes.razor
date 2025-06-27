@@ -1,5 +1,267 @@
-﻿<h3>Incomes</h3>
+@using AppUI.State
+
+@inject UserState UserState
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h5">Income Management</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="Icons.Material.Filled.Add" OnClick="ShowAddIncomeDialog">
+            Add Income
+        </MudButton>
+    </div>
+
+    <!-- Income Summary Cards -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Success">This Month</MudText>
+                            <MudText Typo="Typo.h5">$@thisMonthIncome.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Success">+@monthlyGrowth.ToString("P1") vs Last Month</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.TrendingUp" Size="Size.Large" Color="Color.Success" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary">Primary Source</MudText>
+                            <MudText Typo="Typo.h6">Salary</MudText>
+                            <MudText Typo="Typo.body2">$@primarySourceAmount.ToString("N0")</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Work" Size="Size.Large" Color="Color.Primary" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Info">Passive Income</MudText>
+                            <MudText Typo="Typo.h5">$@passiveIncome.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">@passivePercentage.ToString("P1") of total</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.AutoAwesome" Size="Size.Large" Color="Color.Info" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Warning">YTD Total</MudText>
+                            <MudText Typo="Typo.h5">$@ytdIncome.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">Goal: $120,000</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Assessment" Size="Size.Large" Color="Color.Warning" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Charts Row -->
+    <MudGrid Class="mb-6">
+        <!-- Income Sources -->
+        <MudItem xs="12" md="6">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Income Sources Distribution</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Pie"
+                        InputData="@incomeSourceData"
+                        InputLabels="@incomeSourceLabels"
+                        Width="100%"
+                        Height="300px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Monthly Income Trend -->
+        <MudItem xs="12" md="6">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Monthly Income Trend</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Line"
+                        ChartSeries="@incomeTrendSeries"
+                        XAxisLabels="@monthLabels"
+                        Width="100%"
+                        Height="250px"
+                        ChartOptions="@chartOptions" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Recent Income Entries -->
+    <MudCard Class="pa-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Recent Income Entries</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudTextField @bind-Value="searchString" Placeholder="Search income..." 
+                             Adornment="Adornment.Start" AdornmentIcon="Icons.Material.Filled.Search" 
+                             IconSize="Size.Medium" Class="mt-0" Immediate="true" />
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudDataGrid Items="@GetFilteredIncomes()" Dense="true" Hover="true" Bordered="true" Striped="true">
+                <Columns>
+                    <PropertyColumn Property="x => x.Date" Title="Date" Format="d" />
+                    <PropertyColumn Property="x => x.Description" Title="Description" />
+                    <PropertyColumn Property="x => x.Source" Title="Source">
+                        <CellTemplate>
+                            <MudChip Size="Size.Small" Color="@GetSourceColor(context.Item.Source)">
+                                @context.Item.Source
+                            </MudChip>
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <PropertyColumn Property="x => x.Amount" Title="Amount" Format="C" />
+                    <PropertyColumn Property="x => x.Type" Title="Type" />
+                    <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                        <CellTemplate>
+                            <MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+                                <MudButton Color="Color.Primary" StartIcon="Icons.Material.Filled.Edit" 
+                                          OnClick="@(() => EditIncome(context.Item))">
+                                    Edit
+                                </MudButton>
+                                <MudButton Color="Color.Error" StartIcon="Icons.Material.Filled.Delete" 
+                                          OnClick="@(() => DeleteIncome(context.Item))">
+                                    Delete
+                                </MudButton>
+                            </MudButtonGroup>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
+    // Mock data
+    private decimal thisMonthIncome = 8500;
+    private decimal monthlyGrowth = 0.085m;
+    private decimal primarySourceAmount = 6500;
+    private decimal passiveIncome = 1200;
+    private decimal passivePercentage = 0.14m;
+    private decimal ytdIncome = 95000;
+    private string searchString = string.Empty;
 
+    // Chart data
+    private double[] incomeSourceData = { 76, 14, 6, 4 };
+    private string[] incomeSourceLabels = { "Salary", "Investments", "Freelance", "Rental" };
+    
+    private List<ChartSeries> incomeTrendSeries = new();
+    private string[] monthLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+    private ChartOptions chartOptions = new();
+
+    // Income data
+    private List<IncomeItem> incomes = new();
+
+    protected override void OnInitialized()
+    {
+        LoadIncomeData();
+        InitializeChartData();
+    }
+
+    private void LoadIncomeData()
+    {
+        incomes = new List<IncomeItem>
+        {
+            new() { Id = 1, Date = DateTime.Now.AddDays(-1), Description = "Monthly Salary", Source = "Salary", Amount = 4500m, Type = "Regular" },
+            new() { Id = 2, Date = DateTime.Now.AddDays(-5), Description = "Dividend Payment", Source = "Investments", Amount = 320m, Type = "Passive" },
+            new() { Id = 3, Date = DateTime.Now.AddDays(-10), Description = "Freelance Project", Source = "Freelance", Amount = 850m, Type = "One-time" },
+            new() { Id = 4, Date = DateTime.Now.AddDays(-15), Description = "Rental Income", Source = "Rental", Amount = 1200m, Type = "Passive" },
+            new() { Id = 5, Date = DateTime.Now.AddDays(-18), Description = "Bonus Payment", Source = "Salary", Amount = 2000m, Type = "One-time" },
+            new() { Id = 6, Date = DateTime.Now.AddDays(-25), Description = "Side Business", Source = "Business", Amount = 650m, Type = "Regular" }
+        };
+    }
+
+    private void InitializeChartData()
+    {
+        incomeTrendSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "Monthly Income",
+                Data = new double[] { 7200, 7800, 8100, 8300, 8000, 8500 }
+            }
+        };
+
+        chartOptions = new ChartOptions
+        {
+            YAxisTicks = 1000,
+            LineStrokeWidth = 3
+        };
+    }
+
+    private IEnumerable<IncomeItem> GetFilteredIncomes()
+    {
+        if (string.IsNullOrEmpty(searchString))
+            return incomes;
+
+        return incomes.Where(i => 
+            i.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            i.Source.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private Color GetSourceColor(string source) => source switch
+    {
+        "Salary" => Color.Primary,
+        "Investments" => Color.Success,
+        "Freelance" => Color.Info,
+        "Rental" => Color.Warning,
+        "Business" => Color.Secondary,
+        _ => Color.Default
+    };
+
+    private void ShowAddIncomeDialog()
+    {
+        Snackbar.Add("Add Income dialog would open here", Severity.Info);
+    }
+
+    private void EditIncome(IncomeItem income)
+    {
+        Snackbar.Add($"Edit income: {income.Description}", Severity.Info);
+    }
+
+    private void DeleteIncome(IncomeItem income)
+    {
+        Snackbar.Add($"Delete income: {income.Description}", Severity.Warning);
+    }
+
+    public class IncomeItem
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public string Type { get; set; } = string.Empty;
+    }
 }

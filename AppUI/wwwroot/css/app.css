@@ -1,5 +1,5 @@
 ﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a, .btn-link {
@@ -30,6 +30,121 @@ h1:focus {
 
 .invalid {
     outline: 1px solid #e50000;
+}
+
+/* Custom Finance Manager Styles */
+.finance-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.finance-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+.stat-card .mud-typography {
+    color: white;
+}
+
+.budget-progress-bar {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.dashboard-grid {
+    gap: 1.5rem;
+}
+
+.mud-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.mud-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* Custom MudBlazor overrides */
+.mud-table-container {
+    border-radius: 8px;
+}
+
+.mud-input-outlined {
+    border-radius: 8px;
+}
+
+.mud-button {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.mud-chip {
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* Login page specific styles */
+.login-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.login-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+}
+
+/* Dashboard specific styles */
+.kpi-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chart-container {
+    border-radius: 8px;
+    background: white;
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content {
+        padding: 0.5rem;
+    }
+    
+    .mud-container {
+        padding: 1rem;
+    }
+    
+    .finance-card {
+        margin-bottom: 1rem;
+    }
 }
 
 .validation-message {

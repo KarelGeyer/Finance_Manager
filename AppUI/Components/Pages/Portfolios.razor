@@ -1,5 +1,6 @@
 @page "/portfolios"
 @using AppUI.State
+@using AppUI.Components
 @using AppUI.Components.Generic.Crud
 @using Common.Models.ProductModels.Properties
 @using Common.Response
@@ -8,7 +9,8 @@
 @inject UserState UserState
 @inject ISnackbar Snackbar
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+<AuthGuard>
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">Portfolio Management</MudText>
 
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="Color.Primary">
@@ -130,6 +132,7 @@
         </MudTabPanel>
     </MudTabs>
 </MudContainer>
+</AuthGuard>
 
 <!-- Create/Edit/Delete Dialogs -->
 @if (showCreateDialog)

@@ -1,5 +1,335 @@
-﻿<h3>Budgets</h3>
+@using AppUI.State
+
+@inject UserState UserState
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h5">Budget Planning</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="Icons.Material.Filled.Add" OnClick="ShowCreateBudgetDialog">
+            Create Budget
+        </MudButton>
+    </div>
+
+    <!-- Budget Overview Cards -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary">Total Budget</MudText>
+                            <MudText Typo="Typo.h5">$@totalBudget.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">This Month</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.AccountBalanceWallet" Size="Size.Large" Color="Color.Primary" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Warning">Total Spent</MudText>
+                            <MudText Typo="Typo.h5">$@totalSpent.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">@spentPercentage.ToString("P0") of budget</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.TrendingUp" Size="Size.Large" Color="Color.Warning" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Success">Remaining</MudText>
+                            <MudText Typo="Typo.h5">$@totalRemaining.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">@daysLeft days left</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Savings" Size="Size.Large" Color="Color.Success" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Error">Over Budget</MudText>
+                            <MudText Typo="Typo.h5">@overBudgetCategories</MudText>
+                            <MudText Typo="Typo.body2">Categories</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Warning" Size="Size.Large" Color="Color.Error" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Budget Progress -->
+    <MudCard Class="pa-4 mb-6">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Budget Categories Progress</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                @foreach (var budget in budgetCategories)
+                {
+                    <MudItem xs="12" md="6">
+                        <div class="mb-4">
+                            <div class="d-flex justify-space-between mb-2">
+                                <div class="d-flex align-center">
+                                    <MudIcon Icon="@GetCategoryIcon(budget.Category)" Class="mr-2" />
+                                    <MudText Typo="Typo.body1">@budget.Category</MudText>
+                                </div>
+                                <MudText Typo="Typo.body2">$@budget.Spent.ToString("N0") / $@budget.Budget.ToString("N0")</MudText>
+                            </div>
+                            <MudProgressLinear 
+                                Color="@GetProgressColor(budget.SpentPercentage)" 
+                                Size="Size.Medium" 
+                                Value="@(budget.SpentPercentage * 100)"
+                                Class="mb-1" />
+                            <div class="d-flex justify-space-between">
+                                <MudText Typo="Typo.caption" Color="@GetProgressColor(budget.SpentPercentage)">
+                                    @budget.SpentPercentage.ToString("P0") used
+                                </MudText>
+                                <MudText Typo="Typo.caption">
+                                    $@budget.Remaining.ToString("N0") remaining
+                                </MudText>
+                            </div>
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
+
+    <!-- Budget vs Actual Chart -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" md="8">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Budget vs Actual Spending</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Bar"
+                        ChartSeries="@budgetChartSeries"
+                        XAxisLabels="@budgetCategoryLabels"
+                        Width="100%" 
+                        Height="300px"
+                        ChartOptions="@chartOptions" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Budget Alerts</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudList>
+                        @foreach (var alert in budgetAlerts)
+                        {
+                            <MudListItem>
+                                <div class="d-flex align-center">
+                                    <MudIcon Icon="@alert.Icon" Color="@alert.Color" Class="mr-3" />
+                                    <div>
+                                        <MudText Typo="Typo.body2">@alert.Category</MudText>
+                                        <MudText Typo="Typo.caption" Color="@alert.Color">@alert.Message</MudText>
+                                    </div>
+                                </div>
+                            </MudListItem>
+                            <MudDivider />
+                        }
+                    </MudList>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Budget History -->
+    <MudCard Class="pa-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Budget History</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudDataGrid Items="@budgetHistory" Dense="true" Hover="true" Bordered="true" Striped="true">
+                <Columns>
+                    <PropertyColumn Property="x => x.Month" Title="Month" />
+                    <PropertyColumn Property="x => x.Category" Title="Category" />
+                    <PropertyColumn Property="x => x.BudgetAmount" Title="Budget" Format="C0" />
+                    <PropertyColumn Property="x => x.ActualAmount" Title="Actual" Format="C0" />
+                    <TemplateColumn Title="Variance" CellClass="text-center">
+                        <CellTemplate>
+                            @{
+                                var variance = context.Item.ActualAmount - context.Item.BudgetAmount;
+                                var isOver = variance > 0;
+                            }
+                            <MudChip Size="Size.Small" Color="@(isOver ? Color.Error : Color.Success)">
+                                @(isOver ? "+" : "")@variance.ToString("C0")
+                            </MudChip>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Performance" CellClass="text-center">
+                        <CellTemplate>
+                            @{
+                                var performance = context.Item.BudgetAmount > 0 ? (context.Item.ActualAmount / context.Item.BudgetAmount) : 0;
+                            }
+                            <MudText Typo="Typo.body2" Color="@(performance > 1 ? Color.Error : Color.Success)">
+                                @performance.ToString("P0")
+                            </MudText>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
+    // Mock data
+    private decimal totalBudget = 4500;
+    private decimal totalSpent = 2850;
+    private decimal totalRemaining = 1650;
+    private decimal spentPercentage = 0.63m;
+    private int daysLeft = 12;
+    private int overBudgetCategories = 1;
 
+    // Budget categories
+    private List<BudgetCategory> budgetCategories = new();
+    private List<BudgetAlert> budgetAlerts = new();
+    private List<BudgetHistoryItem> budgetHistory = new();
+
+    // Chart data
+    private List<ChartSeries> budgetChartSeries = new();
+    private string[] budgetCategoryLabels = { "Housing", "Food", "Transport", "Entertainment", "Healthcare", "Shopping" };
+    private ChartOptions chartOptions = new();
+
+    protected override void OnInitialized()
+    {
+        LoadBudgetData();
+        InitializeChartData();
+    }
+
+    private void LoadBudgetData()
+    {
+        budgetCategories = new List<BudgetCategory>
+        {
+            new() { Category = "Housing", Budget = 1200, Spent = 1200, SpentPercentage = 1.0m },
+            new() { Category = "Food", Budget = 600, Spent = 450, SpentPercentage = 0.75m },
+            new() { Category = "Transport", Budget = 400, Spent = 380, SpentPercentage = 0.95m },
+            new() { Category = "Entertainment", Budget = 300, Spent = 250, SpentPercentage = 0.83m },
+            new() { Category = "Healthcare", Budget = 200, Spent = 120, SpentPercentage = 0.60m },
+            new() { Category = "Shopping", Budget = 350, Spent = 450, SpentPercentage = 1.29m }
+        };
+
+        // Calculate remaining for each category
+        foreach (var category in budgetCategories)
+        {
+            category.Remaining = category.Budget - category.Spent;
+        }
+
+        budgetAlerts = new List<BudgetAlert>
+        {
+            new() { Category = "Shopping", Message = "29% over budget", Color = Color.Error, Icon = Icons.Material.Filled.Warning },
+            new() { Category = "Housing", Message = "Budget fully used", Color = Color.Warning, Icon = Icons.Material.Filled.Info },
+            new() { Category = "Transport", Message = "95% of budget used", Color = Color.Warning, Icon = Icons.Material.Filled.Info }
+        };
+
+        budgetHistory = new List<BudgetHistoryItem>
+        {
+            new() { Month = "June 2024", Category = "Housing", BudgetAmount = 1200, ActualAmount = 1200 },
+            new() { Month = "June 2024", Category = "Food", BudgetAmount = 600, ActualAmount = 580 },
+            new() { Month = "May 2024", Category = "Housing", BudgetAmount = 1200, ActualAmount = 1180 },
+            new() { Month = "May 2024", Category = "Food", BudgetAmount = 600, ActualAmount = 620 }
+        };
+    }
+
+    private void InitializeChartData()
+    {
+        budgetChartSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "Budget",
+                Data = budgetCategories.Select(b => (double)b.Budget).ToArray()
+            },
+            new ChartSeries
+            {
+                Name = "Actual",
+                Data = budgetCategories.Select(b => (double)b.Spent).ToArray()
+            }
+        };
+
+        chartOptions = new ChartOptions
+        {
+            YAxisTicks = 200
+        };
+    }
+
+    private string GetCategoryIcon(string category) => category switch
+    {
+        "Housing" => Icons.Material.Filled.Home,
+        "Food" => Icons.Material.Filled.Restaurant,
+        "Transport" => Icons.Material.Filled.DirectionsCar,
+        "Entertainment" => Icons.Material.Filled.MovieFilter,
+        "Healthcare" => Icons.Material.Filled.LocalHospital,
+        "Shopping" => Icons.Material.Filled.ShoppingCart,
+        _ => Icons.Material.Filled.Category
+    };
+
+    private Color GetProgressColor(decimal percentage) => percentage switch
+    {
+        >= 1.0m => Color.Error,
+        >= 0.8m => Color.Warning,
+        _ => Color.Success
+    };
+
+    private void ShowCreateBudgetDialog()
+    {
+        Snackbar.Add("Create Budget dialog would open here", Severity.Info);
+    }
+
+    public class BudgetCategory
+    {
+        public string Category { get; set; } = string.Empty;
+        public decimal Budget { get; set; }
+        public decimal Spent { get; set; }
+        public decimal Remaining { get; set; }
+        public decimal SpentPercentage { get; set; }
+    }
+
+    public class BudgetAlert
+    {
+        public string Category { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public Color Color { get; set; }
+        public string Icon { get; set; } = string.Empty;
+    }
+
+    public class BudgetHistoryItem
+    {
+        public string Month { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal BudgetAmount { get; set; }
+        public decimal ActualAmount { get; set; }
+    }
 }

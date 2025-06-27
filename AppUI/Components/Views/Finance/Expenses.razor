@@ -1,5 +1,268 @@
-﻿<h3>Expenses</h3>
+@using AppUI.State
+
+@inject UserState UserState
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h5">Expense Management</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="Icons.Material.Filled.Add" OnClick="ShowAddExpenseDialog">
+            Add Expense
+        </MudButton>
+    </div>
+
+    <!-- Monthly Summary Cards -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary">This Month</MudText>
+                            <MudText Typo="Typo.h5">$@thisMonthExpenses.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Success">vs Budget: $3,500</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.TrendingUp" Size="Size.Large" Color="Color.Primary" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Warning">Largest Category</MudText>
+                            <MudText Typo="Typo.h6">Housing</MudText>
+                            <MudText Typo="Typo.body2">$@largestCategoryAmount.ToString("N0")</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Warning" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Info">Average Daily</MudText>
+                            <MudText Typo="Typo.h5">$@averageDaily.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">Last 30 days</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.CalendarToday" Size="Size.Large" Color="Color.Info" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudCardContent>
+                    <div class="d-flex justify-space-between align-center">
+                        <div>
+                            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Remaining Budget</MudText>
+                            <MudText Typo="Typo.h5">$@remainingBudget.ToString("N0")</MudText>
+                            <MudText Typo="Typo.body2">Days left: @daysLeftInMonth</MudText>
+                        </div>
+                        <MudIcon Icon="Icons.Material.Filled.AccountBalanceWallet" Size="Size.Large" Color="Color.Secondary" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Charts Row -->
+    <MudGrid Class="mb-6">
+        <!-- Expense Categories -->
+        <MudItem xs="12" md="8">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Expense Categories</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Bar"
+                        ChartSeries="@expenseSeries"
+                        XAxisLabels="@categoryLabels"
+                        Width="100%" 
+                        Height="300px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <!-- Monthly Trend -->
+        <MudItem xs="12" md="4">
+            <MudCard Class="pa-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Monthly Trend</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudChart 
+                        ChartType="ChartType.Line"
+                        ChartSeries="@trendSeries"
+                        XAxisLabels="@monthLabels"
+                        Width="100%"
+                        Height="250px" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Recent Expenses Table -->
+    <MudCard Class="pa-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Recent Expenses</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudTextField @bind-Value="searchString" Placeholder="Search expenses..." 
+                             Adornment="Adornment.Start" AdornmentIcon="Icons.Material.Filled.Search" 
+                             IconSize="Size.Medium" Class="mt-0" Immediate="true" />
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudDataGrid Items="@GetFilteredExpenses()" Dense="true" Hover="true" Bordered="true" Striped="true">
+                <Columns>
+                    <PropertyColumn Property="x => x.Date" Title="Date" Format="d" />
+                    <PropertyColumn Property="x => x.Description" Title="Description" />
+                    <PropertyColumn Property="x => x.Category" Title="Category">
+                        <CellTemplate>
+                            <MudChip Size="Size.Small" Color="@GetCategoryColor(context.Item.Category)">
+                                @context.Item.Category
+                            </MudChip>
+                        </CellTemplate>
+                    </PropertyColumn>
+                    <PropertyColumn Property="x => x.Amount" Title="Amount" Format="C" />
+                    <PropertyColumn Property="x => x.PaymentMethod" Title="Payment Method" />
+                    <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                        <CellTemplate>
+                            <MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+                                <MudButton Color="Color.Primary" StartIcon="Icons.Material.Filled.Edit" 
+                                          OnClick="@(() => EditExpense(context.Item))">
+                                    Edit
+                                </MudButton>
+                                <MudButton Color="Color.Error" StartIcon="Icons.Material.Filled.Delete" 
+                                          OnClick="@(() => DeleteExpense(context.Item))">
+                                    Delete
+                                </MudButton>
+                            </MudButtonGroup>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
 
 @code {
+    // Mock data
+    private decimal thisMonthExpenses = 2850;
+    private decimal largestCategoryAmount = 1200;
+    private decimal averageDaily = 95;
+    private decimal remainingBudget = 650;
+    private int daysLeftInMonth = 12;
+    private string searchString = string.Empty;
 
+    // Chart data
+    private List<ChartSeries> expenseSeries = new();
+    private string[] categoryLabels = { "Housing", "Food", "Transport", "Entertainment", "Healthcare", "Shopping" };
+    
+    private List<ChartSeries> trendSeries = new();
+    private string[] monthLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+
+    // Expenses data
+    private List<ExpenseItem> expenses = new();
+
+    protected override void OnInitialized()
+    {
+        LoadExpenseData();
+        InitializeChartData();
+    }
+
+    private void LoadExpenseData()
+    {
+        expenses = new List<ExpenseItem>
+        {
+            new() { Id = 1, Date = DateTime.Now.AddDays(-1), Description = "Grocery Shopping", Category = "Food", Amount = 125.50m, PaymentMethod = "Credit Card" },
+            new() { Id = 2, Date = DateTime.Now.AddDays(-2), Description = "Gas Station", Category = "Transport", Amount = 65.00m, PaymentMethod = "Debit Card" },
+            new() { Id = 3, Date = DateTime.Now.AddDays(-3), Description = "Restaurant Dinner", Category = "Food", Amount = 85.20m, PaymentMethod = "Credit Card" },
+            new() { Id = 4, Date = DateTime.Now.AddDays(-4), Description = "Movie Tickets", Category = "Entertainment", Amount = 32.00m, PaymentMethod = "Cash" },
+            new() { Id = 5, Date = DateTime.Now.AddDays(-5), Description = "Utility Bill", Category = "Housing", Amount = 150.75m, PaymentMethod = "Bank Transfer" },
+            new() { Id = 6, Date = DateTime.Now.AddDays(-6), Description = "Online Shopping", Category = "Shopping", Amount = 95.30m, PaymentMethod = "Credit Card" }
+        };
+    }
+
+    private void InitializeChartData()
+    {
+        expenseSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "This Month",
+                Data = new double[] { 1200, 450, 380, 250, 220, 350 }
+            }
+        };
+
+        trendSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "Monthly Expenses",
+                Data = new double[] { 2100, 2350, 2200, 2650, 2800, 2850 }
+            }
+        };
+    }
+
+    private IEnumerable<ExpenseItem> GetFilteredExpenses()
+    {
+        if (string.IsNullOrEmpty(searchString))
+            return expenses;
+
+        return expenses.Where(e => 
+            e.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            e.Category.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private Color GetCategoryColor(string category) => category switch
+    {
+        "Housing" => Color.Warning,
+        "Food" => Color.Success,
+        "Transport" => Color.Info,
+        "Entertainment" => Color.Secondary,
+        "Healthcare" => Color.Error,
+        "Shopping" => Color.Primary,
+        _ => Color.Default
+    };
+
+    private void ShowAddExpenseDialog()
+    {
+        Snackbar.Add("Add Expense dialog would open here", Severity.Info);
+    }
+
+    private void EditExpense(ExpenseItem expense)
+    {
+        Snackbar.Add($"Edit expense: {expense.Description}", Severity.Info);
+    }
+
+    private void DeleteExpense(ExpenseItem expense)
+    {
+        Snackbar.Add($"Delete expense: {expense.Description}", Severity.Warning);
+    }
+
+    public class ExpenseItem
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public string PaymentMethod { get; set; } = string.Empty;
+    }
 }

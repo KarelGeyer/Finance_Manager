@@ -1,5 +1,6 @@
 ﻿@page "/finances"
 @using AppUI.State
+@using AppUI.Components
 @using AppUI.Components.Views.Finance
 @using AppUI.Components.Views.Finance.Properties
 @using AppUI.Services
@@ -7,33 +8,34 @@
 @inject RouterState RouterState
 @inject StaticDataState StaticDataState
 
-@if (@RouterState.SectionName == "General Overview")
-{
-    <GeneralOverview />
-}
+<AuthGuard>
+    @if (@RouterState.SectionName == "General Overview")
+    {
+        <GeneralOverview />
+    }
 
-@if (@RouterState.SectionName == "Majetek")
-{
-    <Properties /> 
-}
+    @if (@RouterState.SectionName == "Majetek")
+    {
+        <Properties /> 
+    }
 
-@if (@RouterState.SectionName == "Náklady a dluhy")
-{
-    <Expenses />
-    <Debts />
-}
+    @if (@RouterState.SectionName == "Náklady a dluhy")
+    {
+        <Expenses />
+        <Debts />
+    }
 
-@if (@RouterState.SectionName == "Příjmy a úspory")
-{
-    <Incomes />
-    <Savings />
-}
+    @if (@RouterState.SectionName == "Příjmy a úspory")
+    {
+        <Incomes />
+        <Savings />
+    }
 
-@if (@RouterState.SectionName == "Rozpočty")
-{
-    <Budgets />
-}
-
+    @if (@RouterState.SectionName == "Rozpočty")
+    {
+        <Budgets />
+    }
+</AuthGuard>
 
 @code {
 
@@ -44,7 +46,7 @@
             RouterState.SectionName = RouterState.Params.LinkToSection;
             RouterState.Params.LinkToSection = string.Empty;
         }
-        
+
         RouterState.OnChange += StateHasChanged;
     }
 }

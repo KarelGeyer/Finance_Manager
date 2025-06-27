@@ -1,10 +1,12 @@
 @page "/dashboard"
 @using AppUI.State
+@using AppUI.Components
 @using System.Globalization
 
 @inject UserState UserState
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+<AuthGuard>
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">
         Dashboard - Welcome back, @(UserState.Username ?? "User")!
     </MudText>
@@ -180,6 +182,7 @@
         </MudItem>
     </MudGrid>
 </MudContainer>
+</AuthGuard>
 
 @code {
     // Mock data - Replace with actual service calls
