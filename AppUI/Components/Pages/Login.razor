@@ -1,0 +1,123 @@
+@page "/login"
+@using AppUI.Services
+@using AppUI.State
+@using Common.Response
+@using AppUI.Helpers.Enums
+
+@inject AuthenticationService AuthService
+@inject UserState UserState
+@inject NavigationManager Navigation
+
+<MudContainer Class="mt-16" MaxWidth="MaxWidth.Small">
+    <MudCard Class="pa-4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h4" Align="Align.Center">Finance Manager</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center" Class="mt-2">Sign In</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        
+        <MudCardContent>
+            <EditForm Model="@model" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                
+                <MudTextField @bind-Value="model.Username"
+                              Label="Username"
+                              Variant="Variant.Outlined"
+                              Class="mb-4"
+                              Required="true"
+                              For="@(() => model.Username)" />
+                
+                <MudTextField @bind-Value="model.Password"
+                              Label="Password"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              Class="mb-4"
+                              Required="true"
+                              For="@(() => model.Password)" />
+                
+                @if (UserState.AuthResultState == EResult.Error)
+                {
+                    <MudAlert Severity="Severity.Error" Class="mb-4">
+                        @UserState.AuthErrorMessage
+                    </MudAlert>
+                }
+                
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mb-2"
+                           FullWidth="true"
+                           Disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Signing In...</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Sign In</MudText>
+                    }
+                </MudButton>
+            </EditForm>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private LoginModel model = new();
+    private bool isLoading = false;
+
+    protected override void OnInitialized()
+    {
+        // Clear any previous authentication errors
+        UserState.ClearAuthError();
+        
+        // If user is already authenticated, redirect to home
+        if (UserState.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+        {
+            UserState.SetAuthenticationFailed("Please enter both username and password.");
+            return;
+        }
+
+        isLoading = true;
+        UserState.ClearAuthError();
+        
+        try
+        {
+            var response = await AuthService.LoginAsync(model.Username, model.Password);
+            
+            if (response.Status == Common.Enums.EHttpStatus.OK && !string.IsNullOrEmpty(response.Data))
+            {
+                UserState.SetAuthenticated(response.Data, model.Username);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                UserState.SetAuthenticationFailed(response.ResponseMessage ?? "Login failed. Please check your credentials.");
+            }
+        }
+        catch (Exception ex)
+        {
+            UserState.SetAuthenticationFailed($"Login failed: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

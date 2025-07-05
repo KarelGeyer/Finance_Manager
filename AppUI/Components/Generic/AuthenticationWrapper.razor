@@ -1,0 +1,30 @@
+@using AppUI.State
+@inject UserState UserState
+@inject NavigationManager Navigation
+
+@if (UserState.IsAuthenticated || AllowAnonymous)
+{
+    @ChildContent
+}
+else
+{
+    @* Redirect to login if not authenticated *@
+    @{
+        Navigation.NavigateTo("/login");
+    }
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool AllowAnonymous { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        UserState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
+    }
+}
