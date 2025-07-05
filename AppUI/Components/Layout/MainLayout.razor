@@ -10,7 +10,9 @@
 @inherits LayoutComponentBase
 
 @inject StaticDataState StaticDataState
-@inject StaticDataService StaticDataService;
+@inject StaticDataService StaticDataService
+@inject UserState UserState
+@inject NavigationManager Navigation
 
 <div class="page">
     <MudThemeProvider />
@@ -24,19 +26,35 @@
     }
     else
     {
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-
-        <main>
-            <div class="top-row px-4">
-                <NavMenu Type="@ENavType.Sub" />
-            </div>
-
+        @if (IsLoginPage())
+        {
             <article class="content px-4">
                 @Body
             </article>
-        </main>
+        }
+        else if (UserState.IsAuthenticated)
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4">
+                    <NavMenu Type="@ENavType.Sub" />
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        }
+        else
+        {
+            @* Redirect to login if not authenticated and not on login page *@
+            @{
+                Navigation.NavigateTo("/login");
+            }
+        }
     }
    
 </div>
@@ -48,9 +66,15 @@
     {
         loading = true;
 
-        await AssignCategories();
+        // Only load categories if user is authenticated or on login page
+        if (UserState.IsAuthenticated || IsLoginPage())
+        {
+            await AssignCategories();
+        }
 
         loading = false;
+        
+        UserState.OnChange += StateHasChanged;
     }
 
     private async Task AssignCategories()
@@ -60,5 +84,16 @@
         {
             StaticDataState.SetCategories(response.Data);
         }
+    }
+
+    private bool IsLoginPage()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        return uri.LocalPath.Equals("/login", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChanged;
     }
 }
